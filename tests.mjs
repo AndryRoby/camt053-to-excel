@@ -3,6 +3,21 @@
 
 import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic, parseXml } from './camt053.js';
 import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
+import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
+
+// Minimal in-memory localStorage polyfill: Node has no Web Storage API by
+// default, and licence.js is meant to degrade to a no-op when it's
+// absent — so the load/save/clear round-trip test below needs one
+// installed, exactly like a real browser tab would provide.
+if (typeof globalThis.localStorage === 'undefined') {
+  const store = new Map();
+  globalThis.localStorage = {
+    getItem: (k) => (store.has(k) ? store.get(k) : null),
+    setItem: (k, v) => { store.set(String(k), String(v)); },
+    removeItem: (k) => { store.delete(String(k)); },
+    clear: () => { store.clear(); },
+  };
+}
 
 let pass = 0;
 let fail = 0;
@@ -341,6 +356,85 @@ function eocdEntryCount(bytes) {
   return bytes[eocdStart + 10] | (bytes[eocdStart + 11] << 8);
 }
 eq('buildXlsx: EOCD reports 5 entries in the central directory', eocdEntryCount(xlsxBytes), 5);
+
+// ═══════════════════════════ licence.js (Pro) ════════════════════════════
+// licence.js's real verify()/isValid() check every licence against the
+// ARLing service's actual public key baked into that file, and this
+// repo, correctly, does not hold the matching private key. So every test
+// below signs its own fixture licences with a throwaway Ed25519 keypair
+// generated right here, and passes that test key in as verify()/
+// isValid()'s documented test-only override, so the mechanism under test
+// is licence.js's real code, not a reimplementation of it. Same approach
+// as sepa-pain001-generator/tests.mjs.
+
+function licB64u(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return Buffer.from(bin, 'binary').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function licStableJson(obj) {
+  return '{' + Object.keys(obj).sort().map((k) => JSON.stringify(k) + ':' + JSON.stringify(obj[k])).join(',') + '}';
+}
+async function licSign(payloadObj, privateKey) {
+  const payloadBytes = new TextEncoder().encode(licStableJson(payloadObj));
+  const sig = new Uint8Array(await crypto.subtle.sign('Ed25519', privateKey, payloadBytes));
+  return licB64u(payloadBytes) + '.' + licB64u(sig);
+}
+function licAddDaysIso(iso, days) {
+  const [y, mo, d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+}
+
+await (async () => {
+  eq('licence DEFAULT_PLAN: is exactly "sepa-pro" (the shared bundle plan)', DEFAULT_PLAN, 'sepa-pro');
+
+  const testKeyPair = await crypto.subtle.generateKey('Ed25519', true, ['sign', 'verify']);
+  const testPubRaw = new Uint8Array(await crypto.subtle.exportKey('raw', testKeyPair.publicKey));
+
+  const TODAY = licenceTodayIso();
+  const TOMORROW = licAddDaysIso(TODAY, 1);
+  const YESTERDAY = licAddDaysIso(TODAY, -1);
+  const basePayload = { p: DEFAULT_PLAN, e: TOMORROW, s: 'abcd1234', m: '0123456789abcdef' };
+  const validKey = await licSign(basePayload, testKeyPair.privateKey);
+
+  eq('licence parse: malformed key returns null', parseLicence('garbage'), null);
+  {
+    const parsed = parseLicence(validKey);
+    ok('licence parse: well-formed key parses', parsed !== null);
+    eq('licence parse: plan field round-trips to "sepa-pro"', parsed.payload.p, 'sepa-pro');
+  }
+
+  eq('licence verify: valid signature against the matching (test) pubkey', await verifyLicence(validKey, testPubRaw), true);
+  eq('licence verify: signature by a foreign keypair rejected by the real embedded ARLing pubkey', await verifyLicence(validKey), false);
+
+  {
+    const r = await isValidLicence(validKey, { pubKey: testPubRaw });
+    eq('isValid: valid "sepa-pro" licence -> valid true', r.valid, true);
+    eq('isValid: valid "sepa-pro" licence -> reason "ok"', r.reason, 'ok');
+  }
+  {
+    const key = await licSign({ ...basePayload, e: YESTERDAY }, testKeyPair.privateKey);
+    const r = await isValidLicence(key, { pubKey: testPubRaw });
+    eq('isValid: expired licence -> valid false', r.valid, false);
+    eq('isValid: expired licence -> reason "expired"', r.reason, 'expired');
+  }
+  {
+    const key = await licSign({ ...basePayload, p: 'sepa-generator-pro' }, testKeyPair.privateKey);
+    const r = await isValidLicence(key, { pubKey: testPubRaw });
+    eq('isValid: a different ARLing tool\'s own plan is rejected here (camt.053 only accepts "sepa-pro")', r.valid, false);
+    eq('isValid: wrong plan -> reason "plan"', r.reason, 'plan');
+  }
+
+  clearLicence();
+  eq('licence load: nothing stored returns null', loadLicence(), null);
+  eq('licence save: reports success', saveLicence(validKey), true);
+  eq('licence load: round-trips the exact stored string', loadLicence(), validKey);
+  eq('licence clear: reports success', clearLicence(), true);
+  eq('licence load: returns null again after clear', loadLicence(), null);
+  ok('licence STORAGE_KEY: is exactly "arling_licence_sepa-pro" (shared with the other 3 tools)', LICENCE_STORAGE_KEY === 'arling_licence_sepa-pro');
+})();
 
 // ═══════════════════════════ summary ═══════════════════════════════════
 
