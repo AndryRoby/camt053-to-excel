@@ -2,12 +2,24 @@
 
 Live: https://arling.sk/camt053-to-excel/
 
+**English summary:** a free, client-side tool that turns any camt.053
+XML bank statement (ISO 20022, the standard electronic statement
+format at banks in Slovakia, Germany, Austria and Switzerland) into a
+plain CSV/Excel table, entirely in the browser: nothing you upload is
+sent anywhere. The page itself has a language switcher and is fully
+available in Slovak, English and German (SK/EN/DE), with column
+headers, error messages, the FAQ and the Pro section translated in
+each language, and per-language defaults for number/date formatting
+(decimal comma and dd.mm.yyyy for SK/DE, decimal point and yyyy-mm-dd
+for EN) and CSV export presets (DATEV/Lexware/sevDesk generic layouts
+for DE/EN).
+
 A free, static, client-side tool that turns a **camt.053 XML bank
 statement** (výpis z účtu, ISO 20022) from **Tatra banka, Slovenská
-sporiteľňa (SLSP), VÚB, or ČSOB** into a plain CSV/Excel table, so you
-don't have to eyeball raw XML, or pay for accounting software's
-built-in import, just to see what's on a statement, pair it against
-invoices, or check it by eye.
+sporiteľňa (SLSP), VÚB, ČSOB, or any German, Austrian or Swiss bank**
+into a plain CSV/Excel table, so you don't have to eyeball raw XML, or
+pay for accounting software's built-in import, just to see what's on a
+statement, pair it against invoices, or check it by eye.
 
 ## What it's for
 

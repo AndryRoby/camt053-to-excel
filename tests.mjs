@@ -4,6 +4,12 @@
 import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic, parseXml } from './camt053.js';
 import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
+import {
+  LANGS, DEFAULT_LANG, DICT, COLUMN_LABELS, t, tf, columnLabel, columnLabelsMap,
+  formatAmountForLang, formatDateForLang, defaultCsvOptsForLang, localeTagForLang,
+  ogLocaleForLang, langFromLocale, langFromQueryString, findIncompleteEntries,
+  TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
+} from './i18n.js';
 
 // Minimal in-memory localStorage polyfill: Node has no Web Storage API by
 // default, and licence.js is meant to degrade to a no-op when it's
@@ -435,6 +441,129 @@ await (async () => {
   eq('licence load: returns null again after clear', loadLicence(), null);
   ok('licence STORAGE_KEY: is exactly "arling_licence_sepa-pro" (shared with the other 3 tools)', LICENCE_STORAGE_KEY === 'arling_licence_sepa-pro');
 })();
+
+// ═══════════════════════════ i18n.js: SK/EN/DE dictionary ═══════════════
+// The tool is one page for accountants in Slovakia, Germany, Austria and
+// Switzerland (SK/EN/DE), driven by a single dictionary object and pure
+// helpers in i18n.js. These assertions check the dictionary itself, not
+// the DOM wiring (applyI18n/setLang), which needs a real browser: every
+// key has all three languages filled in, the specific header/number/date
+// rules from the brief hold per language, and no Slovak string leaked
+// into the English or German copy.
+
+eq('i18n LANGS: exactly [sk, en, de]', LANGS.join(','), 'sk,en,de');
+eq('i18n DEFAULT_LANG: "en" (fallback when navigator.language is neither de nor sk/cs)', DEFAULT_LANG, 'en');
+
+{
+  const incomplete = findIncompleteEntries();
+  deepEq('i18n dictionary: every DICT/COLUMN_LABELS entry has a non-empty sk/en/de', incomplete, []);
+}
+ok('i18n dictionary: has a substantial number of keys (every visible string on the page)', Object.keys(DICT).length >= 100);
+deepEq('i18n COLUMN_LABELS: has exactly the same 18 column keys as camt053.js COLUMNS', Object.keys(COLUMN_LABELS).slice().sort(), COLUMNS.map((c) => c.key).slice().sort());
+
+// ── header rows per language (the VS/SS/KS carve-out from the brief) ─────
+eq('columnLabel: vs header stays "VS" in Slovak', columnLabel('vs', 'sk'), 'VS');
+eq('columnLabel: vs header becomes "Reference (VS/SS/KS)" in English', columnLabel('vs', 'en'), 'Reference (VS/SS/KS)');
+eq('columnLabel: vs header becomes "Verwendungszweck / Referenz" in German', columnLabel('vs', 'de'), 'Verwendungszweck / Referenz');
+eq('columnLabel: bookingDate translated to English', columnLabel('bookingDate', 'en'), 'Booking date');
+eq('columnLabel: bookingDate translated to German', columnLabel('bookingDate', 'de'), 'Buchungsdatum');
+eq('columnLabel: unknown column key falls back to the key itself', columnLabel('doesNotExist', 'en'), 'doesNotExist');
+{
+  const enMap = columnLabelsMap('en');
+  eq('columnLabelsMap: covers every COLUMNS key', Object.keys(enMap).length, COLUMNS.length);
+  eq('columnLabelsMap: message column keeps a translated RmtInf free-text label in English', enMap.message, 'Message (RmtInf free text)');
+}
+
+// toCsv()'s opts.labels override (the one permitted change to camt053.js):
+// still optional (existing sk-default behaviour untouched) and, when
+// supplied, produces a translated header row without touching row data.
+{
+  const rows = [{ vs: '123', message: 'hello' }];
+  const csvDefault = toCsv(rows, { columns: ['vs', 'message'], bom: false });
+  includes('toCsv: opts.labels is optional, header stays Slovak by default', csvDefault, 'VS;Správa pre príjemcu');
+  const csvEn = toCsv(rows, { columns: ['vs', 'message'], bom: false, labels: columnLabelsMap('en') });
+  includes('toCsv: opts.labels overrides the header row with English column labels', csvEn, 'Reference (VS/SS/KS);Message (RmtInf free text)');
+  includes('toCsv: opts.labels does not touch row data, only the header', csvEn, '123;hello');
+  const csvDe = toCsv(rows, { columns: ['vs', 'message'], bom: false, labels: columnLabelsMap('de') });
+  includes('toCsv: opts.labels overrides the header row with German column labels', csvDe, 'Verwendungszweck / Referenz;Verwendungszweck-Text (RmtInf)');
+}
+
+// ── t()/tf() lookup ────────────────────────────────────────────────────
+eq('t: unknown key returns the key itself (missing translation stays visible, not blank)', t('no.such.key', 'en'), 'no.such.key');
+eq('t: falls back to DEFAULT_LANG for an unsupported language code', t('js.status.ok', 'fr'), t('js.status.ok', 'en'));
+includes('tf: fills a single {placeholder}', tf('js.download.all', { n: 5 }, 'en'), '5');
+includes('tf: fills a {placeholder} used inside a longer German string', tf('js.sizeWarn', { size: '25 MB', limit: '20 MB' }, 'de'), '25 MB');
+
+// ── number formatting per language ──────────────────────────────────────
+eq('formatAmountForLang: English keeps a decimal point', formatAmountForLang(1234.5, 'en'), '1234.50');
+eq('formatAmountForLang: Slovak uses a decimal comma', formatAmountForLang(1234.5, 'sk'), '1234,50');
+eq('formatAmountForLang: German uses a decimal comma', formatAmountForLang(1234.5, 'de'), '1234,50');
+eq('formatAmountForLang: negative amount, German decimal comma', formatAmountForLang(-89.9, 'de'), '-89,90');
+eq('formatAmountForLang: null amount renders as an empty string, not "null"', formatAmountForLang(null, 'en'), '');
+eq('formatAmountForLang: NaN renders as an empty string', formatAmountForLang(NaN, 'sk'), '');
+
+// ── date formatting per language ────────────────────────────────────────
+eq('formatDateForLang: English keeps ISO yyyy-mm-dd', formatDateForLang('2026-09-02', 'en'), '2026-09-02');
+eq('formatDateForLang: Slovak reformats to dd.mm.yyyy', formatDateForLang('2026-09-02', 'sk'), '02.09.2026');
+eq('formatDateForLang: German reformats to dd.mm.yyyy', formatDateForLang('2026-09-02', 'de'), '02.09.2026');
+eq('formatDateForLang: empty input passes through as an empty string', formatDateForLang('', 'en'), '');
+eq('formatDateForLang: non-ISO input passes through unchanged', formatDateForLang('n/a', 'de'), 'n/a');
+
+// ── CSV export defaults per language: comma+semicolon for sk/de, point+
+// comma for en, exactly as specified in the brief ────────────────────────
+deepEq('defaultCsvOptsForLang: Slovak defaults to decimal comma + semicolon', defaultCsvOptsForLang('sk'), { decimalComma: true, delimiter: ';' });
+deepEq('defaultCsvOptsForLang: German defaults to decimal comma + semicolon', defaultCsvOptsForLang('de'), { decimalComma: true, delimiter: ';' });
+deepEq('defaultCsvOptsForLang: English defaults to decimal point + comma', defaultCsvOptsForLang('en'), { decimalComma: false, delimiter: ',' });
+
+// ── locale detection (pure logic; the DOM-facing detectLang() wraps this
+// with location.search / localStorage / navigator.language, untestable
+// under Node without a browser) ──────────────────────────────────────────
+eq('langFromLocale: "de-DE" -> de', langFromLocale('de-DE'), 'de');
+eq('langFromLocale: "de-AT" -> de (Austrian German)', langFromLocale('de-AT'), 'de');
+eq('langFromLocale: "de-CH" -> de (Swiss German)', langFromLocale('de-CH'), 'de');
+eq('langFromLocale: "sk-SK" -> sk', langFromLocale('sk-SK'), 'sk');
+eq('langFromLocale: "cs-CZ" -> sk (Czech maps to Slovak, per the brief)', langFromLocale('cs-CZ'), 'sk');
+eq('langFromLocale: "fr-FR" -> en (anything else defaults to English)', langFromLocale('fr-FR'), 'en');
+eq('langFromLocale: empty/undefined -> en', langFromLocale(''), 'en');
+eq('langFromQueryString: "?lang=de" -> de', langFromQueryString('?lang=de'), 'de');
+eq('langFromQueryString: "?lang=SK" is case-insensitive -> sk', langFromQueryString('?lang=SK'), 'sk');
+eq('langFromQueryString: unsupported ?lang= value -> null (caller falls through)', langFromQueryString('?lang=fr'), null);
+eq('langFromQueryString: no ?lang= param -> null', langFromQueryString('?other=1'), null);
+
+// ── misc per-language lookups used in the page ───────────────────────────
+eq('localeTagForLang: sk -> sk-SK (history timestamp locale)', localeTagForLang('sk'), 'sk-SK');
+eq('localeTagForLang: de -> de-DE', localeTagForLang('de'), 'de-DE');
+eq('localeTagForLang: en -> en-GB', localeTagForLang('en'), 'en-GB');
+eq('ogLocaleForLang: sk -> sk_SK', ogLocaleForLang('sk'), 'sk_SK');
+eq('ogLocaleForLang: de -> de_DE', ogLocaleForLang('de'), 'de_DE');
+eq('ogLocaleForLang: en -> en_US', ogLocaleForLang('en'), 'en_US');
+
+// ── accounting-software templates: SK list stays (generic only), DE/EN
+// additionally offer DATEV/Lexware/sevDesk generic-CSV presets ───────────
+deepEq('templateOrderForLang: Slovak only offers the generic preset', templateOrderForLang('sk'), ['generic']);
+deepEq('templateOrderForLang: German offers generic + DATEV/Lexware/sevDesk', templateOrderForLang('de'), ['generic', 'datev', 'lexware', 'sevdesk']);
+deepEq('templateOrderForLang: English offers the same list as German', templateOrderForLang('en'), templateOrderForLang('de'));
+eq('TEMPLATE_PRESETS.generic: null (signal value, keep current columns)', TEMPLATE_PRESETS.generic, null);
+ok('TEMPLATE_PRESETS.datev: a real column subset, includes bookingDate', Array.isArray(TEMPLATE_PRESETS.datev) && TEMPLATE_PRESETS.datev.includes('bookingDate'));
+eq('templateLabel: DATEV preset labelled as a generic CSV layout in German, not vendor-certified', templateLabel('datev', 'de'), 'DATEV (generisches CSV-Layout)');
+
+// ── no leftover Slovak in the English/German copy ────────────────────────
+{
+  const leftoverWords = ['Máte', 'Dostanete'];
+  let anyLeftover = false;
+  for (const [key, entry] of Object.entries(DICT)) {
+    for (const lang of ['en', 'de']) {
+      for (const w of leftoverWords) {
+        if (String(entry[lang] || '').includes(w)) anyLeftover = true;
+      }
+    }
+  }
+  eq('i18n dictionary: no leftover Slovak "Máte"/"Dostanete" in any English or German value', anyLeftover, false);
+}
+eq('rendered English: playground heading has no leftover "Dostanete"', t('s2.h2', 'en').includes('Dostanete'), false);
+eq('rendered German: playground heading has no leftover "Dostanete"', t('s2.h2', 'de').includes('Dostanete'), false);
+eq('rendered English: hero lead has no leftover "Máte"', t('hero.lead', 'en').includes('Máte'), false);
+eq('rendered German: hero lead has no leftover "Máte"', t('hero.lead', 'de').includes('Máte'), false);
 
 // ═══════════════════════════ summary ═══════════════════════════════════
 
