@@ -1,0 +1,278 @@
+# camt.053 výpis banky do Excelu: prevod bankového výpisu na tabuľku
+
+> Free, client-side tool that turns a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, or ČSOB into a plain CSV/Excel table.
+
+No account, no backend, no upload of your statement data: everything from reading the XML to building the table runs in your browser.
+
+## Why this exists
+
+Every one of the four major Slovak banks issues its accounting
+statement (výpis do účtovníctva) as camt.053 XML by default: it's the
+"SEPA XML SK štandard" the Slovak Bank Association (SBA) published in
+2013, based on the ISO 20022 camt.053 schema. That's a good format for
+accounting software with a built-in importer, but plenty of real
+workflows don't have one wired up: a bookkeeper reconciling payments
+against invoices by variabilný symbol, a director doing a manual spot
+check on what actually posted this month, a small business whose
+software imports CSV but not camt.053 directly. All of these need the
+statement as a table, not as XML, and the direct route (open the file
+by hand, or buy software that imports it) is more friction than the
+problem deserves. This tool is the shortcut: upload the file, download
+the table.
+
+## Input format
+
+### 1. The statement file(s)
+
+Upload one or more `.xml` files with the file picker, or paste the XML
+text directly into the page. An uploaded file is read with the
+browser's own `FileReader` API; it is never sent anywhere. Multiple
+files can be converted in the same sitting (several months of
+statements, or several accounts), each producing its own table and its
+own CSV download.
+
+### 2. Supported camt.053 versions
+
+| Version | Namespace | Where it's used |
+|---|---|---|
+| camt.053.001.02 | `urn:iso:std:iso:20022:tech:xsd:camt.053.001.02` | The version behind the SBA's 2013 "SEPA XML SK štandard": what Tatra banka, Slovenská sporiteľňa, VÚB, and ČSOB all generate when you choose "výpis do účtovníctva" / "XML - camt.053 SK štandard" in internet banking. |
+| camt.053.001.08 | `urn:iso:std:iso:20022:tech:xsd:camt.053.001.08` | A newer ISO 20022 revision. Not what the four Slovak banks above issue today, but accepted for a statement from a non-Slovak bank, a different account-servicing system, or a source that has moved to the newer schema. |
+
+Both versions carry the same core `Ntry` (entry) fields this tool
+reads: `BookgDt`, `ValDt`, `Amt`, `CdtDbtInd`, and the remittance/
+reference and counterparty-party fields. A file in a different
+namespace (camt.052, camt.054, an unrelated XML file) is rejected with
+a message naming the namespace found, instead of silently producing an
+empty or wrong table.
+
+## What gets read out of the XML
+
+One row per underlying payment. A plain `<Ntry>` with no `NtryDtls/TxDtls`
+becomes one row; an `<Ntry>` batching several `TxDtls` blocks (a bulk
+credit, for instance) becomes one row per `TxDtls`, each with its own
+amount and direction where the transaction detail carries one, falling
+back to the entry-level amount otherwise. That way VS/ŠS/KS pairing
+against invoices works per payment, not per bank-side batch line.
+
+| Column | Source in the XML | Notes |
+|---|---|---|
+| Číslo výpisu | `Stmt/Id` | Identifies which uploaded statement a row came from, once several files are converted together. |
+| Účet (IBAN) | `Stmt/Acct/Id/IBAN` | The statement's own account, not the counterparty. |
+| Dátum zaúčtovania | `BookgDt/Dt` (or `DtTm`) | The date the entry posted to the account ledger. |
+| Dátum valuty | `ValDt/Dt` (or `DtTm`) | The value date used for interest calculation; can differ from the booking date. |
+| Suma | `Amt`, signed by `CdtDbtInd` | `CdtDbtInd = DBIT` makes the row's amount negative; `CRDT` keeps it positive, so a plain SUM() over the column gives the net change to the account. |
+| Mena | `Amt/@Ccy`, falling back to the account's own currency | The `Ccy` attribute on the `Amt` element. |
+| Status | `Sts` (e.g. `BOOK`, `PDNG`) | Whether the entry is booked or still pending, when the statement distinguishes them. |
+| Referencia banky | `AcctSvcrRef`, falling back to `NtryRef` | The bank's own reference for the entry, useful for matching a row back to what's shown in internet banking. |
+| Typ transakcie | `BkTxCd`: `Domn/Cd`-`Fmly/Cd`-`Fmly/SubFmlyCd` and/or the bank's own `Prtry/Cd` | e.g. `PMNT-RCDT-ESCT` for an incoming SEPA credit transfer; shown alongside a bank-proprietary code like `PMNT-RCDT (TATRA)` when the statement carries one. |
+| Protistrana | `RltdPties/Dbtr` or `/Cdtr` | Name of the other side of the transaction: the creditor's name on a debit entry, the debtor's name on a credit entry (confirmed against a real Tatra banka sample: a DBIT entry carries `Cdtr`, not `Dbtr`). |
+| IBAN protistrany | `RltdPties/DbtrAcct` or `/CdtrAcct` | The counterparty's IBAN, when the statement carries it (not every entry does; bank-fee and utility-style lines in particular often don't). |
+| BIC protistrany | `RltdAgts/DbtrAgt` or `/CdtrAgt` (`FinInstnId/BIC` or `/BICFI`) | The counterparty's bank, where present. |
+| EndToEndId | `Refs/EndToEndId` | The end-to-end reference as the bank recorded it, VS/ŠS/KS packing included. |
+| VS / ŠS / KS | Parsed from `EndToEndId`'s `/VS.../SS.../KS...` convention, the structured remittance reference, or, failing both, pattern-matched out of the free-text message | The same National Bank of Slovakia convention the sibling SEPA pain.001 tools already document and check, so a statement generated from a pain.001 file built by SEPA pain.001 Generátor round-trips its VS/ŠS/KS back out. |
+| Správa pre príjemcu | `RmtInf/Ustrd` (all instances joined) | Free-text remittance info. |
+| Poplatok | `Chrgs/TtlChrgsAndTaxAmt`, falling back to `Chrgs/Amt` | Any fee the entry itself carries, separate from its main amount. |
+
+The statement header (`Stmt/Acct`, `Stmt/Bal`, `Stmt/Svcr`) is also
+read, for a summary above the table: account IBAN, statement period
+(`FrToDt`), entry/credit/debit counts and totals, and opening/closing
+balance (`Bal` entries with codes `OPBD`/`PRCD` and `CLBD`/`CLAV`).
+Opening balance plus the net of every entry is checked against the
+reported closing balance, so a mismatch is visible before the
+row-level data is trusted. The servicing bank's BIC (`Svcr/FinInstnId/
+BIC`) is matched against Tatra banka, SLSP, VÚB, ČSOB, and eight other
+Slovak banks' BICs to label which bank issued the file.
+
+## Worked example
+
+This is the actual sample statement the tool ships (the "ukážka"/sample
+button on the page loads exactly this XML), a camt.053.001.02 statement
+with three entries: one incoming SEPA credit transfer, one outgoing
+payment, and one service fee.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>ARL-20260906-000001</MsgId>
+      <CreDtTm>2026-09-06T08:00:00+02:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>SK6809000000000012345678-001-260906</Id>
+      <FrToDt>
+        <FrDtTm>2026-09-01T00:00:00+02:00</FrDtTm>
+        <ToDtTm>2026-09-05T23:59:59+02:00</ToDtTm>
+      </FrToDt>
+      <Acct>
+        <Id><IBAN>SK6809000000000012345678</IBAN></Id>
+        <Ccy>EUR</Ccy>
+        <Ownr><Nm>Ukazkova firma s. r. o.</Nm></Ownr>
+      </Acct>
+      <Svcr><FinInstnId><BIC>TATRSKBX</BIC></FinInstnId></Svcr>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">1000.00</Amt><CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-09-01</Dt></Dt>
+      </Bal>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">1239.30</Amt><CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-09-05</Dt></Dt>
+      </Bal>
+      <Ntry>
+        <NtryRef>2026090100001</NtryRef>
+        <Amt Ccy="EUR">450.00</Amt><CdtDbtInd>CRDT</CdtDbtInd><Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-02</Dt></BookgDt><ValDt><Dt>2026-09-02</Dt></ValDt>
+        <NtryDtls><TxDtls>
+          <Refs><AcctSvcrRef>2026090100001</AcctSvcrRef><EndToEndId>/VS2026001/SS0000/KS0308</EndToEndId></Refs>
+          <BkTxCd><Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn></BkTxCd>
+          <RltdPties><Dbtr><Nm>Jozef Odberatel</Nm></Dbtr><DbtrAcct><Id><IBAN>SK0502000000272000000018</IBAN></Id></DbtrAcct></RltdPties>
+          <RltdAgts><DbtrAgt><FinInstnId><BIC>SUBASKBX</BIC></FinInstnId></DbtrAgt></RltdAgts>
+          <RmtInf><Ustrd>Uhrada faktury 2026-0912</Ustrd></RmtInf>
+        </TxDtls></NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>2026090300002</NtryRef>
+        <Amt Ccy="EUR">89.90</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-03</Dt></BookgDt><ValDt><Dt>2026-09-03</Dt></ValDt>
+        <NtryDtls><TxDtls>
+          <Refs><AcctSvcrRef>2026090300002</AcctSvcrRef><EndToEndId>/VS789/KS0308</EndToEndId></Refs>
+          <BkTxCd><Domn><Cd>PMNT</Cd><Fmly><Cd>ICDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn></BkTxCd>
+          <RltdPties><Cdtr><Nm>Dodavatel Novak s. r. o.</Nm></Cdtr><CdtrAcct><Id><IBAN>SK8709000000002000000018</IBAN></Id></CdtrAcct></RltdPties>
+          <RltdAgts><CdtrAgt><FinInstnId><BIC>GIBASKBX</BIC></FinInstnId></CdtrAgt></RltdAgts>
+          <RmtInf><Ustrd>Kancelarske potreby</Ustrd></RmtInf>
+        </TxDtls></NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>2026090500003</NtryRef>
+        <Amt Ccy="EUR">120.80</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-05</Dt></BookgDt><ValDt><Dt>2026-09-05</Dt></ValDt>
+        <NtryDtls><TxDtls>
+          <Refs><AcctSvcrRef>2026090500003</AcctSvcrRef><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
+          <RltdPties><Cdtr><Nm>Energie SK a. s.</Nm></Cdtr><CdtrAcct><Id><IBAN>SK5809000000000123456789</IBAN></Id></CdtrAcct></RltdPties>
+          <RmtInf><Ustrd>Zaloha elektrina VS: 445566</Ustrd></RmtInf>
+        </TxDtls></NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>
+```
+
+Output table (columns trimmed to the ones with content, for space):
+
+| Dátum zaúčt. | Suma | Protistrana | IBAN protistrany | VS | KS | Správa pre príjemcu |
+|---|---|---|---|---|---|---|
+| 2026-09-02 | 450.00 | Jozef Odberatel | SK0502000000272000000018 | 2026001 | 0308 | Uhrada faktury 2026-0912 |
+| 2026-09-03 | -89.90 | Dodavatel Novak s. r. o. | SK8709000000002000000018 | 789 | 0308 | Kancelarske potreby |
+| 2026-09-05 | -120.80 | Energie SK a. s. | SK5809000000000123456789 | 445566 (z textu) | | Zaloha elektrina VS: 445566 |
+
+Summary above the table: účet `SK6809000000000012345678`, banka Tatra
+banka (BIC `TATRSKBX`), obdobie `2026-09-01` to `2026-09-05`,
+počiatočný zostatok `1000.00 EUR`, konečný zostatok `1239.30 EUR`.
+`1000.00 + 450.00 - 89.90 - 120.80 = 1239.30`: the three rows account
+for the whole balance change, so the built-in check passes. The third
+entry has no `EndToEndId` (its bank sent `NOTPROVIDED`), so its VS is
+instead picked up from the free-text message "Zaloha elektrina VS:
+445566", the same fallback a human reading the statement would use.
+
+## How it works
+
+Static HTML plus one dependency-free JavaScript engine, `camt053.js`,
+loaded as an ES module and also publishing `window.CamtConverter =
+{parse, toRows, toCsv, summarize}` for console/debug use. In the
+browser it parses the XML with the native `DOMParser`; the same file
+also runs unmodified under Node (used by this project's own
+`tests.mjs` test suite) via a small dependency-free tolerant XML
+parser, the same approach this project's sibling tool, SEPA pain.001
+Doctor, uses for its own XML parsing, so the exact same code path is
+exercised in both environments instead of two parallel implementations
+that could drift apart. There is no backend, no upload, and no request
+that carries your statement data anywhere: read `index.html` and
+`camt053.js` directly to verify.
+
+## Who it's for
+
+Slovak accountants, bookkeepers, and company directors who download a
+camt.053 statement from Tatra banka, SLSP, VÚB, or ČSOB internet
+banking and need the transactions as a table: reconciling payments
+against invoices by variabilný symbol, a manual check on what actually
+posted, or a bookkeeping process that has no direct camt.053 importer
+of its own.
+
+## FAQ
+
+**Why does it ask for a camt.053 version, or mention .001.02 vs
+.001.08?**
+It doesn't ask; it detects the version from the `xmlns` on the
+statement's `<Document>` element and reads either. `.001.02` is what
+Tatra banka, SLSP, VÚB, and ČSOB all issue today (the SBA's SEPA XML
+SK štandard); `.001.08` is supported in case the statement comes from
+elsewhere. Both use the same entry-level fields this tool reads, so
+the output looks the same either way.
+
+**My bank isn't Tatra banka, SLSP, VÚB, or ČSOB. Will it still work?**
+If the file is valid camt.053.001.02 or .001.08 XML, yes: the parser
+reads the standard ISO 20022 entry fields, not anything specific to
+one of the four banks. Those four are simply the ones confirmed to
+issue exactly this format for a Slovak account.
+
+**Does it check that the statement is correct, or that the balances
+add up?**
+It reads and displays the opening/closing balance the statement itself
+reports, so you can compare it against the sum of the converted rows
+by eye, but it doesn't reject a file whose entries don't sum to the
+stated balance: a mismatch usually means an entry type (e.g. a pending
+or a reversed transaction) isn't captured the way you expected, worth
+checking against the original XML rather than a sign the tool
+miscalculated.
+
+**Is there a limit on how many entries or files I can convert?**
+Not in this tool. A very large statement (thousands of entries) parses
+more slowly since everything runs in your browser's own JavaScript
+engine, but there's no artificial cap.
+
+**Can I paste the XML instead of uploading a file?**
+Yes. Uploading with the file picker and pasting the XML text both feed
+the same parser; use whichever is easier to get the content into the
+page.
+
+**What happens if the file isn't a camt.053 statement at all (wrong
+namespace, camt.052/camt.054, unrelated XML)?**
+The tool reports the namespace it found instead of the one it expects,
+rather than producing an empty or silently wrong table.
+
+**Does anything about my statement get uploaded when I use the file
+picker?**
+No. The file is read locally with the browser's `FileReader` API, the
+same as pasted text would be, and never leaves the page.
+
+**Is there a developer API, not just the page UI?**
+Yes: `camt053.js` is a plain ES module exporting `parse` (XML string to
+statement objects), `toRows` (statement objects to the row table
+described above), `toCsv` (rows to a CSV string), and `summarize`
+(account/period/balance header). It has no dependency, so it can be
+imported into another Node or browser project directly instead of
+scraping the page.
+
+## Privacy
+
+No account, no login, no cookies for the tool itself, no server-side
+processing of your statement. The only analytics are anonymous usage
+counts (event name + count, never IBANs, names, or amounts) sent to a
+self-hosted Umami instance. The only exception is the optional
+mailing-list form: if you type an email address into it, that address
+is sent to the subscribe endpoint and nothing else.
+
+## Links
+
+- Tool: https://arling.sk/camt053-to-excel/
+- Short reference: https://arling.sk/camt053-to-excel/llms.txt
+- Source code: https://github.com/AndryRoby/camt053-to-excel
+- Sibling tool (builds a pain.001 payment file from Excel/CSV): https://arling.sk/sepa-pain001-generator/
+- Sibling tool (checks a finished pain.001 file against bank rules): https://arling.sk/sepa-pain001-doctor/
+- Hub (more ARLing tools): https://arling.sk/
+
+## Contact
+
+Built by ARLing s. r. o. (Bratislava, Slovakia). andrej@arling.sk

@@ -1,0 +1,12 @@
+{
+  "name": "camt053-to-excel",
+  "version": "1.0.0",
+  "description": "camt.053 výpis banky do Excelu: free, client-side tool that converts a camt.053 XML bank statement from Tatra banka, SLSP, VÚB and ČSOB into a CSV/Excel table.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests.mjs"
+  },
+  "license": "UNLICENSED",
+  "author": "ARLing s. r. o. <andrej@arling.sk>"
+}

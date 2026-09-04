@@ -1,0 +1,38 @@
+# camt.053 výpis banky do Excelu
+
+> Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, or ČSOB into a CSV/Excel table: upload one or more files, download the table, nothing you upload leaves your browser.
+
+Every major Slovak bank issues its accounting statement as camt.053 XML by default (the SBA's 2013 "SEPA XML SK štandard"). This tool reads that XML and lays each transaction out as a row, so you don't need accounting software's own import just to see, check, or reconcile what's on a statement.
+
+## What it does
+
+- Parses one or more uploaded `.xml` files (read client-side with `FileReader`) or pasted XML text into a transaction table.
+- Supports camt.053.001.02 (namespace `urn:iso:std:iso:20022:tech:xsd:camt.053.001.02`, the version behind the SBA's SEPA XML SK štandard that Tatra banka, SLSP, VÚB, and ČSOB all issue) and camt.053.001.08 (`...camt.053.001.08`, a newer ISO 20022 revision) statements.
+- One row per underlying payment (a batched entry with several `TxDtls` becomes several rows): statement id, account IBAN, booking date (`BookgDt`), value date (`ValDt`), amount (`Amt`) signed by `CdtDbtInd` (`DBIT` negative, `CRDT` positive), currency, status, bank reference (`AcctSvcrRef`/`NtryRef`), transaction type (`BkTxCd`), counterparty name/IBAN/BIC from `RltdPties`/`RltdAgts`, `EndToEndId`, VS/ŠS/KS parsed out of the `/VS.../SS.../KS...` convention or the structured reference, remittance text (`RmtInf/Ustrd`), and any fee (`Chrgs`).
+- Surfaces the statement's own account IBAN, period, entry/credit/debit totals, and opening/closing balance from its header, checked against the sum of entries, so a mismatch is visible before the row-level data is trusted. Matches the servicing bank's BIC against a table of Slovak banks.
+- Converts several statement files in one session; each result downloads as CSV or as a standalone .xlsx workbook (built client-side, no library), or copies as tab-separated text.
+
+## Who it's for
+
+Slovak accountants, bookkeepers, and company directors who download a camt.053 statement from internet banking and need it as a table: for pairing payments against invoices by variabilný symbol, a manual reconciliation check, or a bookkeeping process that doesn't have a direct camt.053 import.
+
+## How it works
+
+Static HTML plus one dependency-free JavaScript engine (`camt053.js`, exposing `window.CamtConverter = {parse, toRows, toCsv, summarize}`). All parsing happens in your browser against the file(s) you upload or paste; the tool has no backend and makes no request that carries your statement data anywhere.
+
+## Privacy
+
+No account, no login, no cookies for the tool itself, no server-side processing of your statement. The only analytics are anonymous usage counts (event name + count, never IBANs/amounts/names) sent to a self-hosted Umami instance.
+
+## Links
+
+- Tool: https://arling.sk/camt053-to-excel/
+- Full reference (column mapping, worked example, FAQ): https://arling.sk/camt053-to-excel/llms-full.txt
+- Source code: https://github.com/AndryRoby/camt053-to-excel
+- Sibling tool (builds a pain.001 payment file from Excel/CSV): https://arling.sk/sepa-pain001-generator/
+- Sibling tool (checks a finished pain.001 file against bank rules): https://arling.sk/sepa-pain001-doctor/
+- Hub (more ARLing tools): https://arling.sk/
+
+## Contact
+
+Built by ARLing s. r. o. (Bratislava, Slovakia). andrej@arling.sk
