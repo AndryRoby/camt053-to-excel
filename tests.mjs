@@ -1,0 +1,352 @@
+// tests.mjs — plain Node test runner for camt053.js and xlsx-writer.js
+// (no external dependencies). Run with: node tests.mjs
+
+import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic, parseXml } from './camt053.js';
+import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
+
+let pass = 0;
+let fail = 0;
+const failures = [];
+
+function ok(name, cond, detail) {
+  if (cond) { pass++; } else { fail++; failures.push(`${name}${detail ? ' — ' + detail : ''}`); }
+}
+function eq(name, actual, expected) {
+  const cond = actual === expected;
+  ok(name, cond, cond ? '' : `expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+}
+function deepEq(name, actual, expected) {
+  const cond = JSON.stringify(actual) === JSON.stringify(expected);
+  ok(name, cond, cond ? '' : `expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+}
+function includes(name, haystack, needle) {
+  const cond = typeof haystack === 'string' && haystack.includes(needle);
+  ok(name, cond, cond ? '' : `expected string to include ${JSON.stringify(needle)}`);
+}
+function close(name, actual, expected, eps) {
+  const cond = typeof actual === 'number' && Math.abs(actual - expected) <= (eps || 0.005);
+  ok(name, cond, cond ? '' : `expected ~${expected}, got ${actual}`);
+}
+
+// ═══════════════════════════ fixtures ═══════════════════════════════════
+
+// camt.053.001.08 fixture, two statements, built to exercise the paths the
+// bundled .02 SAMPLE_CAMT053_XML does not: a bare Ntry with no NtryDtls at
+// all, RmtInf/Strd/CdtrRefInf/Ref-sourced VS, a batched Ntry whose two
+// TxDtls each carry their own Amt/CdtDbtInd, an Amt with no Ccy attribute
+// (falls back to the account currency), an entity in free text, and a
+// second statement whose stated closing balance does not reconcile.
+const SAMPLE_08_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.08">
+  <BkToCstmrStmt>
+    <GrpHdr><MsgId>ARL-TEST-08-1</MsgId><CreDtTm>2026-09-06T09:00:00+02:00</CreDtTm></GrpHdr>
+    <Stmt>
+      <Id>SK1111000000000099999999-001-260906</Id>
+      <LglSeqNb>1</LglSeqNb>
+      <Acct><Id><IBAN>SK1111000000000099999999</IBAN></Id><Ccy>EUR</Ccy></Acct>
+      <Bal><Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp><Amt Ccy="EUR">500.00</Amt><CdtDbtInd>CRDT</CdtDbtInd><Dt><Dt>2026-09-01</Dt></Dt></Bal>
+      <Bal><Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp><Amt Ccy="EUR">574.50</Amt><CdtDbtInd>CRDT</CdtDbtInd><Dt><Dt>2026-09-05</Dt></Dt></Bal>
+      <Ntry>
+        <NtryRef>N1</NtryRef>
+        <Amt>200.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-02</Dt></BookgDt>
+        <ValDt><Dt>2026-09-02</Dt></ValDt>
+      </Ntry>
+      <Ntry>
+        <NtryRef>N2</NtryRef>
+        <Amt Ccy="EUR">50.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-03</Dt></BookgDt>
+        <ValDt><Dt>2026-09-03</Dt></ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Refs><AcctSvcrRef>N2-ref</AcctSvcrRef></Refs>
+            <RltdPties><Cdtr><Nm>Dodavatel Structured s. r. o.</Nm></Cdtr><CdtrAcct><Id><IBAN>SK2222000000000088888888</IBAN></Id></CdtrAcct></RltdPties>
+            <RmtInf><Strd><CdtrRefInf><Ref>445566</Ref></CdtrRefInf></Strd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>N3</NtryRef>
+        <Amt Ccy="EUR">75.50</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-04</Dt></BookgDt>
+        <ValDt><Dt>2026-09-04</Dt></ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Amt>30.00</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <Refs><EndToEndId>/VS1001/SS02/KS0308</EndToEndId></Refs>
+            <RltdPties><Cdtr><Nm>Prvy dodavatel</Nm></Cdtr></RltdPties>
+            <RmtInf><Ustrd>Faktura A &amp; B</Ustrd></RmtInf>
+          </TxDtls>
+          <TxDtls>
+            <Amt>45.50</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <Refs><EndToEndId>/VS1002/SS03/KS0308</EndToEndId></Refs>
+            <RltdPties><Cdtr><Nm>Druhy dodavatel</Nm></Cdtr></RltdPties>
+            <RmtInf><Ustrd>Faktura C</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+    <Stmt>
+      <Id>SK3333000000000077777777-001-260906</Id>
+      <LglSeqNb>1</LglSeqNb>
+      <Acct><Id><IBAN>SK3333000000000077777777</IBAN></Id><Ccy>EUR</Ccy></Acct>
+      <Bal><Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp><Amt Ccy="EUR">100.00</Amt><CdtDbtInd>CRDT</CdtDbtInd><Dt><Dt>2026-09-01</Dt></Dt></Bal>
+      <Bal><Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp><Amt Ccy="EUR">999.00</Amt><CdtDbtInd>CRDT</CdtDbtInd><Dt><Dt>2026-09-05</Dt></Dt></Bal>
+      <Ntry>
+        <NtryRef>N4</NtryRef>
+        <Amt Ccy="EUR">10.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-02</Dt></BookgDt>
+        <ValDt><Dt>2026-09-02</Dt></ValDt>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>
+`;
+
+const NOT_CAMT_XML = `<?xml version="1.0"?><Document xmlns="urn:pain.001"><CstmrCdtTrfInitn><GrpHdr><MsgId>X</MsgId></GrpHdr></CstmrCdtTrfInitn></Document>`;
+
+const MALFORMED_XML = `<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"><BkToCstmrStmt><GrpHdr><MsgId>X</MsgId></GrpHdr><Stmt><Id>A</Id>`;
+
+const GARBAGE = 'toto vobec nie je XML subor, len obycajny text';
+
+// ═══════════════════════════ parse(): .02 sample ═════════════════════════
+
+const p02 = parse(SAMPLE_CAMT053_XML);
+ok('parse .02: ok is true', p02.ok === true);
+eq('parse .02: not malformed', p02.malformed, false);
+eq('parse .02: version detected as 001.02', p02.version, '001.02');
+includes('parse .02: namespace captured', p02.namespace, 'camt.053.001.02');
+eq('parse .02: one statement', p02.statements.length, 1);
+eq('parse .02: MsgId read', p02.groupHeader.msgId, 'ARL-20260906-000001');
+eq('parse .02: bank detected from Svcr BIC', p02.bank, 'tatrabanka');
+
+const stmt02 = p02.statements[0];
+eq('parse .02: statement account IBAN', stmt02.account.iban, 'SK6809000000000012345678');
+eq('parse .02: statement account currency', stmt02.account.currency, 'EUR');
+eq('parse .02: statement id', stmt02.id, 'SK6809000000000012345678-001-260906');
+eq('parse .02: from/to datetime read', stmt02.fromDateTime, '2026-09-01T00:00:00+02:00');
+eq('parse .02: 3 entries parsed', stmt02.entries.length, 3);
+eq('parse .02: 2 balances parsed', stmt02.balances.length, 2);
+
+const rows02 = toRows(p02);
+eq('toRows .02: 3 rows total', rows02.length, 3);
+eq('toRows .02: first row signed amount is positive (CRDT)', rows02[0].amount, 450);
+eq('toRows .02: second row signed amount is negative (DBIT)', rows02[1].amount, -89.9);
+eq('toRows .02: third row signed amount is negative (DBIT)', rows02[2].amount, -120.8);
+eq('toRows .02: currency read from Amt Ccy attr', rows02[0].currency, 'EUR');
+eq('toRows .02: txType combines Domn/Fmly/SubFmlyCd', rows02[0].txType, 'PMNT-RCDT-ESCT');
+eq('toRows .02: counterparty is Dbtr for a CRDT entry', rows02[0].counterpartyName, 'Jozef Odberatel');
+eq('toRows .02: counterparty is Cdtr for a DBIT entry', rows02[1].counterpartyName, 'Dodavatel Novak s. r. o.');
+eq('toRows .02: bankRef prefers AcctSvcrRef', rows02[0].bankRef, '2026090100001');
+
+// ── VS/SS/KS: three extraction sources ──────────────────────────────────
+eq('VS source 1/3: from EndToEndId, VS', rows02[0].vs, '2026001');
+eq('VS source 1/3: from EndToEndId, SS keeps leading zeros', rows02[0].ss, '0000');
+eq('VS source 1/3: from EndToEndId, KS keeps leading zeros', rows02[0].ks, '0308');
+eq('VS source 1/3: vsSource tagged "endtoend"', rows02[0].vsSource, 'endtoend');
+eq('VS source 1/3: entry 2 VS with no SS present', rows02[1].vs, '789');
+eq('VS source 1/3: entry 2 SS is empty when absent', rows02[1].ss, '');
+eq('VS source 3/3: from RmtInf/Ustrd free text "VS: 445566"', rows02[2].vs, '445566');
+eq('VS source 3/3: vsSource tagged "ustrd"', rows02[2].vsSource, 'ustrd');
+
+// ═══════════════════════════ parse(): .08 sample, 2 statements ═══════════
+
+const p08 = parse(SAMPLE_08_XML);
+ok('parse .08: ok is true', p08.ok === true);
+eq('parse .08: version detected as 001.08', p08.version, '001.08');
+eq('parse .08: two statements', p08.statements.length, 2);
+
+const rows08 = toRows(p08);
+eq('toRows .08: 5 rows total (3 + 1 bare + 2 batched - wait: 1+1+2 in stmt1, 1 in stmt2 = 5)', rows08.length, 5);
+
+const bareRow = rows08[0];
+eq('bare Ntry (no NtryDtls): still produces exactly one row', bareRow.amount, 200);
+eq('bare Ntry: counterparty name empty (nothing to read)', bareRow.counterpartyName, '');
+eq('bare Ntry: currency falls back to account Ccy (Amt had none)', bareRow.currency, 'EUR');
+
+const structuredRow = rows08[1];
+eq('VS source 2/3: from RmtInf/Strd/CdtrRefInf/Ref', structuredRow.vs, '445566');
+eq('VS source 2/3: vsSource tagged "structured"', structuredRow.vsSource, 'structured');
+eq('structured-ref row: signed amount negative (DBIT)', structuredRow.amount, -50);
+
+const batchRow1 = rows08[2];
+const batchRow2 = rows08[3];
+eq('batched Ntry with 2 TxDtls: produces 2 rows, first amount from its own TxDtls/Amt', batchRow1.amount, -30);
+eq('batched Ntry: second row amount from its own TxDtls/Amt', batchRow2.amount, -45.5);
+eq('batched Ntry: rows keep distinct counterparties', batchRow1.counterpartyName, 'Prvy dodavatel');
+eq('batched Ntry: rows keep distinct counterparties (2nd)', batchRow2.counterpartyName, 'Druhy dodavatel');
+eq('batched Ntry: entity in Ustrd decoded ("&amp;" -> "&")', batchRow1.message, 'Faktura A & B');
+eq('batched Ntry: both rows share the same parent entryIndex', batchRow1.entryIndex, batchRow2.entryIndex);
+
+const statement2Row = rows08[4];
+eq('second statement: its row is present too', statement2Row.statementId, 'SK3333000000000077777777-001-260906');
+
+// ═══════════════════════════ summarize() ═══════════════════════════════
+
+const s08 = summarize(p08);
+eq('summarize .08: aggregates 5 entries across 2 statements', s08.entryCount, 5);
+close('summarize .08: statement 1 balances (OPBD 500 + net 74.50 = CLBD 574.50)', s08.perStatement[0].balanceDiff, 0);
+eq('summarize .08: statement 1 balanceCheckOk true', s08.perStatement[0].balanceCheckOk, true);
+eq('summarize .08: statement 2 balanceCheckOk false (CLBD does not reconcile)', s08.perStatement[1].balanceCheckOk, false);
+close('summarize .08: statement 2 balanceDiff is -889.00', s08.perStatement[1].balanceDiff, -889, 0.01);
+eq('summarize .08: overall balanceCheckOk false when any statement fails', s08.balanceCheckOk, false);
+close('summarize .08: aggregated creditSum (200 + 10)', s08.creditSum, 210);
+close('summarize .08: aggregated debitSum (50 + 30 + 45.50)', s08.debitSum, 125.5);
+
+const s02 = summarize(p02);
+eq('summarize .02: balanceCheckOk true for the bundled sample', s02.balanceCheckOk, true);
+close('summarize .02: creditSum is 450.00', s02.creditSum, 450);
+close('summarize .02: debitSum is 210.70', s02.debitSum, 210.7);
+close('summarize .02: netSum is creditSum - debitSum', s02.netSum, 239.3);
+eq('summarize .02: openingBalance read from OPBD', s02.openingBalance, 1000);
+eq('summarize .02: closingBalance read from CLBD', s02.closingBalance, 1239.3);
+
+// multi-file merge: caller concatenates statements from two parse() calls
+const merged = { statements: [...p02.statements, ...p08.statements] };
+const sMerged = summarize(merged);
+eq('summarize: accepts a hand-merged {statements} object (multi-file upload)', sMerged.statementCount, 3);
+eq('summarize: merged entryCount is the sum of all three statements', sMerged.entryCount, 3 + 5);
+const rowsMerged = toRows(merged);
+eq('toRows: accepts the same hand-merged object', rowsMerged.length, 8);
+
+// defensive: missing/invalid input never throws
+deepEq('toRows(null) returns an empty array', toRows(null), []);
+deepEq('toRows(undefined) returns an empty array', toRows(undefined), []);
+eq('summarize(null) returns ok:false with zeroed totals', summarize(null).ok, false);
+eq('summarize(null): entryCount is 0', summarize(null).entryCount, 0);
+
+// ═══════════════════════════ tolerant parsing / bad input ═══════════════
+
+const pNotCamt = parse(NOT_CAMT_XML);
+eq('parse: well-formed XML but not camt.053 -> ok false', pNotCamt.ok, false);
+eq('parse: BkToCstmrStmt missing is reported in errors', pNotCamt.errors.some((e) => e.includes('BkToCstmrStmt')), true);
+eq('parse: unrecognized namespace -> version "other"', pNotCamt.version, 'other');
+
+const pMalformed = parse(MALFORMED_XML);
+eq('parse: unclosed tags -> malformed true', pMalformed.malformed, true);
+ok('parse: unclosed tags -> at least one parser error reported', pMalformed.errors.length > 0);
+eq('parse: malformed input -> ok false', pMalformed.ok, false);
+
+const pGarbage = parse(GARBAGE);
+eq('parse: plain text with no XML -> ok false', pGarbage.ok, false);
+ok('parse: plain text -> errors reported', pGarbage.errors.length > 0);
+
+const pEmpty = parse('');
+eq('parse: empty string -> ok false, no throw', pEmpty.ok, false);
+
+// ═══════════════════════════ bankFromBic() ═══════════════════════════════
+
+eq('bankFromBic: TATRSKBX -> tatrabanka', bankFromBic('TATRSKBX'), 'tatrabanka');
+eq('bankFromBic: GIBASKBX -> slsp', bankFromBic('GIBASKBX'), 'slsp');
+eq('bankFromBic: SUBASKBX -> vub', bankFromBic('SUBASKBX'), 'vub');
+eq('bankFromBic: CEKOSKBX -> csob', bankFromBic('CEKOSKBX'), 'csob');
+eq('bankFromBic: unknown BIC -> "iná"', bankFromBic('ZZZZZZZZ'), 'iná');
+eq('bankFromBic: empty -> empty string', bankFromBic(''), '');
+eq('bankFromBic: lowercase input still matches (case-insensitive)', bankFromBic('tatrskbx'), 'tatrabanka');
+
+// ═══════════════════════════ toCsv() ═════════════════════════════════════
+
+const csvRows = [
+  { bookingDate: '2026-09-02', amount: 450, currency: 'EUR', vs: '123', message: 'Faktura "2026"; polozka\nriadok2' },
+  { bookingDate: '2026-09-03', amount: -1234.5, currency: 'EUR', vs: '456', message: 'bez specialnych znakov' },
+];
+
+const csvDefault = toCsv(csvRows, { columns: ['bookingDate', 'amount', 'vs', 'message'] });
+eq('toCsv: has UTF-8 BOM by default', csvDefault.charCodeAt(0), 0xfeff);
+const csvNoBom = toCsv(csvRows, { columns: ['bookingDate', 'amount', 'vs', 'message'], bom: false });
+ok('toCsv: bom:false omits the BOM', csvNoBom.charCodeAt(0) !== 0xfeff);
+includes('toCsv: header row uses column labels', csvNoBom, 'Dátum zaúčtovania;Suma;VS;Správa pre príjemcu');
+includes('toCsv: field with ";", quote and newline is quoted and doubled', csvNoBom, '"Faktura ""2026""; polozka\nriadok2"');
+includes('toCsv: plain field is left unquoted', csvNoBom, 'bez specialnych znakov');
+includes('toCsv: amount formatted to 2 decimals with "." by default', csvNoBom, '450.00');
+includes('toCsv: negative amount formatted with "." by default', csvNoBom, '-1234.50');
+const csvComma = toCsv(csvRows, { columns: ['amount'], bom: false, decimalComma: true });
+includes('toCsv: decimalComma:true swaps "." for ","', csvComma, '450,00');
+ok('toCsv: decimalComma:true never leaves a bare "." in an amount', !csvComma.includes('450.00'));
+const csvTab = toCsv(csvRows, { columns: ['bookingDate', 'amount'], bom: false, delimiter: '\t' });
+includes('toCsv: custom delimiter (tab) used between columns', csvTab, '2026-09-02\t450.00');
+const csvSubset = toCsv(rows02, { columns: ['vs'], bom: false });
+eq('toCsv: columns option restricts to just the requested column', csvSubset.split('\r\n')[0], 'VS');
+const csvNullAmount = toCsv([{ amount: null }], { columns: ['amount'], bom: false });
+eq('toCsv: null amount renders as an empty cell, not "null" or "NaN"', csvNullAmount.split('\r\n')[1], '');
+eq('toCsv: line endings are CRLF', csvNoBom.includes('\r\n'), true);
+eq('toCsv: full-run CSV on the .02 sample has header + 3 data lines', toCsv(rows02, { bom: false }).split('\r\n').length, 4);
+eq('COLUMNS: 18 columns defined', COLUMNS.length, 18);
+
+// ═══════════════════════════ tolerant XML parser (internals) ════════════
+
+const treeOk = parseXml('<a x="1"><b>hi &amp; bye</b><c/></a>');
+eq('parseXml: well-formed input is not malformed', treeOk.malformed, false);
+const aNode = treeOk.root.children[0].node;
+eq('parseXml: attribute value read', aNode.attrs.x, '1');
+eq('parseXml: entity decoded in text content', aNode.children[0].node.children[0].text, 'hi & bye');
+eq('parseXml: self-closing element has no children', aNode.children[1].node.children.length, 0);
+
+// ═══════════════════════════ xlsx-writer.js ══════════════════════════════
+
+eq('crc32: matches the standard "123456789" check value (0xCBF43926)', crc32(new TextEncoder().encode('123456789')), 0xcbf43926);
+eq('crc32: empty input is 0', crc32(new Uint8Array(0)), 0);
+
+eq('colLetter: 0 -> A', colLetter(0), 'A');
+eq('colLetter: 25 -> Z', colLetter(25), 'Z');
+eq('colLetter: 26 -> AA', colLetter(26), 'AA');
+eq('colLetter: 27 -> AB', colLetter(27), 'AB');
+eq('colLetter: 51 -> AZ', colLetter(51), 'AZ');
+eq('colLetter: 701 -> ZZ', colLetter(701), 'ZZ');
+eq('colLetter: 702 -> AAA', colLetter(702), 'AAA');
+
+const zipBytes = buildZip([
+  { name: 'a.xml', data: new TextEncoder().encode('<x/>') },
+  { name: 'b.xml', data: new TextEncoder().encode('<y/>') },
+]);
+eq('buildZip: starts with the local file header signature (PK\\x03\\x04)', zipBytes[0] === 0x50 && zipBytes[1] === 0x4b && zipBytes[2] === 0x03 && zipBytes[3] === 0x04, true);
+function countLocalHeaders(bytes) {
+  let n = 0;
+  for (let i = 0; i < bytes.length - 3; i++) {
+    if (bytes[i] === 0x50 && bytes[i + 1] === 0x4b && bytes[i + 2] === 0x03 && bytes[i + 3] === 0x04) n++;
+  }
+  return n;
+}
+eq('buildZip: exactly one local file header per input file', countLocalHeaders(zipBytes), 2);
+function hasEocd(bytes) {
+  for (let i = 0; i < bytes.length - 3; i++) {
+    if (bytes[i] === 0x50 && bytes[i + 1] === 0x4b && bytes[i + 2] === 0x05 && bytes[i + 3] === 0x06) return true;
+  }
+  return false;
+}
+ok('buildZip: end-of-central-directory record present', hasEocd(zipBytes));
+
+const xlsxBytes = buildXlsx('camt053', COLUMNS.map((c) => c.label), [
+  ['2026-09-02', 450], ['2026-09-03', -89.9],
+]);
+ok('buildXlsx: produces a non-trivial byte array', xlsxBytes.length > 200);
+eq('buildXlsx: starts with a ZIP signature', xlsxBytes[0] === 0x50 && xlsxBytes[1] === 0x4b, true);
+eq('buildXlsx: exactly 5 parts (5 local file headers)', countLocalHeaders(xlsxBytes), 5);
+ok('buildXlsx: end-of-central-directory record present', hasEocd(xlsxBytes));
+
+// central-directory entry count matches file count (2 bytes, little-endian,
+// 10 bytes before the very end of the EOCD record's fixed 22-byte tail).
+function eocdEntryCount(bytes) {
+  const eocdStart = bytes.length - 22; // no zip comment written, so it's fixed-size
+  return bytes[eocdStart + 10] | (bytes[eocdStart + 11] << 8);
+}
+eq('buildXlsx: EOCD reports 5 entries in the central directory', eocdEntryCount(xlsxBytes), 5);
+
+// ═══════════════════════════ summary ═══════════════════════════════════
+
+console.log(`\n${pass} passed, ${fail} failed (${pass + fail} total assertions)`);
+if (fail > 0) {
+  console.log('\nFailures:');
+  for (const f of failures) console.log(' - ' + f);
+  process.exit(1);
+}

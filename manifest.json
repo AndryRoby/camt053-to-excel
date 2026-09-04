@@ -1,0 +1,31 @@
+{
+  "name": "camt.053 výpis banky do Excelu",
+  "short_name": "camt.053 do Excelu",
+  "description": "Prevedie výpis z účtu vo formáte camt.053 XML (Tatra banka, SLSP, VÚB, ČSOB) na tabuľku CSV/Excel priamo v prehliadači. Zadarmo, nič sa neodosiela.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "lang": "sk",
+  "background_color": "#f6f2ea",
+  "theme_color": "#f6f2ea",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
