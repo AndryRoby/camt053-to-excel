@@ -29,12 +29,21 @@
   "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, or ČSOB into a CSV/Excel table. Upload one or more files or paste the XML directly; nothing you upload leaves the browser.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
-  "offers": {
-    "@type": "Offer",
-    "name": "Zadarmo",
-    "price": "0",
-    "priceCurrency": "EUR"
-  },
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Zadarmo",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro (cez balík Bankové nástroje)",
+      "price": "9",
+      "priceCurrency": "EUR",
+      "url": "https://arling.sk/bankove-nastroje/#pro"
+    }
+  ],
   "author": {
     "@type": "Organization",
     "name": "ARLing s. r. o.",
@@ -103,6 +112,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "camt.053.001.02 (menný priestor urn:iso:std:iso:20022:tech:xsd:camt.053.001.02), ktorý ako jediný formát výpisu pre účtovníctvo posielajú Tatra banka, SLSP, VÚB aj ČSOB, a novšiu verziu camt.053.001.08. Nástroj menný priestor v súbore rozpozná automaticky; polia, ktoré číta (dátumy, sumy, protistrana, referencie), sú v oboch verziách rovnaké."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Čo dostanem v Pro?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky Bankové nástroje pre účtovníkov, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb."
       }
     }
   ]
@@ -194,6 +211,31 @@
   .icon-btn.primary:hover { background:var(--ink); border-color:var(--ink); color:var(--paper); }
   .icon-btn:disabled { opacity:.55; cursor:default; }
   .icon-btn:disabled:hover { border-color:var(--line); color:var(--ink-2); }
+  .pane-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+  /* Pro */
+  .pro-badge { display:inline-flex; align-items:center; font:700 10px/1 var(--sans); letter-spacing:.04em; color:var(--accent); border:1px solid var(--accent); border-radius:3px; padding:3px 6px; text-decoration:none; margin-left:6px; vertical-align:1px; }
+  .pro-badge:hover { background:var(--accent); color:#fff; }
+  .pro-purchase { display:flex; flex-wrap:wrap; gap:24px; margin-top:28px; align-items:stretch; }
+  .pro-cta { border:1px solid var(--line); background:var(--paper-2); padding:24px; flex:1 1 280px; min-width:0; }
+  .pro-cta p { margin:0 0 16px; color:var(--ink-2); font-size:15px; }
+  .pro-cta .btn { display:inline-block; }
+  .pro-licence-box { border:1px solid var(--line); background:var(--paper); padding:20px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; flex:1 1 320px; }
+  .pro-licence-status { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13.5px; color:var(--ink-2); }
+  .pro-licence-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .pro-licence-manual { border-top:1px solid var(--line); padding-top:14px; }
+  .pro-licence-manual label { font-size:12px; color:var(--muted); display:block; margin-bottom:8px; }
+  .pro-licence-manual-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .pro-licence-manual-row input { flex:1 1 220px; min-width:0; background:var(--paper-2); border:1px solid var(--line); border-radius:4px; padding:9px 10px; font:12.5px/1.4 var(--mono); color:var(--ink); }
+  .pro-licence-manual-row input:focus { border-color:var(--accent); outline:none; }
+  .pro-licence-error { color:var(--accent); font-size:12px; margin:8px 0 0; }
+  .pro-licence-error:empty { display:none; }
+  .pro-history-panel { border:1px solid var(--line); border-top:none; background:var(--paper-2); padding:10px 14px; display:flex; flex-direction:column; gap:8px; max-height:220px; overflow:auto; }
+  .pro-history-item { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .pro-history-item:last-child { border-bottom:none; padding-bottom:0; }
+  .pro-history-meta { color:var(--ink-2); overflow-wrap:anywhere; }
+  .pro-history-meta b { color:var(--ink); }
+  .pro-history-empty { color:var(--muted); font-size:12.5px; margin:0; }
 
   /* Input pane */
   #input-body { flex:1; overflow:auto; padding:18px; display:flex; flex-direction:column; gap:18px; min-height:420px; }
@@ -321,6 +363,7 @@
       <a href="#problem">Ako to funguje</a>
       <a href="#playground">Previesť</a>
       <a href="#endpoint">API</a>
+      <a href="#pro">Pro</a>
       <a href="#faq">Otázky</a>
     </nav>
   </div>
@@ -383,7 +426,7 @@
 
             <div id="input-body">
               <div class="form-section">
-                <div class="form-section-title">Súbor(y) camt.053<span class="hint-inline">.xml, viac naraz, spolu max. 20 MB</span></div>
+                <div class="form-section-title">Súbor(y) camt.053<span class="hint-inline">.xml, max. 20 MB; viac súborov naraz <a class="pro-badge" href="#pro">PRO</a></span></div>
                 <div class="field">
                   <input type="file" id="f-file" accept=".xml,text/xml,application/xml" multiple />
                 </div>
@@ -419,8 +462,12 @@
           <div class="pane">
             <div class="pane-head">
               <span class="pane-title">Výstup</span>
-              <span class="status-pill" id="status-pill">čaká sa</span>
+              <div class="pane-actions">
+                <button class="icon-btn" id="pro-history-btn" type="button" disabled>história</button><a class="pro-badge" href="#pro">PRO</a>
+                <span class="status-pill" id="status-pill">čaká sa</span>
+              </div>
             </div>
+            <div class="pro-history-panel" id="pro-history-panel" hidden></div>
             <div id="output" class="output">
               <p class="placeholder">nahrajte alebo vložte výpis, stlačte <span class="kbd">Previesť</span> alebo <span class="kbd">⌘↵</span><span class="blink"></span></p>
             </div>
@@ -464,9 +511,52 @@
     </div>
   </section>
 
-  <section id="pricing">
+  <section id="pro">
     <div class="wrap">
       <p class="kicker">04</p>
+      <h2>Pro: viac súborov naraz a história.</h2>
+      <p class="sub">Prevod jedného výpisu na CSV alebo Excel je a zostáva úplne zadarmo, bez limitu. Pro pridá spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.</p>
+
+      <ol class="rules">
+        <li>
+          <b>Viac súborov naraz.</b>
+          <p>Nahrajte viac výpisov naraz a spracujte ich v jednom kroku namiesto po jednom. Bez Pro sa spracuje vždy len prvý súbor.</p>
+        </li>
+        <li>
+          <b>História konverzií.</b>
+          <p>Posledné spracované výpisy (názov, dátum, banka, počet položiek) uložené vo vašom prehliadači, dostupné cez tlačidlo „história“ pri výstupe.</p>
+        </li>
+      </ol>
+
+      <div class="pro-purchase">
+        <div class="pro-cta">
+          <p><b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne, DPH v cene, faktúru pošle Stripe.</p>
+          <a class="btn btn-solid" href="https://arling.sk/bankove-nastroje/#pro" data-umami-event="buy_click" data-umami-event-plan="bundle">Kúpiť Pro na arling.sk/bankove-nastroje</a>
+        </div>
+        <div class="pro-licence-box">
+          <div class="pro-licence-status">
+            <span class="status-pill" id="pro-licence-pill">bez licencie</span>
+            <span id="pro-licence-detail"></span>
+          </div>
+          <div class="pro-licence-actions" id="pro-licence-actions-active" hidden>
+            <button class="icon-btn" id="pro-licence-remove-btn" type="button">Odstrániť licenciu</button>
+          </div>
+          <div class="pro-licence-manual">
+            <label for="pro-licence-input">Licenciu ste kúpili na inom počítači alebo v inom nástroji? Vložte licenčný kľúč sem.</label>
+            <div class="pro-licence-manual-row">
+              <input type="text" id="pro-licence-input" placeholder="Licenčný kľúč (dlhý reťazec s bodkou uprostred)" spellcheck="false" autocomplete="off" />
+              <button class="icon-btn primary" id="pro-licence-activate-btn" type="button">Aktivovať</button>
+            </div>
+            <p class="pro-licence-error" id="pro-licence-error"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <p class="kicker">05</p>
       <h2>Zadarmo. Bez limitov, natrvalo.</h2>
       <p class="sub">Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Bez účtu, bez platby, bez limitu na počet výpisov ani stiahnutí.</p>
       <div class="ask">
@@ -492,7 +582,7 @@
 
   <section id="faq">
     <div class="wrap">
-      <p class="kicker">05</p>
+      <p class="kicker">06</p>
       <h2>Otázky, ktoré ľudia naozaj hľadajú.</h2>
       <p class="sub">Priame odpovede na otázky o prevode camt.053 výpisu na tabuľku.</p>
 
@@ -520,6 +610,10 @@
         <summary>Aké verzie camt.053 podporujete?</summary>
         <p><code>camt.053.001.02</code> (menný priestor <code>urn:iso:std:iso:20022:tech:xsd:camt.053.001.02</code>), ktorý ako jediný formát výpisu pre účtovníctvo posielajú Tatra banka, SLSP, VÚB aj ČSOB, a novšiu verziu <code>camt.053.001.08</code>. Nástroj menný priestor v súbore rozpozná automaticky; polia, ktoré číta (dátumy, sumy, protistrana, referencie), sú v oboch verziách rovnaké.</p>
       </details>
+      <details>
+        <summary>Čo dostanem v Pro?</summary>
+        <p>Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.</p>
+      </details>
     </div>
   </section>
 </main>
@@ -528,7 +622,7 @@
   <div class="wrap cols">
     <div><b>ARLing s. r. o.</b><br>Ivanská cesta 32E<br>821 04 Bratislava, Slovensko</div>
     <div>IČO 56583486<br>IČ DPH SK2122352100<br><a href="mailto:andrej@arling.sk">andrej@arling.sk</a></div>
-    <div>Sesterské nástroje: <a href="https://arling.sk/sepa-pain001-doctor/">SEPA pain.001 Doctor</a> · <a href="https://arling.sk/sepa-pain001-generator/">SEPA pain.001 Generátor</a><br><a href="https://arling.sk/">Všetky nástroje ARLing</a> · <a href="llms.txt">llms.txt</a> · <a href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener">GitHub</a> · <a href="https://arling.sk/privacy/">Súkromie</a></div>
+    <div>Sesterské nástroje: <a href="https://arling.sk/sepa-pain001-doctor/">SEPA pain.001 Doctor</a> · <a href="https://arling.sk/sepa-pain001-generator/">SEPA pain.001 Generátor</a> · <a href="https://arling.sk/parovac-platieb/">Párovač platieb</a><br>Pro pre všetky štyri: <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a><br><a href="https://arling.sk/">Všetky nástroje ARLing</a> · <a href="llms.txt">llms.txt</a> · <a href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener">GitHub</a> · <a href="https://arling.sk/privacy/">Súkromie</a></div>
   </div>
   <p class="wrap footer-note">Nič neopúšťa váš prehliadač okrem anonymných počtov použitia cez self-hosted Umami (a e-mailu, ak sa prihlásite na odber nižšie).</p>
   <div class="wrap">
@@ -540,8 +634,33 @@
 <script type="module">
   import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML } from './camt053.js';
   import { buildXlsx } from './xlsx-writer.js';
+  import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
 
   const $ = (id) => document.getElementById(id);
+
+  // ── Pro: history (metadata only, no file content kept) ─────────────────
+  const HISTORY_KEY = 'arling_camt053_pro_history';
+  const HISTORY_MAX = 20;
+
+  function hasLocalStorage() {
+    try { return typeof localStorage !== 'undefined' && localStorage !== null; } catch (e) { return false; }
+  }
+  function loadHistory() {
+    if (!hasLocalStorage()) return [];
+    try {
+      const arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function addHistoryEntry(entry) {
+    if (!hasLocalStorage()) return;
+    try {
+      const list = loadHistory();
+      list.unshift({ date: new Date().toISOString(), name: entry.name || '', bank: entry.bank || '', rows: entry.rows || 0 });
+      while (list.length > HISTORY_MAX) list.pop();
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
 
   const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
   const TABLE_ROW_LIMIT = 200;
@@ -563,6 +682,11 @@
   let loadedFiles = []; // {name, xmlText, size}
   let lastResults = []; // {name, parsed, rows, summary}
   const checkedColumns = new Set(DEFAULT_ON);
+
+  // Pro state: last isValid() result, re-checked on every page load (never
+  // trust a stale value across a reload). Gates "viac súborov naraz" (see
+  // convert() below) and the "história" panel.
+  let licenceState = { valid: false, reason: 'malformed', payload: null };
 
   // ── safe umami wrapper: analytics must never break the tool ────────────
   function track(name, data) {
@@ -745,13 +869,13 @@
     </div>`;
   }
 
-  function renderOutput(results) {
+  function renderOutput(results, noteHtml) {
     lastResults = results;
     const okResults = results.filter((r) => r.parsed.ok);
     const allBtn = results.length > 1 && okResults.length > 0
       ? `<div style="display:flex; justify-content:flex-end; margin-bottom:10px;"><button class="icon-btn primary" id="download-all-btn" type="button">Stiahnuť všetky ako CSV (${okResults.length})</button></div>`
       : '';
-    output.innerHTML = allBtn + results.map((r, i) => buildEntryHtml(r, i)).join('');
+    output.innerHTML = (noteHtml || '') + allBtn + results.map((r, i) => buildEntryHtml(r, i)).join('');
 
     results.forEach((entry, i) => {
       if (!entry.parsed.ok) return;
@@ -818,14 +942,22 @@
       return;
     }
 
-    const results = sources.map((s) => {
+    // "Viac súborov naraz" is Pro; free spracuje vždy len prvý zdroj.
+    let noteHtml = '';
+    let effectiveSources = sources;
+    if (!licenceState.valid && sources.length > 1) {
+      effectiveSources = sources.slice(0, 1);
+      noteHtml = `<div class="warn-banner">Spracoval sa len prvý súbor (${esc(effectiveSources[0].name)}). Spracovanie viacerých súborov naraz je súčasť <a href="#pro">Pro</a>.</div>`;
+    }
+
+    const results = effectiveSources.map((s) => {
       const parsed = parse(s.xmlText);
       const rows = parsed.ok ? toRows(parsed) : [];
       const summary = parsed.ok ? summarize(parsed) : null;
       return { name: s.name, parsed, rows, summary };
     });
 
-    renderOutput(results);
+    renderOutput(results, noteHtml);
 
     const okResults = results.filter((r) => r.parsed.ok);
     const totalRows = okResults.reduce((n, r) => n + r.rows.length, 0);
@@ -836,6 +968,11 @@
     if (okResults.length > 0) {
       const bank = okResults[0].parsed.bank || 'neznáma';
       track('convert', { bank, entries: txBucket(totalRows) });
+    }
+
+    if (licenceState.valid) {
+      okResults.forEach((r) => addHistoryEntry({ name: r.name, bank: r.parsed.bank || '', rows: r.rows.length }));
+      refreshHistoryPanelIfOpen();
     }
   }
   convertBtn.addEventListener('click', convert);
@@ -852,6 +989,128 @@
     setStatusPill('', 'čaká sa');
     lastResults = [];
   });
+
+  // ── Pro: licencia ────────────────────────────────────────────────────
+  function formatSkDate(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? `${m[3]}.${m[2]}.${m[1]}` : (iso || '');
+  }
+
+  function licenceReasonLabel(reason) {
+    return {
+      expired: 'licencia vypršala', signature: 'neplatný kľúč', plan: 'kľúč pre iný produkt',
+      malformed: 'neplatný kľúč', unsupported: 'prehliadač nepodporovaný',
+    }[reason] || 'neplatná licencia';
+  }
+
+  function licenceReasonDetail(reason) {
+    if (reason === 'unsupported') return 'Pro vyžaduje aktuálny prehliadač s podporou WebCrypto Ed25519 (Chrome, Firefox alebo Safari 17+). Aktualizujte prehliadač a skúste znova.';
+    if (reason === 'expired') return 'Táto licencia už vypršala. Kúpou novej licencie na arling.sk/bankove-nastroje ju obnovíte.';
+    if (reason === 'plan') return 'Tento kľúč platí pre iný produkt ARLing, nie pre balík Bankové nástroje.';
+    if (reason === 'malformed') return 'Kľúč sa nepodarilo prečítať, skontrolujte, či ste ho skopírovali celý.';
+    return 'Kľúč sa nepodarilo overiť.';
+  }
+
+  function applyProLockState() {
+    const unlocked = licenceState.valid;
+    $('pro-history-btn').disabled = !unlocked;
+    if (!unlocked) $('pro-history-panel').hidden = true;
+  }
+
+  async function refreshLicenceUI() {
+    const stored = licenceLoad();
+    licenceState = stored ? await licenceIsValid(stored) : { valid: false, reason: 'malformed', payload: null };
+
+    const pill = $('pro-licence-pill');
+    const detail = $('pro-licence-detail');
+    const activeActions = $('pro-licence-actions-active');
+    if (licenceState.valid) {
+      pill.className = 'status-pill pass';
+      pill.textContent = 'Pro aktívne';
+      detail.textContent = `Licencia platná do ${formatSkDate(licenceState.payload.e)}.`;
+      activeActions.hidden = false;
+    } else {
+      pill.className = 'status-pill' + (stored ? ' fail' : '');
+      pill.textContent = stored ? licenceReasonLabel(licenceState.reason) : 'bez licencie';
+      detail.textContent = stored ? licenceReasonDetail(licenceState.reason) : '';
+      activeActions.hidden = !stored;
+    }
+    applyProLockState();
+  }
+
+  async function handleSessionIdFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const sid = params.get('session_id');
+    if (!sid) return;
+    const url = new URL(location.href);
+    url.searchParams.delete('session_id');
+    history.replaceState(null, '', url.pathname + url.search + url.hash);
+
+    $('pro-licence-pill').className = 'status-pill';
+    $('pro-licence-pill').textContent = 'aktivujem…';
+    const res = await licenceClaim(sid);
+    if (res && res.ok && res.licence) {
+      licenceSave(res.licence);
+      await refreshLicenceUI();
+      track('licence_activated', { plan: res.plan || '' });
+    } else {
+      await refreshLicenceUI();
+      $('pro-licence-detail').textContent = 'Aktivácia zlyhala. Skúste vložiť kľúč ručne nižšie, alebo napíšte na andrej@arling.sk.';
+    }
+    const proSection = document.getElementById('pro');
+    if (proSection) proSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $('pro-licence-activate-btn').addEventListener('click', async () => {
+    const input = $('pro-licence-input');
+    const err = $('pro-licence-error');
+    const key = (input.value || '').trim();
+    err.textContent = '';
+    if (!key) { err.textContent = 'Vložte licenčný kľúč.'; return; }
+    const r = await licenceIsValid(key);
+    if (!r.valid) { err.textContent = licenceReasonDetail(r.reason); return; }
+    licenceSave(key);
+    input.value = '';
+    await refreshLicenceUI();
+    track('licence_activated', { plan: r.payload.p });
+  });
+
+  $('pro-licence-remove-btn').addEventListener('click', () => {
+    if (!window.confirm('Odstrániť licenciu z tohto prehliadača?')) return;
+    licenceClear();
+    refreshLicenceUI();
+  });
+
+  // ── Pro: história ────────────────────────────────────────────────────
+  function renderHistoryPanel() {
+    const panel = $('pro-history-panel');
+    const items = loadHistory();
+    if (items.length === 0) {
+      panel.innerHTML = '<p class="pro-history-empty">Zatiaľ žiadna história. Prekonvertujte prvý výpis.</p>';
+      return;
+    }
+    panel.innerHTML = items.map((h) => `<div class="pro-history-item">
+        <span class="pro-history-meta"><b>${esc(h.name || '(bez názvu)')}</b> · ${esc(new Date(h.date).toLocaleString('sk-SK'))} · ${h.rows} riadkov${h.bank ? ' · ' + esc(h.bank) : ''}</span>
+      </div>`).join('');
+  }
+
+  function refreshHistoryPanelIfOpen() {
+    const panel = $('pro-history-panel');
+    if (!panel.hidden) renderHistoryPanel();
+  }
+
+  $('pro-history-btn').addEventListener('click', () => {
+    if (!licenceState.valid) return;
+    const panel = $('pro-history-panel');
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) {
+      renderHistoryPanel();
+      track('pro_feature', { name: 'history_open' });
+    }
+  });
+
+  // ── init (licencia) ──────────────────────────────────────────────────
+  refreshLicenceUI().then(handleSessionIdFromUrl);
 </script>
 <script src="subscribe.js" defer></script>
 </body>
