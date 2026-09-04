@@ -1,6 +1,8 @@
 # camt.053 výpis banky do Excelu: prevod bankového výpisu na tabuľku
 
-> Free, client-side tool that turns a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, or ČSOB into a plain CSV/Excel table.
+**English summary:** a free, client-side tool that turns a camt.053 XML bank statement (ISO 20022) into a plain CSV/Excel table, entirely in the browser. Beyond Tatra banka/SLSP/VÚB/ČSOB in Slovakia, camt.053 is the standard electronic statement format at any bank in Germany, Austria and Switzerland (Sparkasse, Volksbank, Deutsche Bank, Commerzbank, Raiffeisen, Erste, UBS, PostFinance, and others), so the page itself now ships in Slovak, English and German: a language switcher in the header (also reachable via `?lang=sk|en|de`) translates the hero, playground labels, column headers, FAQ, and Pro section, and switches the CSV export defaults (decimal comma + semicolon for SK/DE, decimal point + comma for EN; date format dd.mm.yyyy for SK/DE, yyyy-mm-dd for EN) and the accounting-software CSV presets (DATEV/Lexware/sevDesk generic layouts, offered for DE/EN).
+
+> Free, client-side tool that turns a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, ČSOB, or any German, Austrian or Swiss bank into a plain CSV/Excel table.
 
 No account, no backend, no upload of your statement data: everything from reading the XML to building the table runs in your browser.
 
@@ -193,12 +195,13 @@ that carries your statement data anywhere: read `index.html` and
 
 ## Who it's for
 
-Slovak accountants, bookkeepers, and company directors who download a
-camt.053 statement from Tatra banka, SLSP, VÚB, or ČSOB internet
-banking and need the transactions as a table: reconciling payments
-against invoices by variabilný symbol, a manual check on what actually
-posted, or a bookkeeping process that has no direct camt.053 importer
-of its own.
+Accountants, bookkeepers, and company directors in Slovakia, Germany,
+Austria and Switzerland who download a camt.053 statement from
+internet banking (Tatra banka, SLSP, VÚB, ČSOB, or any DE/AT/CH bank)
+and need the transactions as a table: reconciling payments against
+invoices (by variabilný symbol in Slovakia, or the Verwendungszweck/
+remittance text elsewhere), a manual check on what actually posted, or
+a bookkeeping process that has no direct camt.053 importer of its own.
 
 ## FAQ
 

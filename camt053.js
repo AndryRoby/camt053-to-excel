@@ -613,18 +613,24 @@ function formatAmountForCsv(amount, decimalComma) {
  * default delimiter here; decimalComma additionally swaps "." for "," in
  * amounts to match a Slovak locale Excel install. Returns the text with a
  * UTF-8 BOM prefixed by default (bom:false to omit), CRLF line endings.
+ *
+ * opts.labels (optional): a { [columnKey]: label } map that overrides
+ * COLUMNS' own (Slovak) c.label for the header row only, so a caller can
+ * supply a translated header (see i18n.js's columnLabelsMap()) without any
+ * other change to this engine.
  */
 function toCsv(rows, opts) {
   const o = opts || {};
   const delimiter = o.delimiter || ';';
   const decimalComma = !!o.decimalComma;
   const bom = o.bom !== false;
+  const labels = o.labels && typeof o.labels === 'object' ? o.labels : null;
   const columns = Array.isArray(o.columns) && o.columns.length
     ? COLUMNS.filter((c) => o.columns.includes(c.key))
     : COLUMNS;
 
   const lines = [];
-  lines.push(columns.map((c) => csvCell(c.label, delimiter)).join(delimiter));
+  lines.push(columns.map((c) => csvCell(labels && labels[c.key] ? labels[c.key] : c.label, delimiter)).join(delimiter));
   (rows || []).forEach((r) => {
     const line = columns.map((c) => {
       const raw = c.key === 'amount' || c.key === 'charges' ? formatAmountForCsv(r[c.key], decimalComma) : r[c.key];
