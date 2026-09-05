@@ -181,10 +181,16 @@ export const DICT = {
     en: 'The most recently processed statements (name, date, bank, entry count) stored in your browser, available via the “history” button by the output.',
     de: 'Die zuletzt verarbeiteten Auszüge (Name, Datum, Bank, Anzahl der Positionen) werden in Ihrem Browser gespeichert und sind über die Schaltfläche „Verlauf“ bei der Ausgabe abrufbar.',
   },
+  's4.r3.title': { sk: 'Prednostná podpora e-mailom.', en: 'Priority email support.', de: 'Bevorzugter E-Mail-Support.' },
+  's4.r3.body': {
+    sk: 'Otázka alebo prípad, ktorý si nástroj pomýlil? Odpoveď prednostne, priamo od autora nástroja.',
+    en: 'A question, or a case the tool got wrong? A priority reply, directly from the tool’s author.',
+    de: 'Eine Frage oder ein Fall, den das Tool falsch verarbeitet hat? Bevorzugte Antwort, direkt vom Autor des Tools.',
+  },
   's4.cta.p': {
-    sk: '<b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne, DPH v cene, faktúru pošle Stripe.',
-    en: '<b>One licence for four tools.</b> Pro for camt.053 do Excelu is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generátor and Párovač platieb: €9/month or €79/year, VAT included, Stripe sends the invoice.',
-    de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 do Excelu wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA pain.001 Generátor und Párovač platieb: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr, inkl. MwSt., die Rechnung stellt Stripe.',
+    sk: '<b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky štyri nástroje, DPH v cene, faktúru pošle Stripe.',
+    en: '<b>One licence for four tools.</b> Pro for camt.053 do Excelu is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generátor and Párovač platieb: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.',
+    de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 do Excelu wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA pain.001 Generátor und Párovač platieb: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.',
   },
   's4.cta.btn': { sk: 'Kúpiť Pro na arling.sk/bankove-nastroje', en: 'Buy Pro at arling.sk/bankove-nastroje', de: 'Pro kaufen auf arling.sk/bankove-nastroje' },
   's4.licence.manual.label': {
@@ -195,6 +201,8 @@ export const DICT = {
   's4.licence.input.placeholder': { sk: 'Licenčný kľúč (dlhý reťazec s bodkou uprostred)', en: 'Licence key (a long string with a dot in the middle)', de: 'Lizenzschlüssel (langer Text mit Punkt in der Mitte)' },
   's4.licence.activate.btn': { sk: 'Aktivovať', en: 'Activate', de: 'Aktivieren' },
   's4.licence.remove.btn': { sk: 'Odstrániť licenciu', en: 'Remove licence', de: 'Lizenz entfernen' },
+  's4.sticky.text': { sk: 'Pro pre všetky štyri nástroje: 9 €/mesiac alebo 79 €/rok.', en: 'Pro for all four tools: €9/month or €79/year.', de: 'Pro für alle vier Tools: 9 €/Monat oder 79 €/Jahr.' },
+  's4.sticky.btn': { sk: 'Kúpiť Pro', en: 'Buy Pro', de: 'Pro kaufen' },
 
   // ── section 05: pricing / ask ────────────────────────────────────────
   's5.h2': { sk: 'Zadarmo. Bez limitov, natrvalo.', en: 'Free. No limits, for good.', de: 'Kostenlos. Ohne Limits, dauerhaft.' },
