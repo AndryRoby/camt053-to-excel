@@ -129,7 +129,15 @@
       "name": "Was bekomme ich mit Pro?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite Banktools für Buchhalter aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den Pro-Abschnitt."
+        "text": "Einen Export nach MT940 (.sta) und in das Format DATEV-Buchungsstapel (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite Banktools für Buchhalter aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den Pro-Abschnitt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Wandeln Sie camt.053 auch für DATEV in MT940 um?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja, als Pro-Funktion. Deutsche Banken liefern den Kontoauszug für die Buchhaltung seit November 2025 nur noch als camt.053, MT940 wurde aus dem Regelwerk der Kreditwirtschaft gestrichen. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten camt.053-Dateiimport, der manuelle Dateiimport erwartet nach wie vor MT940 (der kostenpflichtige DATEV-Bankdatenservice deckt camt.053 auf einem anderen Weg ab). Dieses Tool kann einen Auszug daher nach MT940 (.sta) für den manuellen DATEV-Import oder andere ältere Software umwandeln, und ebenso direkt in das Format DATEV-Buchungsstapel (EXTF-CSV). Beide Exporte laufen wie der Rest des Tools im Browser, nichts wird hochgeladen. Prüfen Sie vor dem ersten Import die Einstellung von Bankkonto (Konto) und Gegenkonto in DATEV, und testen Sie zuerst mit einer kleinen Datei: Die :86:-Feldkonvention bei MT940 unterscheidet sich leicht von Bank zu Bank, und Buchungstext/Gegenkonto beim DATEV-Import hängen von Ihrem eigenen Kontenrahmen ab."
       }
     }
   ]
@@ -274,7 +282,7 @@
   .form-section-title .hint-inline { text-transform:none; font:11.5px/1.4 var(--sans); color:var(--muted); letter-spacing:0; }
   .field { display:flex; flex-direction:column; gap:5px; min-width:0; }
   .field input[type="file"] { background:var(--paper-2); color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:7px 9px; font:12.5px/1.4 var(--sans); width:100%; }
-  .field .hint { font-size:11px; color:var(--muted); font-family:var(--sans); }
+  .hint, .field .hint { font-size:11px; color:var(--muted); font-family:var(--sans); margin:0; }
   .json-in { width:100%; background:var(--paper-2); color:var(--ink); border:1px solid var(--line); border-radius:4px; outline:none; resize:vertical; padding:12px 14px; font:12.5px/1.6 var(--mono); tab-size:2; min-height:120px; }
   .json-in:focus { border-color:var(--accent); }
 
@@ -293,6 +301,22 @@
   .csv-opts label { display:flex; align-items:center; gap:6px; cursor:pointer; }
   .csv-opts input[type="checkbox"] { accent-color:var(--accent); }
   .csv-opts select { background:var(--paper-2); color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:5px 7px; font:12px/1.3 var(--mono); }
+
+  .datev-opts { display:flex; flex-wrap:wrap; gap:10px 16px; }
+  .datev-opts label { display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--muted); min-width:0; }
+  .datev-opts input { background:var(--paper-2); color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:6px 8px; font:12.5px/1.3 var(--mono); width:9em; }
+  .datev-opts input:focus { border-color:var(--accent); outline:none; }
+
+  /* Pro export preview panel (MT940/DATEV) */
+  .pro-export-preview { border:1px solid var(--warn); background:var(--accent-soft); border-radius:4px; padding:14px 16px; margin-top:10px; display:flex; flex-direction:column; gap:12px; }
+  .pro-export-preview-head { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .pro-export-preview-title { font:600 13px/1.3 var(--sans); }
+  .pro-export-preview pre { margin:0; padding:10px 12px; background:var(--paper); border:1px solid var(--line); border-radius:4px; font:11.5px/1.5 var(--mono); overflow-x:auto; white-space:pre; color:var(--ink-2); }
+  .pro-export-preview-note { font-size:12px; color:var(--ink-2); margin:0; }
+  .pro-export-preview-buy { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .pro-export-preview-buy .btn { padding:9px 13px; font-size:13px; margin:0; }
+  .pro-export-close { flex:none; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:12px/1 var(--sans); padding:5px 9px; }
+  .pro-export-close:hover { border-color:var(--accent); color:var(--accent); }
 
   /* Output */
   .output { flex:1; padding:16px 18px; font:13px/1.5 var(--sans); overflow:auto; min-height:420px; background:var(--paper); }
@@ -432,7 +456,7 @@
       <ul class="facts">
         <li data-i18n="hero.fact.banks">jede Bank mit camt.053-Export (ISO 20022)</li>
         <li data-i18n="hero.fact.versions">2 camt.053-Versionen: .001.02 und .001.08</li>
-        <li data-i18n="hero.fact.tests">311 automatisierte Tests</li>
+        <li data-i18n="hero.fact.tests">503 automatisierte Tests</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
         <li data-i18n="hero.fact.free">0 €, ohne Konto, läuft im Browser</li>
       </ul>
@@ -513,6 +537,18 @@
                   </label>
                 </div>
               </div>
+
+              <div class="form-section">
+                <div class="form-section-title"><span data-i18n="s2.datev.title">Einstellungen DATEV-Buchungsstapel (Pro)</span><a class="pro-badge" href="#pro" data-i18n="s2.pro.badge">PRO</a></div>
+                <p class="hint" data-i18n="s2.datev.hint">Gelten für den DATEV-Buchungsstapel-Export (EXTF-CSV) unten beim Ergebnis. Die Einstellung ist kostenlos, der Download der Datei selbst ist Pro.</p>
+                <div class="datev-opts">
+                  <label><span data-i18n="s2.datev.bankAccount.label">Kontonummer der Bank</span><input type="text" id="datev-bank-account" value="1200" inputmode="numeric" autocomplete="off" /></label>
+                  <label><span data-i18n="s2.datev.accountLength.label">Sachkontenlänge</span><input type="text" id="datev-account-length" value="4" inputmode="numeric" autocomplete="off" /></label>
+                  <label><span data-i18n="s2.datev.advisor.label">Beraternummer</span><input type="text" id="datev-advisor" placeholder="1001" inputmode="numeric" autocomplete="off" /></label>
+                  <label><span data-i18n="s2.datev.client.label">Mandantennummer</span><input type="text" id="datev-client" placeholder="1" inputmode="numeric" autocomplete="off" /></label>
+                  <label><span data-i18n="s2.datev.fyStart.label">Wirtschaftsjahr-Beginn</span><input type="date" id="datev-fy-start" /></label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -571,10 +607,14 @@
   <section id="pro">
     <div class="wrap">
       <p class="kicker">04</p>
-      <h2 data-i18n="s4.h2">Pro: mehrere Dateien gleichzeitig und Verlauf.</h2>
-      <p class="sub" data-i18n="s4.sub">Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf hinzu, mit einer Lizenz für alle vier ARLing-Banktools.</p>
+      <h2 data-i18n="s4.h2">Pro: MT940 und DATEV-Buchungsstapel, mehrere Dateien gleichzeitig.</h2>
+      <p class="sub" data-i18n="s4.sub">Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt einen MT940-Export (für den manuellen DATEV-Import oder andere ältere Software) und einen DATEV-Buchungsstapel-Export (EXTF-CSV) hinzu, dazu die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für alle vier ARLing-Banktools.</p>
 
       <ol class="rules">
+        <li>
+          <b data-i18n="s4.r0.title">MT940- und DATEV-Buchungsstapel-Export.</b>
+          <p data-i18n="s4.r0.body">Deutsche Banken liefern seit November 2025 nur noch camt.053, MT940 wurde aus dem Regelwerk gestrichen. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten camt.053-Dateiimport, der manuelle Dateiimport erwartet nach wie vor MT940. Pro fügt zusätzlich einen Export direkt in das Format DATEV-Buchungsstapel (EXTF-CSV) hinzu.</p>
+        </li>
         <li>
           <b data-i18n="s4.r1.title">Mehrere Dateien gleichzeitig.</b>
           <p data-i18n="s4.r1.body">Laden Sie mehrere Auszüge gleichzeitig hoch und verarbeiten Sie sie in einem Schritt statt einzeln. Ohne Pro wird immer nur die erste Datei verarbeitet.</p>
@@ -678,7 +718,11 @@
       </details>
       <details>
         <summary data-i18n="faq.q7">Was bekomme ich mit Pro?</summary>
-        <p data-i18n-html="faq.a7">Die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.</p>
+        <p data-i18n-html="faq.a7">Einen Export nach MT940 (.sta) und in das Format DATEV-Buchungsstapel (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq.q8">Wandeln Sie camt.053 auch für DATEV in MT940 um?</summary>
+        <p data-i18n-html="faq.a8">Ja, als Pro-Funktion. Deutsche Banken liefern den Kontoauszug für die Buchhaltung seit November 2025 nur noch als camt.053, MT940 wurde aus dem Regelwerk der Kreditwirtschaft gestrichen. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten camt.053-Dateiimport, der manuelle Dateiimport erwartet nach wie vor MT940 (der kostenpflichtige DATEV-Bankdatenservice deckt camt.053 auf einem anderen Weg ab). Dieses Tool kann einen Auszug daher nach MT940 (.sta) für den manuellen DATEV-Import oder andere ältere Software umwandeln, und ebenso direkt in das Format DATEV-Buchungsstapel (EXTF-CSV). Beide Exporte laufen wie der Rest des Tools im Browser, nichts wird hochgeladen. Prüfen Sie vor dem ersten Import die Einstellung von Bankkonto (Konto) und Gegenkonto in DATEV, und testen Sie zuerst mit einer kleinen Datei: Die <code>:86:</code>-Feldkonvention bei MT940 unterscheidet sich leicht von Bank zu Bank, und Buchungstext/Gegenkonto beim DATEV-Import hängen von Ihrem eigenen Kontenrahmen ab.</p>
       </details>
     </div>
   </section>
@@ -709,6 +753,8 @@
   import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE } from '../camt053.js';
   import { buildXlsx } from '../xlsx-writer.js';
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from '../licence.js';
+  import { toMt940 } from '../mt940.js';
+  import { toDatevBuchungsstapel, toCp1252Bytes } from '../datev-extf.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
     defaultCsvOptsForLang, defaultColumnsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
@@ -859,6 +905,12 @@
   }
   applyCsvDefaults();
 
+  // DATEV Buchungsstapel options default: Wirtschaftsjahr-Beginn = 1 January
+  // of the current year (01.01.YYYY per the brief); left untouched once the
+  // visitor has typed a value of their own.
+  const datevFyStartEl = $('datev-fy-start');
+  if (datevFyStartEl && !datevFyStartEl.value) datevFyStartEl.value = `${new Date().getFullYear()}-01-01`;
+
   function activeColumns() {
     return COLUMNS.filter((c) => checkedColumns.has(c.key));
   }
@@ -991,6 +1043,60 @@
     return { columns: activeColumns().map((c) => c.key), delimiter: optDelim.value, decimalComma: optComma.checked, bom: true, labels: columnLabelsMap(getLang()) };
   }
 
+  // ── Pro exports: MT940 (.sta) and DATEV Buchungsstapel (EXTF CSV) ───────
+  // Generating the content is free (client-side, same as every other
+  // export); only the actual download is gated on a valid licence. Without
+  // one, a click shows a small preview (first PREVIEW_LINES lines) plus
+  // the same buy buttons as the Pro section, right under that statement's
+  // card, so the value is visible before asking for a purchase.
+  const PREVIEW_LINES = 8;
+
+  function mt940Filename(entry) {
+    return baseFilename(entry.name) + '.sta';
+  }
+  function datevFilename() {
+    const d = new Date();
+    const p2 = (n) => String(n).padStart(2, '0');
+    return `EXTF_Buchungsstapel_${d.getFullYear()}${p2(d.getMonth() + 1)}${p2(d.getDate())}.csv`;
+  }
+
+  function datevOptionsFromUI() {
+    return {
+      bankAccount: $('datev-bank-account').value || undefined,
+      accountLength: $('datev-account-length').value || undefined,
+      advisorNumber: $('datev-advisor').value || undefined,
+      clientNumber: $('datev-client').value || undefined,
+      fiscalYearStart: $('datev-fy-start').value || undefined,
+    };
+  }
+
+  function renderProExportPreview(idx, kind, content) {
+    const slot = $('pro-export-slot-' + idx);
+    if (!slot) return;
+    const lines = content.split(/\r\n|\n/).filter((l) => l.length > 0).slice(0, PREVIEW_LINES).join('\n');
+    const titleKey = kind === 'mt940' ? 'js.pro.preview.title.mt940' : 'js.pro.preview.title.datev';
+    slot.innerHTML = `<div class="pro-export-preview">
+      <div class="pro-export-preview-head">
+        <span class="pro-export-preview-title">${esc(t(titleKey))}</span>
+        <button type="button" class="pro-export-close" data-close-preview="1">${esc(t('js.pro.preview.close'))}</button>
+      </div>
+      <pre>${esc(lines)}</pre>
+      <p class="pro-export-preview-note">${esc(tf('js.pro.preview.note', { n: PREVIEW_LINES }))}</p>
+      <div class="pro-export-preview-buy">
+        <span>${esc(t('js.pro.preview.buyPrompt'))}</span>
+        <a class="btn btn-solid" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="export_preview">${esc(t('s4.buy.year.btn'))}</a>
+        <a class="btn btn-line" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="export_preview">${esc(t('s4.buy.month.btn'))}</a>
+      </div>
+    </div>`;
+    const closeBtn = slot.querySelector('[data-close-preview="1"]');
+    if (closeBtn) closeBtn.addEventListener('click', () => { slot.innerHTML = ''; });
+    slot.querySelectorAll('a[data-umami-event="buy_click"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        try { if (window.arlingPingOwner) window.arlingPingOwner('buy_click', el.getAttribute('data-umami-event-plan') || ''); } catch (e) {}
+      });
+    });
+  }
+
   function buildEntryHtml(entry, idx) {
     const cols = activeColumns();
     if (!entry.parsed.ok) {
@@ -1007,11 +1113,14 @@
           <button class="icon-btn" data-copy-tsv="${idx}" type="button">${esc(t('js.copy.tsv'))}</button>
           <button class="icon-btn" data-download-csv="${idx}" type="button">${esc(t('js.download.csv'))}</button>
           <button class="icon-btn primary" data-download-xlsx="${idx}" type="button">${esc(t('js.download.xlsx'))}</button>
+          <button class="icon-btn" data-export-mt940="${idx}" type="button">${esc(t('js.download.mt940'))}</button>
+          <button class="icon-btn" data-export-datev="${idx}" type="button">${esc(t('js.download.datev'))}</button>
         </div>
       </div>
       ${balanceBanner(entry.summary)}
       ${summaryTableHtml(entry.summary)}
       ${dataTableHtml(entry.rows, cols)}
+      <div class="pro-export-preview-slot" id="pro-export-slot-${idx}"></div>
     </div>`;
   }
 
@@ -1044,6 +1153,31 @@
         const bytes = buildXlsx('camt053', headers, dataRows);
         triggerDownload(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), baseFilename(entry.name) + '-tabulka.xlsx');
         track('download_xlsx', { bank: entry.parsed.bank || '' });
+      });
+      const proExportSlot = output.querySelector(`#pro-export-slot-${i}`);
+      const mt940Btn = output.querySelector(`[data-export-mt940="${i}"]`);
+      mt940Btn.addEventListener('click', () => {
+        const content = toMt940(entry.parsed);
+        if (licenceState.valid) {
+          if (proExportSlot) proExportSlot.innerHTML = '';
+          triggerDownload(new Blob([content], { type: 'application/octet-stream' }), mt940Filename(entry));
+          track('mt940_download', { bank: entry.parsed.bank || '' });
+        } else {
+          renderProExportPreview(i, 'mt940', content);
+          track('mt940_preview', { bank: entry.parsed.bank || '' });
+        }
+      });
+      const datevBtn = output.querySelector(`[data-export-datev="${i}"]`);
+      datevBtn.addEventListener('click', () => {
+        const content = toDatevBuchungsstapel(entry.parsed, datevOptionsFromUI());
+        if (licenceState.valid) {
+          if (proExportSlot) proExportSlot.innerHTML = '';
+          triggerDownload(new Blob([toCp1252Bytes(content)], { type: 'text/csv' }), datevFilename());
+          track('datev_download', { bank: entry.parsed.bank || '' });
+        } else {
+          renderProExportPreview(i, 'datev', content);
+          track('datev_preview', { bank: entry.parsed.bank || '' });
+        }
       });
       const cpBtn = output.querySelector(`[data-copy-tsv="${i}"]`);
       cpBtn.addEventListener('click', async () => {
@@ -1309,6 +1443,10 @@
       else if (window.fetch) { fetch(url, { keepalive: true, mode: 'no-cors' }).catch(function () {}); }
     } catch (e) {}
   }
+  // Exposed so the main module script can ping the same endpoint for buy
+  // buttons it creates dynamically after this IIFE's own querySelectorAll
+  // scan (the MT940/DATEV Pro-export preview panel's buy buttons).
+  window.arlingPingOwner = pingOwner;
   document.querySelectorAll('[data-umami-event="buy_click"],[data-umami-event="trial_click"],[data-umami-event="download_click"],[data-umami-event="bundle_click"]').forEach(function (el) {
     el.addEventListener('click', function () {
       pingOwner(el.getAttribute('data-umami-event'), el.getAttribute('data-umami-event-plan') || '');

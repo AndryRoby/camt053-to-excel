@@ -115,6 +115,55 @@ dependency on `DOMParser`, so it also runs unmodified in Node (used by
 this project's own test suite, `tests.mjs`), the same approach this
 project's sibling tool, SEPA pain.001 Doctor, uses for parsing XML.
 
+## Pro: MT940 and DATEV Buchungsstapel exports
+
+German banks stopped issuing MT940 in November 2025: the German banking
+industry's own rulebook now specifies camt.053 only for the electronic
+account statement. DATEV Kanzlei-Rechnungswesen, however, still has no
+direct camt.053 file import; its manual file import (Stapelverarbeitung)
+still expects MT940 (the paid DATEV Bankdatenservice covers camt.053 a
+different way). That gap is what these two Pro exports are for, both
+generated client-side exactly like the free CSV/Excel export, just
+gated on a licence (the same "Bankové nástroje" / Banking tools bundle
+licence used across all four ARLing bank tools) for the actual download;
+without a licence, clicking either button shows a preview of the first
+eight lines instead.
+
+- **MT940 (`.sta`)**, built by `mt940.js`: one SWIFT MT940 message per
+  camt.053 `<Stmt>`, with the German `:86:` structured subfield
+  convention (GVC code, `?00`-`?34` subfields, SEPA `EREF+`/`SVWZ+` tags
+  inside the `?20`-`?29` Verwendungszweck lines). For an import into
+  DATEV or any other MT940-only software.
+- **DATEV Buchungsstapel (EXTF CSV)**, built by `datev-extf.js`: the
+  DATEV-Format "Buchungsstapel" (booking batch) header, its column
+  header row, then one row per entry, with a small options block
+  (Kontonummer der Bank, Sachkontenlänge, Beraternummer,
+  Mandantennummer, Wirtschaftsjahr-Beginn) so the file matches your own
+  DATEV client setup.
+
+**Known limits, honestly:**
+
+- The exact wording of a bank's own `:86:` `?00` Buchungstext, and which
+  of `EREF+`/`MREF+`/`CRED+`/`DEBT+`/`SVWZ+` a bank fills in, differs
+  bank to bank; camt.053 (and this tool's parser) does not carry a
+  mandate id or creditor scheme id today, so this export only ever
+  writes `EREF+` (from `EndToEndId`) and `SVWZ+` (from the remittance
+  text). It is a well-formed, generic MT940 message built from the
+  fields camt.053 actually exposes, not a byte-for-byte replica of any
+  one bank's own historical MT940 export.
+- The DATEV Buchungsstapel export always books against the bank account
+  (Konto) you configure, leaves BU-Schlüssel/Gegenkonto to your own
+  chart of accounts, and its header uses a defensible generic value for
+  a couple of DATEV-internal metadata fields (the Buchungsstapel
+  sub-format version, the origin code) that this project could not
+  independently verify against DATEV's own (JavaScript-rendered)
+  developer documentation.
+- Both exports are built and tested against this project's own sample
+  statements, not against DATEV Kanzlei-Rechnungswesen itself (which
+  this project has no access to). **Test-import a small file first**
+  before relying on either export for real bookkeeping, and check your
+  Konto/Gegenkonto setup in DATEV before the first real import.
+
 ## Privacy
 
 - No account, no login, no cookies for the tool itself.
