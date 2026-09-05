@@ -183,6 +183,7 @@
   .facts { list-style:none; margin:22px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px 0; color:var(--muted); font-size:14px; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }
+  .hero-video { margin:18px 0 0; font-size:14.5px; color:var(--ink-2); }
 
   /* Buttons */
   .btn { display:inline-block; font:600 15px/1 var(--sans); padding:13px 18px; border-radius:4px; text-decoration:none; cursor:pointer; border:2px solid transparent; appearance:none; -webkit-appearance:none; }
@@ -233,6 +234,17 @@
   .pro-cta { border:1px solid var(--line); background:var(--paper-2); padding:24px; flex:1 1 280px; min-width:0; }
   .pro-cta p { margin:0 0 16px; color:var(--ink-2); font-size:15px; }
   .pro-cta .btn { display:inline-block; }
+  .pro-buy { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 12px; }
+  .pro-buy .btn { margin:0; text-align:center; }
+  .pro-buy .btn + .btn { margin:0; }
+  .pro-cta p.fineprint { font-size:12.5px; color:var(--muted); margin:0 0 10px; }
+  .pro-cta p.pro-bundle-link { font-size:13.5px; margin:0; }
+  /* Mobile: the buy box comes right after the intro, the three reasons follow (Paper Sell: price early). */
+  @media (max-width:760px) {
+    #pro .wrap { display:flex; flex-direction:column; }
+    #pro .pro-purchase { margin-top:0; }
+    #pro .rules { order:5; margin-top:28px; }
+  }
   .pro-licence-box { border:1px solid var(--line); background:var(--paper); padding:20px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; flex:1 1 320px; }
   .pro-licence-status { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13.5px; color:var(--ink-2); }
   .pro-licence-actions { display:flex; gap:8px; flex-wrap:wrap; }
@@ -362,9 +374,17 @@
 
   /* Sticky mobile Pro bar (Paper Sell): mobile only, appears after the hero, closable. */
   .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--paper-2); border-top:1px solid var(--line); }
-  .sticky-cta-inner { display:flex; align-items:center; gap:10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
-  .sticky-cta-text { flex:1 1 auto; min-width:0; font-size:12.5px; color:var(--ink-2); overflow-wrap:anywhere; }
-  .sticky-cta .btn { flex:none; padding:10px 14px; font-size:13.5px; margin:0; }
+  .sticky-cta-inner { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
+  .sticky-cta-text { flex:1 1 160px; min-width:0; font-size:12.5px; color:var(--ink-2); overflow-wrap:anywhere; }
+  .sticky-cta-buttons { display:flex; flex-wrap:wrap; gap:8px; flex:none; }
+  .sticky-cta .btn { flex:none; padding:10px 14px; font-size:13.5px; margin:0; white-space:nowrap; }
+  .sticky-cta .btn + .btn { margin:0; }
+  @media (max-width:520px) {
+    .sticky-cta-text { flex:1 1 calc(100% - 40px); }
+    .sticky-cta-close { order:1; }
+    .sticky-cta-buttons { order:2; flex:1 1 100%; }
+    .sticky-cta-buttons .btn { flex:1 1 auto; text-align:center; }
+  }
   .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:16px/1 var(--sans); padding:0; }
   .sticky-cta-close:hover { border-color:var(--accent); color:var(--accent); }
   @media (min-width:761px) { .sticky-cta { display:none !important; } }
@@ -403,6 +423,7 @@
       <h1 data-i18n="hero.h1">Výpis z banky v XML (camt.053) na tabuľku za sekundu.</h1>
       <p class="lead" data-i18n="hero.lead">Nahrajte alebo vložte výpis, ktorý ste stiahli z internet bankingu Tatra banky, SLSP, VÚB alebo ČSOB, a stiahnite tabuľku CSV alebo Excel s dátumami, sumami, protistranou a variabilným symbolom. Bez odosielania, bez účtu.</p>
       <a class="btn btn-solid" href="#playground" data-i18n="hero.cta">Previesť výpis</a><a class="btn btn-line" href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener" data-i18n="hero.source">Zdrojový kód na GitHube</a>
+      <p class="hero-video"><a href="https://youtu.be/6751B-kkMHQ" target="_blank" rel="noopener" data-umami-event="video_click" data-umami-event-place="hero" data-i18n="hero.video">Video, 2 minúty (po nemecky): výpis z banky do Excelu</a></p>
       <ul class="facts">
         <li data-i18n="hero.fact.banks">4 banky: Tatra banka, SLSP, VÚB, ČSOB</li>
         <li data-i18n="hero.fact.versions">2 verzie camt.053: .001.02 a .001.08</li>
@@ -566,7 +587,12 @@
       <div class="pro-purchase">
         <div class="pro-cta">
           <p data-i18n-html="s4.cta.p"><b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky štyri nástroje, DPH v cene, faktúru pošle Stripe.</p>
-          <a class="btn btn-solid" href="https://arling.sk/bankove-nastroje/" data-umami-event="bundle_click" data-i18n="s4.cta.btn">Kúpiť Pro na arling.sk/bankove-nastroje</a>
+          <div class="pro-buy">
+            <a class="btn btn-solid" id="pro-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.year.btn">Kúpiť Pro, 79&nbsp;€/rok</a>
+            <a class="btn btn-line" id="pro-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.month.btn">alebo 9&nbsp;€/mesiac</a>
+          </div>
+          <p class="fineprint" data-i18n="s4.buy.fineprint">Platba cez Stripe, DPH v cene, zrušiť môžete kedykoľvek. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.</p>
+          <p class="pro-bundle-link"><a id="pro-bundle-link" href="https://arling.sk/bankove-nastroje/" data-umami-event="bundle_click" data-umami-event-place="camt" data-i18n="s4.bundle.link">Čo všetko je v balíku</a></p>
         </div>
         <div class="pro-licence-box">
           <div class="pro-licence-status">
@@ -577,7 +603,7 @@
             <button class="icon-btn" id="pro-licence-remove-btn" type="button" data-i18n="s4.licence.remove.btn">Odstrániť licenciu</button>
           </div>
           <div class="pro-licence-manual">
-            <label for="pro-licence-input" data-i18n="s4.licence.manual.label">Licenciu ste kúpili na inom počítači alebo v inom nástroji? Vložte licenčný kľúč sem.</label>
+            <label for="pro-licence-input" data-i18n="s4.licence.manual.label">Licenčný kľúč nájdete na potvrdzovacej stránke hneď po zaplatení. Kúpili ste ho na inom počítači alebo v inom nástroji? Vložte ho sem.</label>
             <div class="pro-licence-manual-row">
               <input type="text" id="pro-licence-input" placeholder="Licenčný kľúč (dlhý reťazec s bodkou uprostred)" spellcheck="false" autocomplete="off" data-i18n-placeholder="s4.licence.input.placeholder" />
               <button class="icon-btn primary" id="pro-licence-activate-btn" type="button" data-i18n="s4.licence.activate.btn">Aktivovať</button>
@@ -664,8 +690,11 @@
 
 <div class="sticky-cta" id="sticky-cta" hidden>
   <div class="sticky-cta-inner">
-    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Pro pre všetky štyri nástroje: 9 €/mesiac alebo 79 €/rok.</span>
-    <a class="btn btn-solid" href="https://arling.sk/bankove-nastroje/" data-umami-event="bundle_click" data-umami-event-place="sticky" data-i18n="s4.sticky.btn">Kúpiť Pro</a>
+    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Licencia Pro pre všetky štyri nástroje, zrušiť kedykoľvek.</span>
+    <span class="sticky-cta-buttons">
+      <a class="btn btn-solid" id="sticky-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.year.btn">Kúpiť Pro, 79&nbsp;€/rok</a>
+      <a class="btn btn-line" id="sticky-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.month.btn">alebo 9&nbsp;€/mesiac</a>
+    </span>
     <button type="button" class="sticky-cta-close" id="sticky-cta-close" aria-label="Zavrieť lištu">&times;</button>
   </div>
 </div>
