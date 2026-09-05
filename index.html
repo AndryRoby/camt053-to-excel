@@ -406,7 +406,7 @@
       <ul class="facts">
         <li data-i18n="hero.fact.banks">4 banky: Tatra banka, SLSP, VÚB, ČSOB</li>
         <li data-i18n="hero.fact.versions">2 verzie camt.053: .001.02 a .001.08</li>
-        <li data-i18n="hero.fact.tests">288 automatizovaných testov</li>
+        <li data-i18n="hero.fact.tests">311 automatizovaných testov</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
         <li data-i18n="hero.fact.free">0 €, bez účtu, beží vo vašom prehliadači</li>
       </ul>
@@ -677,7 +677,7 @@
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
-    defaultCsvOptsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
+    defaultCsvOptsForLang, defaultColumnsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
   } from './i18n.js';
 
   const $ = (id) => document.getElementById(id);
@@ -708,7 +708,8 @@
 
   const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
   const TABLE_ROW_LIMIT = 200;
-  const DEFAULT_ON = new Set(['bookingDate', 'valueDate', 'amount', 'currency', 'counterpartyName', 'vs', 'ss', 'ks', 'message']);
+  // The default column set lives in i18n.js (DEFAULT_COLUMNS_BY_LANG): it
+  // differs per language, see checkedColumns below.
   const BANK_LABEL_KEY = { tatrabanka: 'js.bank.tatrabanka', slsp: 'js.bank.slsp', vub: 'js.bank.vub', csob: 'js.bank.csob', 'iná': 'js.bank.unknown' };
   const VS_SOURCE_KEY = { endtoend: 'js.vs.endtoend', structured: 'js.vs.structured', ustrd: 'js.vs.ustrd', '': 'js.vs.none' };
 
@@ -736,7 +737,15 @@
 
   let loadedFiles = []; // {name, xmlText, size}
   let lastResults = []; // {name, parsed, rows, summary}
-  const checkedColumns = new Set(DEFAULT_ON);
+  // Columns ticked in the table and the download. The default set depends
+  // on the language (i18n.js defaultColumnsForLang: VS/ŠS/KS on for Slovak,
+  // the counterparty IBAN instead of them for German and English, whose
+  // statements never carry the Slovak symbols). columnsCustomized flips to
+  // true the moment the visitor ticks a toggle or picks a software preset;
+  // until then a language switch also switches the default column set,
+  // after that the visitor's own selection is left alone.
+  const checkedColumns = new Set(defaultColumnsForLang(getLang()));
+  let columnsCustomized = false;
 
   // Pro state: last isValid() result, re-checked on every page load (never
   // trust a stale value across a reload). Gates "viac súborov naraz" (see
@@ -775,6 +784,7 @@
     colTogglesEl.querySelectorAll('input[data-col]').forEach((cb) => {
       cb.addEventListener('change', () => {
         const key = cb.getAttribute('data-col');
+        columnsCustomized = true;
         if (cb.checked) checkedColumns.add(key); else checkedColumns.delete(key);
         if (lastResults.length) renderOutput(lastResults);
       });
@@ -797,6 +807,7 @@
     // "generic" (preset === null/undefined) is a no-op signal: keep whatever
     // columns are currently checked instead of replacing them.
     if (preset) {
+      columnsCustomized = true;
       checkedColumns.clear();
       preset.forEach((k) => checkedColumns.add(k));
       renderColToggles();
@@ -1226,6 +1237,12 @@
   // ── language switch: re-render every dynamically-built piece so a live
   // switch (not just first load) shows the new language everywhere ───────
   document.addEventListener('arling:langchange', () => {
+    if (!columnsCustomized) {
+      // Untouched column selection: switch to the new language's defaults
+      // (VS/ŠS/KS for sk, counterparty IBAN for de/en), like the sample.
+      checkedColumns.clear();
+      defaultColumnsForLang(getLang()).forEach((k) => checkedColumns.add(k));
+    }
     renderColToggles();
     renderTemplateSelect();
     applyCsvDefaults();
