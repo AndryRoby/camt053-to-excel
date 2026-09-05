@@ -48,6 +48,7 @@ export const DICT = {
   },
   'hero.cta': { sk: 'Previesť výpis', en: 'Convert a statement', de: 'Kontoauszug umwandeln' },
   'hero.source': { sk: 'Zdrojový kód na GitHube', en: 'Source code on GitHub', de: 'Quellcode auf GitHub' },
+  'hero.video': { sk: 'Video, 2 minúty (po nemecky): výpis z banky do Excelu', en: 'Video, 2 minutes (in German): bank statement to Excel', de: 'Video, 2 Minuten: Kontoauszug nach Excel' },
   'hero.fact.banks': {
     sk: '4 banky: Tatra banka, SLSP, VÚB, ČSOB',
     en: 'any bank exporting camt.053 (ISO 20022)',
@@ -193,17 +194,23 @@ export const DICT = {
     en: '<b>One licence for four tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.',
     de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.',
   },
-  's4.cta.btn': { sk: 'Kúpiť Pro na arling.sk/bankove-nastroje', en: 'Buy Pro at arling.sk/bankove-nastroje', de: 'Pro kaufen auf arling.sk/bankove-nastroje' },
+  's4.buy.year.btn': { sk: 'Kúpiť Pro, 79 €/rok', en: 'Buy Pro, €79/year', de: 'Pro kaufen, 79 €/Jahr' },
+  's4.buy.month.btn': { sk: 'alebo 9 €/mesiac', en: 'or €9/month', de: 'oder 9 €/Monat' },
+  's4.buy.fineprint': {
+    sk: 'Platba cez Stripe, DPH v cene, zrušiť môžete kedykoľvek. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
+    en: 'Payment via Stripe, VAT included, cancel anytime. You get the licence key on the confirmation page right after payment.',
+    de: 'Zahlung über Stripe, inkl. MwSt., jederzeit kündbar. Den Lizenzschlüssel erhalten Sie direkt nach der Zahlung auf der Bestätigungsseite.',
+  },
+  's4.bundle.link': { sk: 'Čo všetko je v balíku', en: 'What is in the bundle', de: 'Was im Paket enthalten ist' },
   's4.licence.manual.label': {
-    sk: 'Licenciu ste kúpili na inom počítači alebo v inom nástroji? Vložte licenčný kľúč sem.',
-    en: 'Bought the licence on another computer or in another tool? Paste the licence key here.',
-    de: 'Lizenz auf einem anderen Computer oder in einem anderen Tool gekauft? Lizenzschlüssel hier einfügen.',
+    sk: 'Licenčný kľúč nájdete na potvrdzovacej stránke hneď po zaplatení. Kúpili ste ho na inom počítači alebo v inom nástroji? Vložte ho sem.',
+    en: 'The licence key is on the confirmation page right after payment. Bought it on another computer or in another tool? Paste it here.',
+    de: 'Den Lizenzschlüssel finden Sie direkt nach der Zahlung auf der Bestätigungsseite. Auf einem anderen Computer oder in einem anderen Tool gekauft? Hier einfügen.',
   },
   's4.licence.input.placeholder': { sk: 'Licenčný kľúč (dlhý reťazec s bodkou uprostred)', en: 'Licence key (a long string with a dot in the middle)', de: 'Lizenzschlüssel (langer Text mit Punkt in der Mitte)' },
   's4.licence.activate.btn': { sk: 'Aktivovať', en: 'Activate', de: 'Aktivieren' },
   's4.licence.remove.btn': { sk: 'Odstrániť licenciu', en: 'Remove licence', de: 'Lizenz entfernen' },
-  's4.sticky.text': { sk: 'Pro pre všetky štyri nástroje: 9 €/mesiac alebo 79 €/rok.', en: 'Pro for all four tools: €9/month or €79/year.', de: 'Pro für alle vier Tools: 9 €/Monat oder 79 €/Jahr.' },
-  's4.sticky.btn': { sk: 'Kúpiť Pro', en: 'Buy Pro', de: 'Pro kaufen' },
+  's4.sticky.text': { sk: 'Licencia Pro pre všetky štyri nástroje, zrušiť kedykoľvek.', en: 'Pro licence for all four tools, cancel anytime.', de: 'Pro-Lizenz für alle vier Tools, jederzeit kündbar.' },
 
   // ── section 05: pricing / ask ────────────────────────────────────────
   's5.h2': { sk: 'Zadarmo. Bez limitov, natrvalo.', en: 'Free. No limits, for good.', de: 'Kostenlos. Ohne Limits, dauerhaft.' },
@@ -712,6 +719,11 @@ export function applyI18n(lang) {
   if (businessLink) {
     businessLink.href = 'mailto:andrej@arling.sk?subject=' + encodeURIComponent(t('s5.business.subject', l));
   }
+
+  // The Pro-section "what is in the bundle" link sends visitors to the
+  // bankove-nastroje bundle page in the language they are already reading.
+  const bundleLink = document.getElementById('pro-bundle-link');
+  if (bundleLink) bundleLink.href = 'https://arling.sk/bankove-nastroje/?lang=' + l;
 
   try { document.dispatchEvent(new CustomEvent('arling:langchange', { detail: { lang: l } })); } catch (e) {}
 }
