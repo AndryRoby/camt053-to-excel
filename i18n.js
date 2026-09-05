@@ -55,7 +55,7 @@ export const DICT = {
     de: 'jede Bank mit camt.053-Export (ISO 20022)',
   },
   'hero.fact.versions': { sk: '2 verzie camt.053: .001.02 a .001.08', en: '2 camt.053 versions: .001.02 and .001.08', de: '2 camt.053-Versionen: .001.02 und .001.08' },
-  'hero.fact.tests': { sk: '311 automatizovaných testov', en: '311 automated tests', de: '311 automatisierte Tests' },
+  'hero.fact.tests': { sk: '503 automatizovaných testov', en: '503 automated tests', de: '503 automatisierte Tests' },
   'hero.fact.maxsize': { sk: 'max. 20 MB', en: 'max. 20 MB', de: 'max. 20 MB' },
   'hero.fact.free': { sk: '0 €, bez účtu, beží vo vašom prehliadači', en: '€0, no account, runs in your browser', de: '0 €, ohne Konto, läuft im Browser' },
 
@@ -165,11 +165,17 @@ export const DICT = {
   },
 
   // ── section 04: Pro ──────────────────────────────────────────────────
-  's4.h2': { sk: 'Pro: viac súborov naraz a história.', en: 'Pro: several files at once, plus history.', de: 'Pro: mehrere Dateien gleichzeitig und Verlauf.' },
+  's4.h2': { sk: 'Pro: MT940 a DATEV Buchungsstapel, viac súborov naraz.', en: 'Pro: MT940 and DATEV Buchungsstapel, several files at once.', de: 'Pro: MT940 und DATEV-Buchungsstapel, mehrere Dateien gleichzeitig.' },
   's4.sub': {
-    sk: 'Prevod jedného výpisu na CSV alebo Excel je a zostáva úplne zadarmo, bez limitu. Pro pridá spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.',
-    en: 'Converting a single statement to CSV or Excel is, and stays, completely free, no limit. Pro adds processing several files at once and a conversion history, with one licence shared across the four ARLing banking tools.',
-    de: 'Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf hinzu, mit einer Lizenz für alle vier ARLing-Banktools.',
+    sk: 'Prevod jedného výpisu na CSV alebo Excel je a zostáva úplne zadarmo, bez limitu. Pro pridá export do MT940 (pre ručný import do DATEV alebo iný starší softvér) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.',
+    en: 'Converting a single statement to CSV or Excel is, and stays, completely free, no limit. Pro adds an MT940 export (for a manual DATEV import or any other legacy software) and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a conversion history, with one licence shared across the four ARLing banking tools.',
+    de: 'Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt einen MT940-Export (für den manuellen DATEV-Import oder andere ältere Software) und einen DATEV-Buchungsstapel-Export (EXTF-CSV) hinzu, dazu die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für alle vier ARLing-Banktools.',
+  },
+  's4.r0.title': { sk: 'MT940 a DATEV Buchungsstapel export.', en: 'MT940 and DATEV Buchungsstapel export.', de: 'MT940- und DATEV-Buchungsstapel-Export.' },
+  's4.r0.body': {
+    sk: 'Nemecké banky od novembra 2025 posielajú výpis už len ako camt.053, MT940 zrušili. DATEV Kanzlei-Rechnungswesen ale priamy import camt.053 nemá, ručný import súborov stále čaká MT940. Pro k tomu pridá aj export priamo do formátu DATEV Buchungsstapel (EXTF CSV).',
+    en: 'German banks have stopped issuing MT940 since November 2025 and deliver only camt.053. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940. Pro also adds an export straight into the DATEV Buchungsstapel (EXTF CSV) format.',
+    de: 'Deutsche Banken liefern seit November 2025 nur noch camt.053, MT940 wurde aus dem Regelwerk gestrichen. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten camt.053-Dateiimport, der manuelle Dateiimport erwartet nach wie vor MT940. Pro fügt zusätzlich einen Export direkt in das Format DATEV-Buchungsstapel (EXTF-CSV) hinzu.',
   },
   's4.r1.title': { sk: 'Viac súborov naraz.', en: 'Several files at once.', de: 'Mehrere Dateien gleichzeitig.' },
   's4.r1.body': {
@@ -292,9 +298,15 @@ export const DICT = {
   },
   'faq.q7': { sk: 'Čo dostanem v Pro?', en: 'What do I get with Pro?', de: 'Was bekomme ich mit Pro?' },
   'faq.a7': {
-    sk: 'Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.',
-    en: 'Processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.',
-    de: 'Die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
+    sk: 'Export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.',
+    en: 'An MT940 (.sta) export and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.',
+    de: 'Einen Export nach MT940 (.sta) und in das Format DATEV-Buchungsstapel (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
+  },
+  'faq.q8': { sk: 'Prevediete camt.053 aj na MT940 pre DATEV?', en: 'Can you also convert camt.053 to MT940 for DATEV?', de: 'Wandeln Sie camt.053 auch für DATEV in MT940 um?' },
+  'faq.a8': {
+    sk: 'Áno, ako Pro funkciu. Nemecké banky od novembra 2025 posielajú výpis pre účtovníctvo už len ako camt.053, formát MT940 z pravidiel bankového styku vypadol. DATEV Kanzlei-Rechnungswesen ale priamy import súboru camt.053 nemá, jeho ručný import súborov stále čaká MT940 (platený DATEV Bankdatenservice import camt.053 rieši inou cestou). Preto tento nástroj vie výpis previesť na MT940 (.sta) pre ručný import do DATEV alebo do iného staršieho softvéru, a tiež priamo do formátu DATEV Buchungsstapel (EXTF CSV). Oba exporty bežia rovnako v prehliadači, nič sa nikam neodosiela. Skontrolujte v DATEV nastavenie účtu banky (Konto) a protiúčtu (Gegenkonto) pred prvým importom a najprv vyskúšajte na malom súbore: konvencia poľa <code>:86:</code> pri MT940 sa medzi bankami mierne líši a Buchungstext/Gegenkonto v DATEV importe závisí od vášho účtovného rozvrhu.',
+    en: 'Yes, as a Pro feature. German banks have delivered the account statement for accounting only as camt.053 since November 2025; MT940 was removed from the banking industry rulebook. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940 (a paid DATEV Bankdatenservice add-on handles camt.053 a different way). So this tool can convert a statement to MT940 (.sta) for a manual DATEV import or any other legacy software, and also directly to the DATEV Buchungsstapel (EXTF CSV) format. Both exports run in the browser just like the rest of the tool: nothing is uploaded. Check your bank account (Konto) and contra account (Gegenkonto) setup in DATEV before the first import, and test with a small file first: the <code>:86:</code> field convention in MT940 varies slightly bank to bank, and the Buchungstext/Gegenkonto in a DATEV import depend on your own chart of accounts.',
+    de: 'Ja, als Pro-Funktion. Deutsche Banken liefern den Kontoauszug für die Buchhaltung seit November 2025 nur noch als camt.053, MT940 wurde aus dem Regelwerk der Kreditwirtschaft gestrichen. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten camt.053-Dateiimport, der manuelle Dateiimport erwartet nach wie vor MT940 (der kostenpflichtige DATEV-Bankdatenservice deckt camt.053 auf einem anderen Weg ab). Dieses Tool kann einen Auszug daher nach MT940 (.sta) für den manuellen DATEV-Import oder andere ältere Software umwandeln, und ebenso direkt in das Format DATEV-Buchungsstapel (EXTF-CSV). Beide Exporte laufen wie der Rest des Tools im Browser, nichts wird hochgeladen. Prüfen Sie vor dem ersten Import die Einstellung von Bankkonto (Konto) und Gegenkonto in DATEV, und testen Sie zuerst mit einer kleinen Datei: Die <code>:86:</code>-Feldkonvention bei MT940 unterscheidet sich leicht von Bank zu Bank, und Buchungstext/Gegenkonto beim DATEV-Import hängen von Ihrem eigenen Kontenrahmen ab.',
   },
 
   // ── footer ───────────────────────────────────────────────────────────
@@ -354,6 +366,31 @@ export const DICT = {
   'js.download.csv': { sk: 'Stiahnuť CSV', en: 'Download CSV', de: 'CSV herunterladen' },
   'js.download.xlsx': { sk: 'Stiahnuť Excel', en: 'Download Excel', de: 'Excel herunterladen' },
   'js.download.all': { sk: 'Stiahnuť všetky ako CSV ({n})', en: 'Download all as CSV ({n})', de: 'Alle als CSV herunterladen ({n})' },
+  'js.download.mt940': { sk: 'Stiahnuť MT940 (.sta)', en: 'Download MT940 (.sta)', de: 'MT940 (.sta) herunterladen' },
+  'js.download.datev': { sk: 'Stiahnuť DATEV Buchungsstapel (EXTF CSV)', en: 'Download DATEV Buchungsstapel (EXTF CSV)', de: 'DATEV Buchungsstapel (EXTF CSV) herunterladen' },
+  'js.pro.export.badge': { sk: 'PRO export', en: 'PRO export', de: 'PRO-Export' },
+
+  'js.pro.preview.title.mt940': { sk: 'Ukážka MT940 (Pro funkcia)', en: 'MT940 preview (Pro feature)', de: 'MT940-Vorschau (Pro-Funktion)' },
+  'js.pro.preview.title.datev': { sk: 'Ukážka DATEV Buchungsstapel (Pro funkcia)', en: 'DATEV Buchungsstapel preview (Pro feature)', de: 'Vorschau DATEV-Buchungsstapel (Pro-Funktion)' },
+  'js.pro.preview.note': {
+    sk: 'Prvých {n} riadkov súboru, ktorý by sa stiahol. Celý súbor a jeho stiahnutie sú súčasť Pro (balík Bankové nástroje).',
+    en: 'The first {n} lines of the file that would download. The full file, and downloading it, are part of Pro (the Banking tools bundle).',
+    de: 'Die ersten {n} Zeilen der Datei, die heruntergeladen würde. Die vollständige Datei und der Download sind Teil von Pro (Paket Banktools).',
+  },
+  'js.pro.preview.buyPrompt': { sk: 'Odomknúť Pro:', en: 'Unlock Pro:', de: 'Pro freischalten:' },
+  'js.pro.preview.close': { sk: 'Zavrieť ukážku', en: 'Close preview', de: 'Vorschau schließen' },
+
+  's2.datev.title': { sk: 'Nastavenia DATEV Buchungsstapel (Pro)', en: 'DATEV Buchungsstapel settings (Pro)', de: 'Einstellungen DATEV-Buchungsstapel (Pro)' },
+  's2.datev.hint': {
+    sk: 'Platia pre export DATEV Buchungsstapel (EXTF CSV) nižšie pri výsledku. Nastavenie je zadarmo, samotné stiahnutie súboru je Pro.',
+    en: 'Used by the DATEV Buchungsstapel (EXTF CSV) export below, next to the result. Setting these is free; downloading the file itself is Pro.',
+    de: 'Gelten für den DATEV-Buchungsstapel-Export (EXTF-CSV) unten beim Ergebnis. Die Einstellung ist kostenlos, der Download der Datei selbst ist Pro.',
+  },
+  's2.datev.bankAccount.label': { sk: 'Číslo bankového účtu (Konto)', en: 'Bank account number (Konto)', de: 'Kontonummer der Bank' },
+  's2.datev.accountLength.label': { sk: 'Dĺžka čísla účtu (Sachkontenlänge)', en: 'Account number length (Sachkontenlänge)', de: 'Sachkontenlänge' },
+  's2.datev.advisor.label': { sk: 'Číslo poradcu (Beraternummer)', en: 'Advisor number (Beraternummer)', de: 'Beraternummer' },
+  's2.datev.client.label': { sk: 'Číslo klienta (Mandantennummer)', en: 'Client number (Mandantennummer)', de: 'Mandantennummer' },
+  's2.datev.fyStart.label': { sk: 'Začiatok hospodárskeho roka', en: 'Fiscal year start', de: 'Wirtschaftsjahr-Beginn' },
 
   'js.sample.loaded': { sk: 'ukážka vložená (výpis Tatra banky, 3 položky), stlačte {kbd1} alebo {kbd2}', en: 'sample loaded (German bank statement, 4 entries), press {kbd1} or {kbd2}', de: 'Beispiel geladen (deutscher Kontoauszug, 4 Positionen), drücken Sie {kbd1} oder {kbd2}' },
 

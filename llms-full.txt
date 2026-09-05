@@ -259,6 +259,21 @@ picker?**
 No. The file is read locally with the browser's `FileReader` API, the
 same as pasted text would be, and never leaves the page.
 
+**Can it convert camt.053 to MT940 for DATEV?**
+Yes, as a Pro (licensed) feature: `mt940.js` builds one SWIFT MT940
+message per statement, with the German `:86:` structured subfield
+convention (GVC code, `?00`-`?34` subfields, SEPA `EREF+`/`SVWZ+` tags),
+for a manual import into DATEV Kanzlei-Rechnungswesen or any other
+MT940-only software. German banks stopped issuing MT940 in November
+2025 (camt.053 only, per the banking industry's own rulebook), but
+DATEV's manual file import still expects MT940, since DATEV has no
+direct camt.053 file import of its own. `datev-extf.js` additionally
+exports straight into the DATEV-Format "Buchungsstapel" (EXTF CSV), with
+a small Konto/Sachkontenlänge/Beraternummer/Mandantennummer/
+Wirtschaftsjahr-Beginn options block. Both exports run client-side like
+the rest of the tool; without a Pro licence, the button shows a preview
+of the file's first 8 lines instead of downloading it.
+
 **Is there a developer API, not just the page UI?**
 Yes: `camt053.js` is a plain ES module exporting `parse` (XML string to
 statement objects), `toRows` (statement objects to the row table

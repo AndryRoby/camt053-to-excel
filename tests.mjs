@@ -4,6 +4,8 @@
 import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE, bankFromBic, parseXml } from './camt053.js';
 import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
+import { toMt940, toMt940Statement, transliterateSwiftX } from './mt940.js';
+import { toDatevBuchungsstapel, toCp1252SafeText, toCp1252Bytes, FORMAT_VERSION as DATEV_FORMAT_VERSION, FORMAT_CATEGORY as DATEV_FORMAT_CATEGORY } from './datev-extf.js';
 import {
   LANGS, DEFAULT_LANG, DICT, COLUMN_LABELS, t, tf, columnLabel, columnLabelsMap,
   formatAmountForLang, formatDateForLang, defaultCsvOptsForLang, localeTagForLang,
@@ -818,6 +820,237 @@ includes('i18n sample loaded: German names the German statement with 4 Positione
   const llms = norm(readFileSync(new URL('./llms.txt', import.meta.url), 'utf8'));
   includes('llms.txt mentions the German URL', llms, langUrl('de'));
   includes('llms.txt mentions the English URL', llms, langUrl('en'));
+}
+
+// ═══════════════════════════ mt940.js (Pro export) ═══════════════════════
+// SWIFT MT940 output for the DE sample (4 entries) and the SK sample (3
+// entries), plus a tiny hand-written MT940 reader (below) that parses the
+// generated text back, so the round trip itself is the assertion, not
+// just string-matching the generator's own output.
+
+const SWIFT_X_RE = /^[A-Za-z0-9 \/\-\?:\(\)\.,'+\r\n]*$/;
+
+function readBalanceLine(text, tag) {
+  const re = new RegExp(tag.replace(/[:]/g, '\\$&') + '([CD])(\\d{6})([A-Z]{3})([\\d,]+)');
+  const m = re.exec(text);
+  if (!m) return null;
+  return { mark: m[1], date: m[2], ccy: m[3], amount: Number(m[4].replace(',', '.')) * (m[1] === 'D' ? -1 : 1) };
+}
+
+/** Small MT940 reader, written here (not in mt940.js) purely to prove the
+ * generator's output round-trips: splits into messages at each :20:,
+ * reads :60F:/:62F: balances and every :61: entry (value date, booking
+ * MMDD, sign from the C/D[/RC/RD] mark, amount, 4-letter code, customer
+ * reference before "//", bank reference after it). */
+function readMt940(text) {
+  ok('readMt940 fixture: input uses CRLF, not bare LF', !/[^\r]\n/.test(text));
+  const messages = [];
+  let current = null;
+  text.split('\r\n').forEach((line) => {
+    if (line.startsWith(':20:')) { current = { reference: line.slice(4), entries: [] }; messages.push(current); }
+    if (!current) return;
+    if (line.startsWith(':25:')) current.account = line.slice(4);
+    if (line.startsWith(':60F:')) current.opening = readBalanceLine(line, ':60F:');
+    if (line.startsWith(':62F:')) current.closing = readBalanceLine(line, ':62F:');
+    const m61 = /^:61:(\d{6})(\d{4})(R?[CD])([\d,]+)([A-Z]{4})([^\r\n]*)$/.exec(line);
+    if (m61) {
+      const [, valuta, bookg, mark, amt, code, rest] = m61;
+      const sign = mark.endsWith('D') ? -1 : 1;
+      const [customerRef, bankRef] = rest.split('//');
+      current.entries.push({
+        valueDate: `20${valuta.slice(0, 2)}-${valuta.slice(2, 4)}-${valuta.slice(4, 6)}`,
+        bookingMonthDay: bookg,
+        mark, code,
+        amount: Math.round(Number(amt.replace(',', '.')) * sign * 100) / 100,
+        customerRef: customerRef || '', bankRef: bankRef || '',
+      });
+    }
+  });
+  return messages;
+}
+
+const pDeForMt940 = parse(SAMPLE_CAMT053_XML_DE);
+const mt940De = toMt940(pDeForMt940);
+const sDeForMt940 = summarize(pDeForMt940);
+
+eq('mt940: CRLF line endings throughout (no bare LF)', /[^\r]\n/.test(mt940De), false);
+{
+  const lines = mt940De.split('\r\n').filter((l) => l.length > 0 || true).slice(0, -1); // drop trailing '' from the final \r\n
+  const tooLong = lines.filter((l) => l.length > 65);
+  eq('mt940 DE: every line is at most 65 characters', tooLong.length, 0, tooLong.map((l) => l.length).join(','));
+  ok('mt940 DE: has at least the expected core fields', lines.some((l) => l.startsWith(':20:')) && lines.some((l) => l.startsWith(':25:')) && lines.some((l) => l.startsWith(':60F:')) && lines.some((l) => l.startsWith(':62F:')));
+  const nonX = lines.filter((l) => !SWIFT_X_RE.test(l));
+  eq('mt940 DE: only SWIFT X character set used on every line', nonX.length, 0, nonX.join(' | '));
+  eq('mt940 DE: ends with a "-" terminator line', lines[lines.length - 1], '-');
+}
+includes('mt940 DE: :25: carries the account IBAN', mt940De, ':25:DE40123456780000123456');
+includes('mt940 DE: umlaut transliterated (Bürobedarf -> Buerobedarf) inside field 86', mt940De, 'Buerobedarf');
+includes('mt940 DE: umlaut transliterated (Kontoführungsentgelt -> Kontofuehrungsentgelt)', mt940De, 'Kontofuehrungsentgelt');
+ok('mt940 DE: no raw umlaut survives anywhere in the output', !/[äöüÄÖÜß]/.test(mt940De));
+includes('mt940 DE: NONREF used for the fee entry (EndToEndId is the literal NOTPROVIDED)', mt940De, 'NCHGNONREF');
+includes('mt940 DE: DK-tagged proprietary code read straight through (NTRF from "NTRF+166")', mt940De, 'NTRF');
+includes('mt940 DE: NDDT for the SEPA-Lastschrift entry', mt940De, 'NDDT');
+includes('mt940 DE: NMSC for the card-payment entry', mt940De, 'NMSC');
+includes('mt940 DE: NCHG for the fee entry', mt940De, 'NCHG');
+includes('mt940 DE field 86: SEPA EREF+ tag present', mt940De, 'EREF+');
+includes('mt940 DE field 86: SEPA SVWZ+ tag present', mt940De, 'SVWZ+');
+
+{
+  const parsedBack = readMt940(mt940De);
+  eq('mt940 DE round-trip: exactly one message (one statement)', parsedBack.length, 1);
+  const msg = parsedBack[0];
+  eq('mt940 DE round-trip: 4 entries recovered', msg.entries.length, 4);
+  deepEq('mt940 DE round-trip: amounts match rowsDe exactly, in order', msg.entries.map((e) => e.amount), [1785, -214, -86.37, -12.9]);
+  ok('mt940 DE round-trip: every entry has a 2026 value date', msg.entries.every((e) => e.valueDate.startsWith('2026-')));
+  eq('mt940 DE round-trip: first entry value date is 2026-09-08', msg.entries[0].valueDate, '2026-09-08');
+  eq('mt940 DE round-trip: last entry value date is 2026-09-11', msg.entries[3].valueDate, '2026-09-11');
+  ok('mt940 DE round-trip: sum of entries equals summarize().netSum', Math.abs(msg.entries.reduce((s, e) => s + e.amount, 0) - sDeForMt940.netSum) < 0.005);
+  ok('mt940 DE round-trip: opening balance matches summarize()', msg.opening && Math.abs(msg.opening.amount - sDeForMt940.openingBalance) < 0.005);
+  ok('mt940 DE round-trip: closing balance matches summarize()', msg.closing && Math.abs(msg.closing.amount - sDeForMt940.closingBalance) < 0.005);
+  eq('mt940 DE round-trip: opening balance currency EUR', msg.opening.ccy, 'EUR');
+  eq('mt940 DE round-trip: no reversal marks (RC/RD) in this fixture', msg.entries.filter((e) => e.mark.length === 2).length, 0);
+}
+
+// ── Slovak sample: different reference convention, still round-trips ────
+{
+  const pSkForMt940 = parse(SAMPLE_CAMT053_XML);
+  const mt940Sk = toMt940(pSkForMt940);
+  const sSkForMt940 = summarize(pSkForMt940);
+  const lines = mt940Sk.split('\r\n').filter(Boolean);
+  eq('mt940 SK: every line at most 65 characters', lines.filter((l) => l.length > 65).length, 0);
+  eq('mt940 SK: only SWIFT X character set used', lines.filter((l) => !SWIFT_X_RE.test(l)).length, 0);
+  const parsedBack = readMt940(mt940Sk);
+  eq('mt940 SK round-trip: one message', parsedBack.length, 1);
+  eq('mt940 SK round-trip: 3 entries recovered', parsedBack[0].entries.length, 3);
+  deepEq('mt940 SK round-trip: amounts match rows02', parsedBack[0].entries.map((e) => e.amount), [450, -89.9, -120.8]);
+  ok('mt940 SK round-trip: opening/closing balances match summarize()', Math.abs(parsedBack[0].opening.amount - sSkForMt940.openingBalance) < 0.005 && Math.abs(parsedBack[0].closing.amount - sSkForMt940.closingBalance) < 0.005);
+  includes('mt940 SK: NONREF for the entry with no EndToEndId reference (fee has none set)', mt940Sk, 'NONREF');
+}
+
+// ── one message per statement: SAMPLE_08_XML has 2 statements ───────────
+{
+  const p08ForMt940 = parse(SAMPLE_08_XML);
+  const mt940_08 = toMt940(p08ForMt940);
+  const parsedBack = readMt940(mt940_08);
+  eq('mt940 .08: one MT940 message per statement (2 statements -> 2 messages)', parsedBack.length, 2);
+  eq('mt940 .08: first message carries its 4 entries (bare Ntry + structured-ref row + 2-row batch)', parsedBack[0].entries.length, 4);
+  eq('mt940 .08: second message carries its 1 entry', parsedBack[1].entries.length, 1);
+  const dashCount = (mt940_08.match(/^-$/gm) || []).length;
+  eq('mt940 .08: two "-" terminators (one per message)', dashCount, 2);
+}
+
+// ── transliterateSwiftX() unit behaviour ─────────────────────────────────
+eq('transliterateSwiftX: ä -> ae', transliterateSwiftX('Bäcker'), 'Baecker');
+eq('transliterateSwiftX: ö -> oe', transliterateSwiftX('Möbel'), 'Moebel');
+eq('transliterateSwiftX: ü -> ue', transliterateSwiftX('Grün'), 'Gruen');
+eq('transliterateSwiftX: ß -> ss', transliterateSwiftX('Straße'), 'Strasse');
+eq('transliterateSwiftX: Ä -> Ae', transliterateSwiftX('Ärger'), 'Aerger');
+eq('transliterateSwiftX: non-X punctuation stripped', transliterateSwiftX('Rechnung Nr. 5 (März)'), 'Rechnung Nr. 5 (Maerz)');
+eq('transliterateSwiftX: euro sign and other symbols stripped', transliterateSwiftX('50€ *Test*'), '50 Test');
+eq('transliterateSwiftX: empty/null-ish input never throws', transliterateSwiftX(null), '');
+eq('transliterateSwiftX: allowed characters pass through unchanged', transliterateSwiftX("A-Z 0-9 /-?:().,'+"), "A-Z 0-9 /-?:().,'+");
+
+// ── synthetic reversal (RC/RD): the SubFmlyCd carrying "RVSL" is the only
+// reversal signal camt053.js's row shape exposes today (RvslInd itself is
+// not parsed), so this test builds a minimal statement object directly
+// rather than routing through parse(). ──────────────────────────────────
+{
+  const reversalStmt = {
+    id: 'REV-1', legalSeqNb: '1', fromDateTime: '2026-09-01', toDateTime: '2026-09-01',
+    account: { iban: 'DE40123456780000123456', currency: 'EUR' },
+    balances: [
+      { type: 'OPBD', amount: 100, currency: 'EUR', date: '2026-09-01' },
+      { type: 'CLBD', amount: 50, currency: 'EUR', date: '2026-09-01' },
+    ],
+    entries: [
+      { bookingDate: '2026-09-01', valueDate: '2026-09-01', amount: -50, currency: 'EUR', direction: 'DBIT', txType: 'PMNT-RCDT-RVSL', endToEndId: 'REV-REF', bankRef: 'B1', counterpartyName: 'Test GmbH', message: 'Storno' },
+    ],
+  };
+  const mt940Rev = toMt940Statement(reversalStmt);
+  const back = readMt940(mt940Rev + '\r\n');
+  eq('mt940 reversal: mark is "RD" (reversed debit) when SubFmlyCd carries RVSL', back[0].entries[0].mark, 'RD');
+  eq('mt940 reversal: amount still reads back correctly signed', back[0].entries[0].amount, -50);
+}
+
+// ═══════════════════════════ datev-extf.js (Pro export) ══════════════════
+
+eq('DATEV FORMAT_VERSION is 700 (current DATEV-Format version)', DATEV_FORMAT_VERSION, 700);
+eq('DATEV FORMAT_CATEGORY is 21 (Buchungsstapel)', DATEV_FORMAT_CATEGORY, 21);
+
+const datevDe = toDatevBuchungsstapel(pDeForMt940, { advisorNumber: 12345, clientNumber: 6789, bankAccount: 1200 });
+eq('DATEV DE: CRLF line endings', /[^\r]\n/.test(datevDe), false);
+{
+  const lines = datevDe.split('\r\n').filter(Boolean);
+  eq('DATEV DE: header + column-header + 4 data lines', lines.length, 6);
+  const headerFields = lines[0].split(';');
+  eq('DATEV DE: header starts with "EXTF"', headerFields[0], '"EXTF"');
+  eq('DATEV DE: header field 2 is the version number 700', headerFields[1], '700');
+  eq('DATEV DE: header field 3 is the format category 21', headerFields[2], '21');
+  eq('DATEV DE: header has 17 fields', headerFields.length, 17);
+  eq('DATEV DE: header carries Beraternummer (field 11)', headerFields[10], '12345');
+  eq('DATEV DE: header carries Mandantennummer (field 12)', headerFields[11], '6789');
+  includes('DATEV DE: header carries an 8-digit WJ-Beginn (field 13)', headerFields[12], '20260101');
+
+  const colHeaderFields = lines[1].split(';');
+  includes('DATEV DE: column header names Umsatz first', colHeaderFields[0], 'Umsatz');
+  includes('DATEV DE: column header names Soll/Haben-Kennzeichen', colHeaderFields[1], 'Soll/Haben');
+  includes('DATEV DE: column header names Buchungstext last', colHeaderFields[colHeaderFields.length - 1], 'Buchungstext');
+
+  for (let i = 2; i < lines.length; i++) {
+    eq(`DATEV DE row ${i - 1}: column count matches the column-header row`, lines[i].split(';').length, colHeaderFields.length);
+  }
+
+  const row1 = lines[2].split(';');
+  eq('DATEV DE row 1: Umsatz uses comma decimal', row1[0], '1785,00');
+  eq('DATEV DE row 1: Soll/Haben-Kennzeichen is S for a credit (CRDT) entry', row1[1], 'S');
+  eq('DATEV DE row 1: Konto is the configured bank account 1200', row1[6], '1200');
+  eq('DATEV DE row 1: Belegdatum is DDMM (8 Sept -> 0809)', row1[9], '0809');
+
+  const row2 = lines[3].split(';');
+  eq('DATEV DE row 2: Soll/Haben-Kennzeichen is H for a debit (DBIT) entry', row2[1], 'H');
+  const row3 = lines[4].split(';');
+  eq('DATEV DE row 3: Soll/Haben-Kennzeichen is H for a debit (DBIT) entry', row3[1], 'H');
+  const row4 = lines[5].split(';');
+  eq('DATEV DE row 4: Soll/Haben-Kennzeichen is H for a debit (DBIT) entry', row4[1], 'H');
+
+  ok('DATEV DE: umlaut preserved in Buchungstext (Bürobedarf, not transliterated)', lines[4].includes('Bürobedarf'));
+  ok('DATEV DE: umlaut preserved in Buchungstext (Kontoführungsentgelt)', lines[5].includes('Kontoführungsentgelt'));
+
+  // Field-length limits from the brief: Belegfeld 1 <= 36, Buchungstext <= 60.
+  for (let i = 2; i < lines.length; i++) {
+    const cols = lines[i].split(';');
+    const beleg1 = cols[10].replace(/^"|"$/g, '').replace(/""/g, '"');
+    const buchungstext = cols[13].replace(/^"|"$/g, '').replace(/""/g, '"');
+    ok(`DATEV DE row ${i - 1}: Belegfeld 1 is at most 36 characters`, beleg1.length <= 36, String(beleg1.length));
+    ok(`DATEV DE row ${i - 1}: Buchungstext is at most 60 characters`, buchungstext.length <= 60, String(buchungstext.length));
+  }
+}
+
+// ── Slovak sample: still well-formed, comma decimals, DDMM dates ────────
+{
+  const pSkForDatev = parse(SAMPLE_CAMT053_XML);
+  const datevSk = toDatevBuchungsstapel(pSkForDatev, {});
+  const lines = datevSk.split('\r\n').filter(Boolean);
+  eq('DATEV SK: header + column-header + 3 data lines', lines.length, 5);
+  const colCount = lines[1].split(';').length;
+  for (let i = 2; i < lines.length; i++) eq(`DATEV SK row ${i - 1}: column count matches header`, lines[i].split(';').length, colCount);
+  const row1 = lines[2].split(';');
+  eq('DATEV SK row 1: comma-decimal amount', row1[0], '450,00');
+  eq('DATEV SK row 1: Soll/Haben S for CRDT', row1[1], 'S');
+  eq('DATEV SK: default Beraternummer applied when not supplied', lines[0].split(';')[10], '1001');
+  eq('DATEV SK: default Mandantennummer applied when not supplied', lines[0].split(';')[11], '1');
+  eq('DATEV SK: default Sachkontenlänge is 4', lines[0].split(';')[13], '4');
+  eq('DATEV SK: default Kontonummer der Bank is 1200', lines[2].split(';')[6], '1200');
+}
+
+// ── toCp1252SafeText() / toCp1252Bytes() ─────────────────────────────────
+eq('toCp1252SafeText: keeps umlauts unchanged (unlike SWIFT X transliteration)', toCp1252SafeText('Bürobedarf Straße'), 'Bürobedarf Straße');
+eq('toCp1252SafeText: em dash and smart quotes mapped to plain ASCII', toCp1252SafeText('a – b “c”'), 'a - b "c"');
+eq('toCp1252SafeText: characters outside Latin-1 (e.g. euro sign, emoji) are dropped', /[^\x00-\xff]/.test(toCp1252SafeText('50€ 🎉 Test')), false);
+{
+  const bytes = toCp1252Bytes(toCp1252SafeText('Bürobedarf'));
+  eq('toCp1252Bytes: "ü" encodes as byte 0xFC (Windows-1252/Latin-1)', bytes[1], 0xfc);
+  eq('toCp1252Bytes: output length equals the safe string length (1 byte per char)', bytes.length, 'Bürobedarf'.length);
 }
 
 // ═══════════════════════════ summary ═══════════════════════════════════
