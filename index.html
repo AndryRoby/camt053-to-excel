@@ -309,7 +309,7 @@
   .data-table { width:100%; border-collapse:collapse; font-size:12px; font-family:var(--mono); min-width:640px; }
   .data-table th, .data-table td { padding:6px 9px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; white-space:nowrap; }
   .data-table th { font-family:var(--sans); font-size:10px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); background:var(--paper-2); }
-  .data-table td { max-width:220px; overflow-wrap:anywhere; white-space:normal; }
+  .data-table td { max-width:220px; overflow-wrap:break-word; white-space:normal; }
   .data-table td.num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
   .data-table tr:last-child td { border-bottom:none; }
   .table-note { font-size:11.5px; color:var(--muted); margin:8px 0 0; }
@@ -406,7 +406,7 @@
       <ul class="facts">
         <li data-i18n="hero.fact.banks">4 banky: Tatra banka, SLSP, VÚB, ČSOB</li>
         <li data-i18n="hero.fact.versions">2 verzie camt.053: .001.02 a .001.08</li>
-        <li data-i18n="hero.fact.tests">170+ automatizovaných testov</li>
+        <li data-i18n="hero.fact.tests">288 automatizovaných testov</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
         <li data-i18n="hero.fact.free">0 €, bez účtu, beží vo vašom prehliadači</li>
       </ul>
@@ -447,7 +447,7 @@
             <div class="pane-head">
               <span class="pane-title" data-i18n="s2.input.label">Vstup</span>
               <div class="pane-actions">
-                <button class="icon-btn" id="sample-btn" type="button" title="Načítať malý ukážkový výpis s 3 položkami" data-i18n="s2.sample.btn" data-i18n-title="s2.sample.btn.title">ukážka</button>
+                <button class="icon-btn" id="sample-btn" type="button" title="Načítať malý ukážkový výpis Tatra banky s 3 položkami" data-i18n="s2.sample.btn" data-i18n-title="s2.sample.btn.title">ukážka</button>
                 <button class="icon-btn primary" id="convert-btn" type="button" data-i18n="s2.convert.btn">Previesť ↵</button>
               </div>
             </div>
@@ -672,7 +672,7 @@
 
 <!-- Scripts -->
 <script type="module">
-  import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML } from './camt053.js';
+  import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE } from './camt053.js';
   import { buildXlsx } from './xlsx-writer.js';
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
   import {
@@ -1083,11 +1083,26 @@
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); convert(); }
   });
 
+  // ── sample statement per language ────────────────────────────────────
+  // Slovak visitors get the Tatra banka sample; German and English visitors
+  // (the DE/AT ad campaign lands on ?lang=de, the video shows the sample)
+  // get the German Muster GmbH statement. The language comes from i18n.js's
+  // getLang(), the one source of truth for the active language.
+  function sampleXmlForLang(lang) {
+    return lang === 'sk' ? SAMPLE_CAMT053_XML : SAMPLE_CAMT053_XML_DE;
+  }
+  function isPristineSample(text) {
+    return text === SAMPLE_CAMT053_XML || text === SAMPLE_CAMT053_XML_DE;
+  }
+  function sampleLoadedHtml() {
+    return `<p class="placeholder">${tf('js.sample.loaded', { kbd1: `<span class="kbd">${esc(t('s2.kbd.convert'))}</span>`, kbd2: '<span class="kbd">⌘↵</span>' })}<span class="blink"></span></p>`;
+  }
+
   sampleBtn.addEventListener('click', () => {
     loadedFiles = [];
     renderFileList();
-    xmlText.value = SAMPLE_CAMT053_XML;
-    output.innerHTML = `<p class="placeholder">${tf('js.sample.loaded', { kbd1: `<span class="kbd">${esc(t('s2.kbd.convert'))}</span>`, kbd2: '<span class="kbd">⌘↵</span>' })}<span class="blink"></span></p>`;
+    xmlText.value = sampleXmlForLang(getLang());
+    output.innerHTML = sampleLoadedHtml();
     setStatusPill('', t('js.status.waiting'));
     lastResults = [];
   });
@@ -1216,6 +1231,11 @@
     applyCsvDefaults();
     if (lastResults.length) {
       renderOutput(lastResults);
+    } else if (isPristineSample(xmlText.value)) {
+      // An untouched, not yet converted sample follows the language switch
+      // (Tatra banka sample for sk, German sample for de/en).
+      xmlText.value = sampleXmlForLang(getLang());
+      output.innerHTML = sampleLoadedHtml();
     } else if (!output.querySelector('.result-card, .err-text')) {
       output.innerHTML = `<p class="placeholder">${t('s2.output.placeholder.full')}</p>`;
     }

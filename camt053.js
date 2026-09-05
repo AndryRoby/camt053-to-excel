@@ -491,7 +491,8 @@ function readEntry(ntryNode, ctx) {
 }
 
 function readStatement(stmtNode) {
-  const account = readAccount(firstChild(stmtNode, 'Acct'));
+  const acctNode = firstChild(stmtNode, 'Acct');
+  const account = readAccount(acctNode);
   const id = textOf(firstChild(stmtNode, 'Id'));
   const legalSeqNb = textOf(firstChild(stmtNode, 'LglSeqNb'));
   const elctrncSeqNb = textOf(firstChild(stmtNode, 'ElctrncSeqNb'));
@@ -499,7 +500,11 @@ function readStatement(stmtNode) {
   const frToDt = firstChild(stmtNode, 'FrToDt');
   const fromDateTime = frToDt ? (textOf(firstChild(frToDt, 'FrDtTm')) || textAt(frToDt, 'FrDt', 'Dt')) : '';
   const toDateTime = frToDt ? (textOf(firstChild(frToDt, 'ToDtTm')) || textAt(frToDt, 'ToDt', 'Dt')) : '';
-  const servicerBic = textAt(stmtNode, 'Svcr', 'FinInstnId', 'BIC') || textAt(stmtNode, 'Svcr', 'FinInstnId', 'BICFI');
+  // The Tatra banka export carries Svcr directly under Stmt; the .001.02
+  // schema itself (CashAccount20) and German/Austrian exports (Sparkasse,
+  // Volksbank, ...) place it under Acct. Read either, Stmt-level first.
+  const servicerBic = textAt(stmtNode, 'Svcr', 'FinInstnId', 'BIC') || textAt(stmtNode, 'Svcr', 'FinInstnId', 'BICFI')
+    || textAt(acctNode, 'Svcr', 'FinInstnId', 'BIC') || textAt(acctNode, 'Svcr', 'FinInstnId', 'BICFI');
 
   const balances = readBalances(stmtNode);
   const ctx = { statementId: id, account: account.iban || account.otherId, accountCurrency: account.currency };
@@ -744,7 +749,8 @@ function summarize(parsed) {
 // A small, valid camt.053.001.02 statement with 3 entries (one credit, two
 // debits, no real personal data), shaped after the real Tatra banka sample
 // this engine was built against. Used by the "ukážka" button in index.html
-// and by tests.mjs.
+// when the page is in Slovak (German and English load SAMPLE_CAMT053_XML_DE
+// below) and by tests.mjs.
 
 const SAMPLE_CAMT053_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
@@ -846,9 +852,189 @@ const SAMPLE_CAMT053_XML = `<?xml version="1.0" encoding="UTF-8"?>
 </Document>
 `;
 
+// ─────────────────────────── sample file (German) ──────────────────────────
+// The sample the "Beispiel"/"sample" button loads when the page is in German
+// or English (index.html picks by i18n getLang(); Slovak keeps the Tatra
+// banka sample above): a camt.053.001.02 statement shaped after a typical
+// Sparkasse/Volksbank export for a fictional "Muster GmbH" business account
+// at a fictional "Musterbank" (BIC MUSTDEFFXXX). Four entries: a received
+// SEPA-Überweisung (invoice paid by a customer), a paid SEPA-Lastschrift
+// (electricity, with mandate reference and a creditor identifier in the
+// DE..ZZZ.. pattern), a girocard card payment, and a bank fee. IBANs are
+// fictional but pass the mod-97 check (tests.mjs verifies); bank codes
+// 12345678 / 87654321 / 11223344 / 55667788 are not assigned to any bank.
+// No real person or company. Opening balance + the four entries add up
+// exactly to the closing balance.
+
+const SAMPLE_CAMT053_XML_DE = `<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>camt053-20260912-000037</MsgId>
+      <CreDtTm>2026-09-12T06:30:00+02:00</CreDtTm>
+      <MsgPgntn><PgNb>1</PgNb><LastPgInd>true</LastPgInd></MsgPgntn>
+    </GrpHdr>
+    <Stmt>
+      <Id>KA-2026-037</Id>
+      <ElctrncSeqNb>37</ElctrncSeqNb>
+      <LglSeqNb>9</LglSeqNb>
+      <CreDtTm>2026-09-12T06:30:00+02:00</CreDtTm>
+      <FrToDt>
+        <FrDtTm>2026-09-07T00:00:00+02:00</FrDtTm>
+        <ToDtTm>2026-09-11T23:59:59+02:00</ToDtTm>
+      </FrToDt>
+      <Acct>
+        <Id><IBAN>DE40123456780000123456</IBAN></Id>
+        <Tp><Cd>CACC</Cd></Tp>
+        <Ccy>EUR</Ccy>
+        <Nm>Geschäftskonto</Nm>
+        <Ownr><Nm>Muster GmbH</Nm></Ownr>
+        <Svcr><FinInstnId><BIC>MUSTDEFFXXX</BIC><Nm>Musterbank</Nm></FinInstnId></Svcr>
+      </Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">12480.55</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-09-07</Dt></Dt>
+      </Bal>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">13952.28</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-09-11</Dt></Dt>
+      </Bal>
+      <Ntry>
+        <NtryRef>2026090800001</NtryRef>
+        <Amt Ccy="EUR">1785.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-08</Dt></BookgDt>
+        <ValDt><Dt>2026-09-08</Dt></ValDt>
+        <AcctSvcrRef>2026090800001</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn>
+          <Prtry><Cd>NTRF+166</Cd><Issr>DK</Issr></Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>2026090800001</AcctSvcrRef>
+              <EndToEndId>RE-2026-0417</EndToEndId>
+            </Refs>
+            <RltdPties>
+              <Dbtr><Nm>Beispiel Handels GmbH</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE77876543210001234567</IBAN></Id></DbtrAcct>
+              <Cdtr><Nm>Muster GmbH</Nm></Cdtr>
+              <CdtrAcct><Id><IBAN>DE40123456780000123456</IBAN></Id></CdtrAcct>
+            </RltdPties>
+            <RltdAgts><DbtrAgt><FinInstnId><BIC>BEISDEB1XXX</BIC></FinInstnId></DbtrAgt></RltdAgts>
+            <RmtInf><Ustrd>Rechnung RE-2026-0417 vom 01.09.2026, Kundenreferenz KD-10245</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>SEPA-Überweisung Gutschrift</AddtlNtryInf>
+      </Ntry>
+      <Ntry>
+        <NtryRef>2026090900002</NtryRef>
+        <Amt Ccy="EUR">214.00</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-09</Dt></BookgDt>
+        <ValDt><Dt>2026-09-09</Dt></ValDt>
+        <AcctSvcrRef>2026090900002</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>PMNT</Cd><Fmly><Cd>RDDT</Cd><SubFmlyCd>ESDD</SubFmlyCd></Fmly></Domn>
+          <Prtry><Cd>NDDT+105</Cd><Issr>DK</Issr></Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>2026090900002</AcctSvcrRef>
+              <EndToEndId>SW-2026-09-4711-0815</EndToEndId>
+              <MndtId>M-2024-0042</MndtId>
+            </Refs>
+            <RltdPties>
+              <Dbtr><Nm>Muster GmbH</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE40123456780000123456</IBAN></Id></DbtrAcct>
+              <Cdtr>
+                <Nm>Stadtwerke Musterstadt GmbH</Nm>
+                <Id><PrvtId><Othr><Id>DE98ZZZ09999999999</Id><SchmeNm><Prtry>SEPA</Prtry></SchmeNm></Othr></PrvtId></Id>
+              </Cdtr>
+              <CdtrAcct><Id><IBAN>DE72112233440009876543</IBAN></Id></CdtrAcct>
+            </RltdPties>
+            <RltdAgts><CdtrAgt><FinInstnId><BIC>BEISDEB1XXX</BIC></FinInstnId></CdtrAgt></RltdAgts>
+            <RmtInf><Ustrd>Stromabschlag September 2026, Vertragskonto 4711 0815, Mandat M-2024-0042, Gläubiger-ID DE98ZZZ09999999999</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>SEPA-Basislastschrift</AddtlNtryInf>
+      </Ntry>
+      <Ntry>
+        <NtryRef>2026091000003</NtryRef>
+        <Amt Ccy="EUR">86.37</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-10</Dt></BookgDt>
+        <ValDt><Dt>2026-09-10</Dt></ValDt>
+        <AcctSvcrRef>2026091000003</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>PMNT</Cd><Fmly><Cd>CCRD</Cd><SubFmlyCd>POSD</SubFmlyCd></Fmly></Domn>
+          <Prtry><Cd>NMSC+106</Cd><Issr>DK</Issr></Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>2026091000003</AcctSvcrRef>
+              <EndToEndId>26091012310815-00123</EndToEndId>
+            </Refs>
+            <RltdPties>
+              <Dbtr><Nm>Muster GmbH</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE40123456780000123456</IBAN></Id></DbtrAcct>
+              <Cdtr><Nm>Bürobedarf Musterstadt</Nm></Cdtr>
+              <CdtrAcct><Id><IBAN>DE95556677880002468135</IBAN></Id></CdtrAcct>
+            </RltdPties>
+            <RltdAgts><CdtrAgt><FinInstnId><BIC>FIKTDEMMXXX</BIC></FinInstnId></CdtrAgt></RltdAgts>
+            <RmtInf><Ustrd>Kartenzahlung girocard 10.09.2026 12:31 Uhr, Bürobedarf Musterstadt, Beleg 26-1234</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>Kartenzahlung girocard</AddtlNtryInf>
+      </Ntry>
+      <Ntry>
+        <NtryRef>2026091100004</NtryRef>
+        <Amt Ccy="EUR">12.90</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-09-11</Dt></BookgDt>
+        <ValDt><Dt>2026-09-11</Dt></ValDt>
+        <AcctSvcrRef>2026091100004</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>ACMT</Cd><Fmly><Cd>MDOP</Cd><SubFmlyCd>CHRG</SubFmlyCd></Fmly></Domn>
+          <Prtry><Cd>NCHG+808</Cd><Issr>DK</Issr></Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>2026091100004</AcctSvcrRef>
+              <EndToEndId>NOTPROVIDED</EndToEndId>
+            </Refs>
+            <RltdPties>
+              <Dbtr><Nm>Muster GmbH</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE40123456780000123456</IBAN></Id></DbtrAcct>
+              <Cdtr><Nm>Musterbank</Nm></Cdtr>
+              <CdtrAcct><Id><IBAN>DE65123456780000000010</IBAN></Id></CdtrAcct>
+            </RltdPties>
+            <RltdAgts><CdtrAgt><FinInstnId><BIC>MUSTDEFFXXX</BIC></FinInstnId></CdtrAgt></RltdAgts>
+            <RmtInf><Ustrd>Kontoführungsentgelt September 2026, Kontonummer 0000123456</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>Entgeltabschluss</AddtlNtryInf>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>
+`;
+
 // ─────────────────────────────────── exports ────────────────────────────────
 
-const CamtConverter = { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic };
+const CamtConverter = { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE, bankFromBic };
 
 // Loaded as an ES module (import { parse, toRows, toCsv, summarize } from
 // './camt053.js') in both Node (tests.mjs) and the browser; when loaded in
@@ -859,4 +1045,4 @@ if (typeof window !== 'undefined') {
   window.CamtConverter = CamtConverter;
 }
 
-export { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic, parseXml };
+export { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE, bankFromBic, parseXml };

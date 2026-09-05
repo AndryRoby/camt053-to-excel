@@ -54,7 +54,7 @@ export const DICT = {
     de: 'jede Bank mit camt.053-Export (ISO 20022)',
   },
   'hero.fact.versions': { sk: '2 verzie camt.053: .001.02 a .001.08', en: '2 camt.053 versions: .001.02 and .001.08', de: '2 camt.053-Versionen: .001.02 und .001.08' },
-  'hero.fact.tests': { sk: '201 automatizovaných testov', en: '201 automated tests', de: '201 automatisierte Tests' },
+  'hero.fact.tests': { sk: '288 automatizovaných testov', en: '288 automated tests', de: '288 automatisierte Tests' },
   'hero.fact.maxsize': { sk: 'max. 20 MB', en: 'max. 20 MB', de: 'max. 20 MB' },
   'hero.fact.free': { sk: '0 €, bez účtu, beží vo vašom prehliadači', en: '€0, no account, runs in your browser', de: '0 €, ohne Konto, läuft im Browser' },
 
@@ -102,7 +102,7 @@ export const DICT = {
   's2.input.label': { sk: 'Vstup', en: 'Input', de: 'Eingabe' },
   's2.output.label': { sk: 'Výstup', en: 'Output', de: 'Ausgabe' },
   's2.sample.btn': { sk: 'ukážka', en: 'sample', de: 'Beispiel' },
-  's2.sample.btn.title': { sk: 'Načítať malý ukážkový výpis s 3 položkami', en: 'Load a small sample statement with 3 entries', de: 'Kleinen Beispielauszug mit 3 Positionen laden' },
+  's2.sample.btn.title': { sk: 'Načítať malý ukážkový výpis Tatra banky s 3 položkami', en: 'Load a small sample statement from a German bank with 4 entries', de: 'Kleinen Beispiel-Kontoauszug einer deutschen Bank mit 4 Positionen laden' },
   's2.convert.btn': { sk: 'Previesť ↵', en: 'Convert ↵', de: 'Umwandeln ↵' },
   's2.files.title': { sk: 'Súbor(y) camt.053', en: 'camt.053 file(s)', de: 'camt.053-Datei(en)' },
   's2.files.hint': { sk: '.xml, max. 20 MB; viac súborov naraz', en: '.xml, max. 20 MB; several files at once', de: '.xml, max. 20 MB; mehrere Dateien gleichzeitig' },
@@ -348,7 +348,7 @@ export const DICT = {
   'js.download.xlsx': { sk: 'Stiahnuť Excel', en: 'Download Excel', de: 'Excel herunterladen' },
   'js.download.all': { sk: 'Stiahnuť všetky ako CSV ({n})', en: 'Download all as CSV ({n})', de: 'Alle als CSV herunterladen ({n})' },
 
-  'js.sample.loaded': { sk: 'ukážka vložená, stlačte {kbd1} alebo {kbd2}', en: 'sample loaded, press {kbd1} or {kbd2}', de: 'Beispiel geladen, drücken Sie {kbd1} oder {kbd2}' },
+  'js.sample.loaded': { sk: 'ukážka vložená (výpis Tatra banky, 3 položky), stlačte {kbd1} alebo {kbd2}', en: 'sample loaded (German bank statement, 4 entries), press {kbd1} or {kbd2}', de: 'Beispiel geladen (deutscher Kontoauszug, 4 Positionen), drücken Sie {kbd1} oder {kbd2}' },
 
   'js.tableNote': { sk: 'Zobrazených prvých {shown} z {total} riadkov. Stiahnutie CSV/Excel obsahuje všetkých {total}.', en: 'Showing the first {shown} of {total} rows. The CSV/Excel download contains all {total}.', de: 'Angezeigt werden die ersten {shown} von {total} Zeilen. Der CSV/Excel-Download enthält alle {total}.' },
 

@@ -87,10 +87,17 @@ Slovak banks' BICs to label which bank issued the file.
 
 ## Worked example
 
-This is the actual sample statement the tool ships (the "ukážka"/sample
-button on the page loads exactly this XML), a camt.053.001.02 statement
-with three entries: one incoming SEPA credit transfer, one outgoing
-payment, and one service fee.
+This is the Slovak sample statement the tool ships (the "ukážka" button
+loads exactly this XML when the page is in Slovak), a camt.053.001.02
+statement with three entries: one incoming SEPA credit transfer, one
+outgoing payment, and one service fee. When the page is in German or
+English, the same button loads a German bank statement instead: a
+camt.053.001.02 export for a fictional Muster GmbH at a fictional
+Musterbank (BIC MUSTDEFFXXX) with four entries (a received
+SEPA-Überweisung with Rechnungsnummer and Kundenreferenz, a paid
+SEPA-Lastschrift with mandate reference and Gläubiger-ID, a girocard
+card payment, and a bank fee), exported as `SAMPLE_CAMT053_XML_DE` from
+`camt053.js`.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

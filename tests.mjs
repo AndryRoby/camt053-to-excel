@@ -1,7 +1,7 @@
 // tests.mjs — plain Node test runner for camt053.js and xlsx-writer.js
 // (no external dependencies). Run with: node tests.mjs
 
-import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, bankFromBic, parseXml } from './camt053.js';
+import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE, bankFromBic, parseXml } from './camt053.js';
 import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
 import {
@@ -179,6 +179,121 @@ eq('VS source 1/3: entry 2 VS with no SS present', rows02[1].vs, '789');
 eq('VS source 1/3: entry 2 SS is empty when absent', rows02[1].ss, '');
 eq('VS source 3/3: from RmtInf/Ustrd free text "VS: 445566"', rows02[2].vs, '445566');
 eq('VS source 3/3: vsSource tagged "ustrd"', rows02[2].vsSource, 'ustrd');
+
+// ═══════════════════════════ parse(): German .02 sample (de/en button) ═══
+// SAMPLE_CAMT053_XML_DE is what the sample button loads for German and
+// English visitors: a Sparkasse/Volksbank-style statement for a fictional
+// Muster GmbH, four entries. These assertions pin down everything the
+// table shows for it, that it reconciles, that the fictional IBANs are
+// nonetheless mod-97 valid, and that umlauts survive parse -> CSV -> XLSX.
+
+// ISO 13616 mod-97 check, written out here on purpose (the engine has no
+// IBAN validator of its own; this guards the sample, not the engine).
+function ibanMod97Ok(iban) {
+  const s = String(iban || '').replace(/\s+/g, '').toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(s)) return false;
+  const rearranged = s.slice(4) + s.slice(0, 4);
+  const digits = rearranged.replace(/[A-Z]/g, (c) => String(c.charCodeAt(0) - 55));
+  let r = 0;
+  for (const ch of digits) r = (r * 10 + Number(ch)) % 97;
+  return r === 1;
+}
+eq('ibanMod97Ok: known-good IBAN passes (sanity check of the checker itself)', ibanMod97Ok('DE89370400440532013000'), true);
+eq('ibanMod97Ok: one digit changed fails', ibanMod97Ok('DE89370400440532013001'), false);
+
+const pDe = parse(SAMPLE_CAMT053_XML_DE);
+ok('DE sample: parses without error (ok true)', pDe.ok === true, pDe.errors.join('; '));
+eq('DE sample: not malformed', pDe.malformed, false);
+deepEq('DE sample: no parser errors at all', pDe.errors, []);
+eq('DE sample: version detected as 001.02', pDe.version, '001.02');
+eq('DE sample: exactly one statement', pDe.statements.length, 1);
+eq('DE sample: MsgId read', pDe.groupHeader.msgId, 'camt053-20260912-000037');
+eq('DE sample: fictional BIC MUSTDEFFXXX is not a Slovak bank -> "iná" (rendered as "andere"/"other")', pDe.bank, 'iná');
+
+const stmtDe = pDe.statements[0];
+eq('DE sample: statement id', stmtDe.id, 'KA-2026-037');
+eq('DE sample: electronic sequence number', stmtDe.elctrncSeqNb, '37');
+eq('DE sample: account owner is Muster GmbH', stmtDe.account.ownerName, 'Muster GmbH');
+eq('DE sample: account currency EUR', stmtDe.account.currency, 'EUR');
+eq('DE sample: account IBAN', stmtDe.account.iban, 'DE40123456780000123456');
+eq('DE sample: servicer BIC read from Acct/Svcr (camt.053.001.02 schema placement, not only Stmt/Svcr)', stmtDe.servicerBic, 'MUSTDEFFXXX');
+eq('DE sample: statement period starts in 2026', stmtDe.fromDateTime.slice(0, 4), '2026');
+eq('DE sample: statement period ends in 2026', stmtDe.toDateTime.slice(0, 4), '2026');
+eq('DE sample: 4 entries', stmtDe.entries.length, 4);
+eq('DE sample: 2 balances (OPBD, CLBD)', stmtDe.balances.length, 2);
+
+const rowsDe = toRows(pDe);
+eq('DE rows: 4 rows total', rowsDe.length, 4);
+deepEq('DE rows: directions CRDT, DBIT, DBIT, DBIT', rowsDe.map((r) => r.direction), ['CRDT', 'DBIT', 'DBIT', 'DBIT']);
+deepEq('DE rows: signed amounts', rowsDe.map((r) => r.amount), [1785, -214, -86.37, -12.9]);
+deepEq('DE rows: German counterparty names (Dbtr on the credit, Cdtr on the debits)', rowsDe.map((r) => r.counterpartyName), ['Beispiel Handels GmbH', 'Stadtwerke Musterstadt GmbH', 'Bürobedarf Musterstadt', 'Musterbank']);
+ok('DE rows: every row has a booking date in 2026', rowsDe.every((r) => /^2026-\d{2}-\d{2}$/.test(r.bookingDate)));
+ok('DE rows: every row has a value date in 2026', rowsDe.every((r) => /^2026-\d{2}-\d{2}$/.test(r.valueDate)));
+ok('DE rows: every row has currency EUR', rowsDe.every((r) => r.currency === 'EUR'));
+ok('DE rows: every row has status BOOK', rowsDe.every((r) => r.status === 'BOOK'));
+ok('DE rows: every row has a bank reference', rowsDe.every((r) => r.bankRef.length > 0));
+ok('DE rows: every row has a counterparty IBAN', rowsDe.every((r) => r.counterpartyIban.startsWith('DE')));
+ok('DE rows: every row has a counterparty BIC', rowsDe.every((r) => /^[A-Z]{6}[A-Z0-9]{2}(XXX)?$/.test(r.counterpartyBic)));
+ok('DE rows: every row has an EndToEndId', rowsDe.every((r) => r.endToEndId.length > 0));
+ok('DE rows: every row has a Verwendungszweck (RmtInf/Ustrd)', rowsDe.every((r) => r.message.length > 0));
+ok('DE rows: every row has a bank transaction code', rowsDe.every((r) => r.txType.length > 0));
+eq('DE rows: received SEPA-Überweisung is PMNT-RCDT-ESCT with the DK proprietary code', rowsDe[0].txType, 'PMNT-RCDT-ESCT / NTRF+166 (DK)');
+eq('DE rows: paid SEPA-Lastschrift is PMNT-RDDT-ESDD (received direct debit, payer side)', rowsDe[1].txType, 'PMNT-RDDT-ESDD / NDDT+105 (DK)');
+eq('DE rows: card payment is PMNT-CCRD-POSD', rowsDe[2].txType, 'PMNT-CCRD-POSD / NMSC+106 (DK)');
+eq('DE rows: bank fee is ACMT-MDOP-CHRG', rowsDe[3].txType, 'ACMT-MDOP-CHRG / NCHG+808 (DK)');
+eq('DE rows: invoice EndToEndId', rowsDe[0].endToEndId, 'RE-2026-0417');
+includes('DE rows: Verwendungszweck carries the Rechnungsnummer', rowsDe[0].message, 'Rechnung RE-2026-0417');
+includes('DE rows: Verwendungszweck carries the Kundenreferenz', rowsDe[0].message, 'Kundenreferenz KD-10245');
+includes('DE rows: direct debit Verwendungszweck is the Stromabschlag', rowsDe[1].message, 'Stromabschlag');
+includes('DE rows: direct debit Verwendungszweck names the mandate', rowsDe[1].message, 'Mandat M-2024-0042');
+includes('DE rows: umlaut in counterparty name survives parse ("Bürobedarf")', rowsDe[2].counterpartyName, 'ü');
+includes('DE rows: umlaut in Verwendungszweck survives parse ("Kontoführungsentgelt")', rowsDe[3].message, 'Kontoführungsentgelt');
+includes('DE sample XML: direct debit carries a MndtId', SAMPLE_CAMT053_XML_DE, '<MndtId>M-2024-0042</MndtId>');
+includes('DE sample XML: direct debit carries a creditor identifier in the DE..ZZZ.. pattern', SAMPLE_CAMT053_XML_DE, '<Id>DE98ZZZ09999999999</Id>');
+ok('DE sample XML: creditor identifier matches the German Gläubiger-ID shape', /DE\d{2}ZZZ\d{11}/.test(SAMPLE_CAMT053_XML_DE));
+ok('DE rows: no Slovak VS/SS/KS false positives from the German free text', rowsDe.every((r) => r.vs === '' && r.ss === '' && r.ks === '' && r.vsSource === ''));
+
+// IBANs: account, every counterparty, and every IBAN literally present in
+// the XML must pass mod-97.
+eq('DE IBAN: account IBAN passes mod-97', ibanMod97Ok(stmtDe.account.iban), true);
+ok('DE IBAN: every counterparty IBAN passes mod-97', rowsDe.every((r) => ibanMod97Ok(r.counterpartyIban)), rowsDe.map((r) => r.counterpartyIban).join(','));
+{
+  const allIbans = Array.from(new Set((SAMPLE_CAMT053_XML_DE.match(/<IBAN>([^<]+)<\/IBAN>/g) || []).map((m) => m.replace(/<\/?IBAN>/g, ''))));
+  ok('DE IBAN: at least 5 distinct IBANs in the sample (account + 4 counterparties)', allIbans.length >= 5, String(allIbans.length));
+  ok('DE IBAN: every <IBAN> in the XML passes mod-97', allIbans.every(ibanMod97Ok), allIbans.filter((i) => !ibanMod97Ok(i)).join(','));
+  ok('DE IBAN: every <IBAN> in the XML is a 22-character German IBAN', allIbans.every((i) => /^DE\d{20}$/.test(i)));
+}
+
+const sDe = summarize(pDe);
+eq('DE summarize: balance check passes', sDe.balanceCheckOk, true);
+close('DE summarize: balanceDiff is 0', sDe.balanceDiff, 0);
+eq('DE summarize: entryCount 4', sDe.entryCount, 4);
+eq('DE summarize: 1 credit, 3 debits', sDe.creditCount + '/' + sDe.debitCount, '1/3');
+close('DE summarize: openingBalance 12480.55', sDe.openingBalance, 12480.55);
+close('DE summarize: closingBalance 13952.28', sDe.closingBalance, 13952.28);
+close('DE summarize: creditSum 1785.00', sDe.creditSum, 1785);
+close('DE summarize: debitSum 313.27', sDe.debitSum, 313.27);
+close('DE summarize: opening + credits - debits = closing, computed here independently', sDe.openingBalance + sDe.creditSum - sDe.debitSum, sDe.closingBalance, 0.001);
+deepEq('DE summarize: single currency EUR', sDe.currencies, ['EUR']);
+
+// umlauts through the export pipeline
+{
+  const csvDe = toCsv(rowsDe, { bom: false, decimalComma: true, delimiter: ';', labels: columnLabelsMap('de') });
+  includes('DE CSV: umlaut counterparty survives toCsv', csvDe, 'Bürobedarf Musterstadt');
+  includes('DE CSV: umlaut Verwendungszweck survives toCsv', csvDe, 'Kontoführungsentgelt');
+  includes('DE CSV: German decimal comma on the amount', csvDe, '-86,37');
+  eq('DE CSV: header + 4 data lines', csvDe.split('\r\n').length, 5);
+  const xlsxDe = buildXlsx('camt053', COLUMNS.map((c) => columnLabel(c.key, 'de')), rowsDe.map((r) => COLUMNS.map((c) => r[c.key])));
+  const xlsxText = new TextDecoder('utf-8').decode(xlsxDe);
+  includes('DE XLSX: umlaut counterparty is UTF-8 inside the sheet (STORED zip, so readable as text)', xlsxText, 'Bürobedarf Musterstadt');
+  includes('DE XLSX: umlaut Verwendungszweck is UTF-8 inside the sheet', xlsxText, 'Kontoführungsentgelt');
+  includes('DE XLSX: German column header written', xlsxText, 'Buchungsdatum');
+}
+
+// The two samples are distinct and each still parses on its own.
+ok('samples: Slovak and German samples are different documents', SAMPLE_CAMT053_XML !== SAMPLE_CAMT053_XML_DE);
+eq('samples: Slovak sample still detects Tatra banka via Stmt/Svcr (unchanged by the Acct/Svcr fallback)', parse(SAMPLE_CAMT053_XML).bank, 'tatrabanka');
+ok('DE sample: no Slovak counterparty leaked into the German sample', !SAMPLE_CAMT053_XML_DE.includes('Odberatel') && !SAMPLE_CAMT053_XML_DE.includes('SK68'));
 
 // ═══════════════════════════ parse(): .08 sample, 2 statements ═══════════
 
@@ -564,6 +679,27 @@ eq('rendered English: playground heading has no leftover "Dostanete"', t('s2.h2'
 eq('rendered German: playground heading has no leftover "Dostanete"', t('s2.h2', 'de').includes('Dostanete'), false);
 eq('rendered English: hero lead has no leftover "Máte"', t('hero.lead', 'en').includes('Máte'), false);
 eq('rendered German: hero lead has no leftover "Máte"', t('hero.lead', 'de').includes('Máte'), false);
+
+// ── sample-button copy matches the sample each language actually loads:
+// sk -> Tatra banka sample (3 entries), en/de -> German sample (4) ───────
+includes('i18n sample title: Slovak names Tatra banka', t('s2.sample.btn.title', 'sk'), 'Tatra banky');
+includes('i18n sample title: Slovak says 3 entries', t('s2.sample.btn.title', 'sk'), '3 polo');
+includes('i18n sample title: English says a German bank', t('s2.sample.btn.title', 'en'), 'German bank');
+includes('i18n sample title: English says 4 entries', t('s2.sample.btn.title', 'en'), '4 entries');
+includes('i18n sample title: German says a German bank', t('s2.sample.btn.title', 'de'), 'deutschen Bank');
+includes('i18n sample title: German says 4 Positionen', t('s2.sample.btn.title', 'de'), '4 Positionen');
+eq('i18n sample title: English no longer claims 3 entries', t('s2.sample.btn.title', 'en').includes('3 entries'), false);
+eq('i18n sample title: German no longer claims 3 Positionen', t('s2.sample.btn.title', 'de').includes('3 Positionen'), false);
+includes('i18n sample loaded: Slovak names the Tatra banka sample with 3 entries', tf('js.sample.loaded', { kbd1: 'A', kbd2: 'B' }, 'sk'), 'Tatra banky, 3 polo');
+includes('i18n sample loaded: English names the German statement with 4 entries', tf('js.sample.loaded', { kbd1: 'A', kbd2: 'B' }, 'en'), 'German bank statement, 4 entries');
+includes('i18n sample loaded: German names the German statement with 4 Positionen', tf('js.sample.loaded', { kbd1: 'A', kbd2: 'B' }, 'de'), 'deutscher Kontoauszug, 4 Positionen');
+{
+  const entryCountSk = toRows(parse(SAMPLE_CAMT053_XML)).length;
+  const entryCountDe = toRows(parse(SAMPLE_CAMT053_XML_DE)).length;
+  includes('i18n sample title: the Slovak number matches the Slovak sample row count', t('s2.sample.btn.title', 'sk'), String(entryCountSk) + ' polo');
+  includes('i18n sample title: the German number matches the German sample row count', t('s2.sample.btn.title', 'de'), String(entryCountDe) + ' Positionen');
+  includes('i18n sample title: the English number matches the German sample row count', t('s2.sample.btn.title', 'en'), String(entryCountDe) + ' entries');
+}
 
 // ═══════════════════════════ summary ═══════════════════════════════════
 
