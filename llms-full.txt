@@ -264,10 +264,11 @@ Yes, as a Pro (licensed) feature: `mt940.js` builds one SWIFT MT940
 message per statement, with the German `:86:` structured subfield
 convention (GVC code, `?00`-`?34` subfields, SEPA `EREF+`/`SVWZ+` tags),
 for a manual import into DATEV Kanzlei-Rechnungswesen or any other
-MT940-only software. German banks stopped issuing MT940 in November
-2025 (camt.053 only, per the banking industry's own rulebook), but
-DATEV's manual file import still expects MT940, since DATEV has no
-direct camt.053 file import of its own. `datev-extf.js` additionally
+MT940-only software. MT940 was removed from the German banking
+industry's own rulebook in November 2025; many banks already issue
+camt.053 only, but DATEV's manual file import still expects MT940,
+since DATEV has no direct camt.053 file import of its own.
+`datev-extf.js` additionally
 exports straight into the DATEV-Format "Buchungsstapel" (EXTF CSV), with
 a small Konto/Sachkontenlänge/Beraternummer/Mandantennummer/
 Wirtschaftsjahr-Beginn options block. Both exports run client-side like
