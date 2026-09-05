@@ -13,6 +13,7 @@ Every major Slovak bank issues its accounting statement as camt.053 XML by defau
 - One row per underlying payment (a batched entry with several `TxDtls` becomes several rows): statement id, account IBAN, booking date (`BookgDt`), value date (`ValDt`), amount (`Amt`) signed by `CdtDbtInd` (`DBIT` negative, `CRDT` positive), currency, status, bank reference (`AcctSvcrRef`/`NtryRef`), transaction type (`BkTxCd`), counterparty name/IBAN/BIC from `RltdPties`/`RltdAgts`, `EndToEndId`, VS/ŠS/KS parsed out of the `/VS.../SS.../KS...` convention or the structured reference, remittance text (`RmtInf/Ustrd`), and any fee (`Chrgs`).
 - Surfaces the statement's own account IBAN, period, entry/credit/debit totals, and opening/closing balance from its header, checked against the sum of entries, so a mismatch is visible before the row-level data is trusted. Matches the servicing bank's BIC against a table of Slovak banks.
 - Converts several statement files in one session; each result downloads as CSV or as a standalone .xlsx workbook (built client-side, no library), or copies as tab-separated text.
+- Ships a built-in sample statement: a German bank statement (fictional Muster GmbH, camt.053.001.02, four entries: a received SEPA credit transfer, a paid SEPA direct debit with mandate reference, a girocard payment and a bank fee) when the page is in German or English, and a Slovak Tatra banka statement (three entries) in Slovak.
 
 ## Who it's for
 

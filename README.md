@@ -33,7 +33,10 @@ bookkeeping process that isn't wired up to a bank's own accounting
 software connector) has no direct route from "an XML file in the
 Downloads folder" to a table, short of opening the XML by hand or
 buying software that imports it. This tool is that route: upload the
-file (or several), and download a table.
+file (or several), and download a table. The page's built-in sample
+("ukážka"/"sample"/"Beispiel" button) is a German bank statement
+(fictional Muster GmbH, four entries) when the page is in German or
+English, and a Slovak Tatra banka statement (three entries) in Slovak.
 
 ## Input format
 
