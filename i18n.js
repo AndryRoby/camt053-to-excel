@@ -23,6 +23,7 @@ export const STORAGE_KEY = 'arling_lang';
 export const DICT = {
   // ── header / nav / language switch ────────────────────────────────────
   'skip': { sk: 'Skočiť na konverziu', en: 'Skip to conversion', de: 'Zur Umwandlung springen' },
+  'wordmark': { sk: 'camt.053 do Excelu', en: 'camt.053 to Excel', de: 'camt.053 nach Excel' },
   'brand.sub': { sk: 'nástroj ARLing', en: 'an ARLing tool', de: 'ein ARLing-Tool' },
   'nav.how': { sk: 'Ako to funguje', en: 'How it works', de: 'So funktioniert es' },
   'nav.convert': { sk: 'Previesť', en: 'Convert', de: 'Umwandeln' },
@@ -80,11 +81,11 @@ export const DICT = {
     en: 'The amount is written into the table signed by <code>CdtDbtInd</code> (DBIT negative, CRDT positive), so the column can be summed directly and checked against the opening and closing balance the statement itself reports.',
     de: 'Der Betrag wird in der Tabelle mit Vorzeichen nach <code>CdtDbtInd</code> eingetragen (DBIT negativ, CRDT positiv), sodass die Spalte direkt summiert und mit dem im Auszug angegebenen Anfangs- und Endsaldo verglichen werden kann.',
   },
-  's1.r3.title': { sk: 'Jeden bankový zápis môže byť viac platieb.', en: 'One bank entry can hold several payments.', de: 'Ein Bankeintrag kann mehrere Zahlungen enthalten.' },
+  's1.r3.title': { sk: 'Jeden bankový zápis môže byť viac platieb.', en: 'One bank entry can hold several payments.', de: 'Ein Sammelposten kann mehrere Zahlungen enthalten.' },
   's1.r3.body': {
     sk: 'Dávkový záznam s viacerými <code>NtryDtls/TxDtls</code> sa rozpíše na samostatný riadok pre každú platbu, takže párovanie podľa VS funguje na úrovni platby, nie na úrovni bankového zápisu.',
     en: 'A batched entry with several <code>NtryDtls/TxDtls</code> blocks is split into a separate row for each payment, so matching by reference works at the payment level, not the bank-entry level.',
-    de: 'Ein Sammelposten mit mehreren <code>NtryDtls/TxDtls</code>-Blöcken wird in eine eigene Zeile je Zahlung aufgeteilt, sodass der Abgleich per Verwendungszweck auf Zahlungsebene funktioniert, nicht auf Ebene des Bankeintrags.',
+    de: 'Ein Sammelposten mit mehreren <code>NtryDtls/TxDtls</code>-Blöcken wird in eine eigene Zeile je Zahlung aufgeteilt, sodass der Abgleich per Verwendungszweck auf Zahlungsebene funktioniert, nicht auf Ebene des Sammelpostens.',
   },
 
   // ── section 02: playground ──────────────────────────────────────────
@@ -149,7 +150,7 @@ export const DICT = {
   's3.copy.p2': {
     sk: 'Engine používa vlastný tolerantný XML parser (rovnaký prístup ako sesterský nástroj SEPA pain.001 Doctor), nie <code>DOMParser</code>, takže beží nezmenený aj v Node: presne to spúšťa aj testovacia sada tohto projektu, <code>tests.mjs</code>.',
     en: 'The engine uses its own tolerant XML parser (the same approach as the sibling tool SEPA pain.001 Doctor), not <code>DOMParser</code>, so it also runs unmodified in Node: exactly what this project’s own test suite, <code>tests.mjs</code>, runs.',
-    de: 'Die Engine verwendet einen eigenen tolerantem XML-Parser (der gleiche Ansatz wie beim Schwester-Tool SEPA pain.001 Doctor), nicht <code>DOMParser</code>, und läuft daher unverändert auch in Node: genau das führt die Testsuite dieses Projekts, <code>tests.mjs</code>, aus.',
+    de: 'Die Engine verwendet einen eigenen toleranten XML-Parser (der gleiche Ansatz wie beim Schwester-Tool SEPA pain.001 Doctor), nicht <code>DOMParser</code>, und läuft daher unverändert auch in Node: genau das führt die Testsuite dieses Projekts, <code>tests.mjs</code>, aus.',
   },
   's3.copy.p3': {
     sk: 'Zadarmo, otvorené, bez reklamy a bez sledovania nad rámec anonymných počtov použitia. Prípad, ktorý nástroj spracuje zle, nahláste ako <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">issue na GitHube</a>.',
@@ -189,8 +190,8 @@ export const DICT = {
   },
   's4.cta.p': {
     sk: '<b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky štyri nástroje, DPH v cene, faktúru pošle Stripe.',
-    en: '<b>One licence for four tools.</b> Pro for camt.053 do Excelu is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generátor and Párovač platieb: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.',
-    de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 do Excelu wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA pain.001 Generátor und Párovač platieb: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.',
+    en: '<b>One licence for four tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.',
+    de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.',
   },
   's4.cta.btn': { sk: 'Kúpiť Pro na arling.sk/bankove-nastroje', en: 'Buy Pro at arling.sk/bankove-nastroje', de: 'Pro kaufen auf arling.sk/bankove-nastroje' },
   's4.licence.manual.label': {
@@ -285,8 +286,8 @@ export const DICT = {
   'faq.q7': { sk: 'Čo dostanem v Pro?', en: 'What do I get with Pro?', de: 'Was bekomme ich mit Pro?' },
   'faq.a7': {
     sk: 'Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.',
-    en: 'Processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generátor and Párovač platieb. See the <a href="#pro">Pro section</a>.',
-    de: 'Die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA pain.001 Generátor und Párovač platieb funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
+    en: 'Processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.',
+    de: 'Die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung eines einzelnen Auszugs in CSV oder Excel bleibt unverändert vollständig kostenlos. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
   },
 
   // ── footer ───────────────────────────────────────────────────────────
@@ -294,6 +295,11 @@ export const DICT = {
   'footer.bundle.label': { sk: 'Pro pre všetky štyri:', en: 'Pro for all four:', de: 'Pro für alle vier:' },
   'footer.all.tools': { sk: 'Všetky nástroje ARLing', en: 'All ARLing tools', de: 'Alle ARLing-Tools' },
   'footer.privacy': { sk: 'Súkromie', en: 'Privacy', de: 'Datenschutz' },
+  'footer.tool.doctor': { sk: 'SEPA pain.001 Doctor', en: 'SEPA pain.001 Doctor', de: 'SEPA pain.001 Doctor' },
+  'footer.tool.generator': { sk: 'SEPA pain.001 Generátor', en: 'SEPA pain.001 Generator', de: 'SEPA-pain.001-Generator' },
+  'footer.tool.matcher': { sk: 'Párovač platieb', en: 'Payment matcher', de: 'Zahlungsabgleich' },
+  'footer.bundle.name': { sk: 'Bankové nástroje pre účtovníkov', en: 'Banking tools for accountants', de: 'Banktools für Buchhalter' },
+  'footer.country': { sk: 'Slovensko', en: 'Slovakia', de: 'Slowakei' },
   'footer.note': {
     sk: 'Nič neopúšťa váš prehliadač okrem anonymných počtov použitia cez self-hosted Umami (a e-mailu, ak sa prihlásite na odber nižšie).',
     en: 'Nothing leaves your browser except anonymous usage counts via self-hosted Umami (and an email address, if you sign up for updates below).',
