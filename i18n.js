@@ -54,7 +54,7 @@ export const DICT = {
     de: 'jede Bank mit camt.053-Export (ISO 20022)',
   },
   'hero.fact.versions': { sk: '2 verzie camt.053: .001.02 a .001.08', en: '2 camt.053 versions: .001.02 and .001.08', de: '2 camt.053-Versionen: .001.02 und .001.08' },
-  'hero.fact.tests': { sk: '288 automatizovaných testov', en: '288 automated tests', de: '288 automatisierte Tests' },
+  'hero.fact.tests': { sk: '311 automatizovaných testov', en: '311 automated tests', de: '311 automatisierte Tests' },
   'hero.fact.maxsize': { sk: 'max. 20 MB', en: 'max. 20 MB', de: 'max. 20 MB' },
   'hero.fact.free': { sk: '0 €, bez účtu, beží vo vašom prehliadači', en: '€0, no account, runs in your browser', de: '0 €, ohne Konto, läuft im Browser' },
 
@@ -467,6 +467,26 @@ export function templateLabel(id, lang) {
 export function templateOrderForLang(lang) {
   const l = resolveLang(lang);
   return TEMPLATE_ORDER_BY_LANG[l] || TEMPLATE_ORDER_BY_LANG.en;
+}
+
+// Columns ticked by default (table and download) per language. Slovak keeps
+// VS/ŠS/KS on: Slovak banks fill them and Slovak bookkeeping matches
+// payments by VS. German and English visitors get the counterparty IBAN
+// instead: a German, Austrian or Swiss statement has no VS/ŠS/KS (they
+// would be three empty columns next to the real Verwendungszweck, which
+// lives in `message`), and every default column is filled in every row of
+// SAMPLE_CAMT053_XML_DE, the sample those languages load (tests.mjs pins
+// that). All keys must exist in COLUMN_LABELS above / camt053.js COLUMNS;
+// VS/ŠS/KS stay available as toggles in every language.
+export const DEFAULT_COLUMNS_BY_LANG = {
+  sk: ['bookingDate', 'valueDate', 'amount', 'currency', 'counterpartyName', 'vs', 'ss', 'ks', 'message'],
+  en: ['bookingDate', 'valueDate', 'amount', 'currency', 'counterpartyName', 'counterpartyIban', 'message'],
+  de: ['bookingDate', 'valueDate', 'amount', 'currency', 'counterpartyName', 'counterpartyIban', 'message'],
+};
+
+export function defaultColumnsForLang(lang) {
+  const l = resolveLang(lang);
+  return (DEFAULT_COLUMNS_BY_LANG[l] || DEFAULT_COLUMNS_BY_LANG.en).slice();
 }
 
 // ─────────────────────────────── pure helpers ───────────────────────────────

@@ -9,6 +9,7 @@ import {
   formatAmountForLang, formatDateForLang, defaultCsvOptsForLang, localeTagForLang,
   ogLocaleForLang, langFromLocale, langFromQueryString, findIncompleteEntries,
   TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
+  DEFAULT_COLUMNS_BY_LANG, defaultColumnsForLang,
 } from './i18n.js';
 
 // Minimal in-memory localStorage polyfill: Node has no Web Storage API by
@@ -294,6 +295,44 @@ deepEq('DE summarize: single currency EUR', sDe.currencies, ['EUR']);
 ok('samples: Slovak and German samples are different documents', SAMPLE_CAMT053_XML !== SAMPLE_CAMT053_XML_DE);
 eq('samples: Slovak sample still detects Tatra banka via Stmt/Svcr (unchanged by the Acct/Svcr fallback)', parse(SAMPLE_CAMT053_XML).bank, 'tatrabanka');
 ok('DE sample: no Slovak counterparty leaked into the German sample', !SAMPLE_CAMT053_XML_DE.includes('Odberatel') && !SAMPLE_CAMT053_XML_DE.includes('SK68'));
+
+// ═══════════════════════════ default column set per language ═════════════
+// What the table and the download show before the visitor touches a
+// toggle (index.html checkedColumns starts as defaultColumnsForLang). Every
+// default column must be filled in every row of the sample that language
+// loads: de/en load the German sample, where VS/ŠS/KS are always empty, so
+// they must not be on by default there; sk loads the Tatra banka sample,
+// where VS/ŠS/KS are filled in at least one row each (a Slovak bank does
+// not set all three symbols on every payment).
+{
+  const filled = (r, k) => (k === 'amount' || k === 'charges') ? Number.isFinite(r[k]) : (typeof r[k] === 'string' && r[k].length > 0);
+  const colKeys = COLUMNS.map((c) => c.key);
+  deepEq('DEFAULT_COLUMNS_BY_LANG: one entry per supported language', Object.keys(DEFAULT_COLUMNS_BY_LANG).sort(), [...LANGS].sort());
+  for (const lang of LANGS) {
+    const d = defaultColumnsForLang(lang);
+    ok(`defaultColumnsForLang(${lang}): every key is a real COLUMNS key`, d.every((k) => colKeys.includes(k)), d.filter((k) => !colKeys.includes(k)).join(','));
+    ok(`defaultColumnsForLang(${lang}): no duplicate keys`, new Set(d).size === d.length);
+    ok(`defaultColumnsForLang(${lang}): booking date, amount, currency, counterparty and message are on`, ['bookingDate', 'amount', 'currency', 'counterpartyName', 'message'].every((k) => d.includes(k)));
+    ok(`defaultColumnsForLang(${lang}): returns a fresh copy each call`, (() => { const a = defaultColumnsForLang(lang); a.push('charges'); return !defaultColumnsForLang(lang).includes('charges'); })());
+  }
+  deepEq('defaultColumnsForLang(sk): Slovak keeps VS/ŠS/KS on, the historical default', defaultColumnsForLang('sk'), ['bookingDate', 'valueDate', 'amount', 'currency', 'counterpartyName', 'vs', 'ss', 'ks', 'message']);
+  for (const lang of ['de', 'en']) {
+    const d = defaultColumnsForLang(lang);
+    ok(`defaultColumnsForLang(${lang}): VS/ŠS/KS are off (a German statement never fills them)`, !d.includes('vs') && !d.includes('ss') && !d.includes('ks'));
+    ok(`defaultColumnsForLang(${lang}): counterparty IBAN is on instead`, d.includes('counterpartyIban'));
+    const gaps = d.filter((k) => !rowsDe.every((r) => filled(r, k)));
+    ok(`defaultColumnsForLang(${lang}): every default column is filled in every row of the German sample`, gaps.length === 0, 'empty somewhere: ' + gaps.join(','));
+  }
+  {
+    const d = defaultColumnsForLang('sk');
+    const never = d.filter((k) => !rows02.some((r) => filled(r, k)));
+    ok('defaultColumnsForLang(sk): every default column is filled in at least one row of the Slovak sample', never.length === 0, 'never filled: ' + never.join(','));
+    const core = d.filter((k) => !['vs', 'ss', 'ks'].includes(k));
+    const gaps = core.filter((k) => !rows02.every((r) => filled(r, k)));
+    ok('defaultColumnsForLang(sk): every non-symbol default column is filled in every row of the Slovak sample', gaps.length === 0, 'empty somewhere: ' + gaps.join(','));
+  }
+  deepEq('defaultColumnsForLang: unknown language falls back to the active language (en in Node)', defaultColumnsForLang('xx'), defaultColumnsForLang('en'));
+}
 
 // ═══════════════════════════ parse(): .08 sample, 2 statements ═══════════
 
