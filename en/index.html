@@ -137,7 +137,7 @@
       "name": "Can you also convert camt.053 to MT940 for DATEV?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, as a Pro feature. German banks have delivered the account statement for accounting only as camt.053 since November 2025; MT940 was removed from the banking industry rulebook. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940 (a paid DATEV Bankdatenservice add-on handles camt.053 a different way). So this tool can convert a statement to MT940 (.sta) for a manual DATEV import or any other legacy software, and also directly to the DATEV Buchungsstapel (EXTF CSV) format. Both exports run in the browser just like the rest of the tool: nothing is uploaded. Check your bank account (Konto) and contra account (Gegenkonto) setup in DATEV before the first import, and test with a small file first: the :86: field convention in MT940 varies slightly bank to bank, and the Buchungstext/Gegenkonto in a DATEV import depend on your own chart of accounts."
+        "text": "Yes, as a Pro feature. MT940 was removed from the German banking industry's rulebook in November 2025; many banks already deliver the account statement for accounting only as camt.053. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940 (a paid DATEV Bankdatenservice add-on handles camt.053 a different way). So this tool can convert a statement to MT940 (.sta) for a manual DATEV import or any other legacy software, and also directly to the DATEV Buchungsstapel (EXTF CSV) format. Both exports run in the browser just like the rest of the tool: nothing is uploaded. Check your bank account (Konto) and contra account (Gegenkonto) setup in DATEV before the first import, and test with a small file first: the :86: field convention in MT940 varies slightly bank to bank, and the Buchungstext/Gegenkonto in a DATEV import depend on your own chart of accounts."
       }
     }
   ]
@@ -616,7 +616,7 @@
       <ol class="rules">
         <li>
           <b data-i18n="s4.r0.title">MT940 and DATEV Buchungsstapel export.</b>
-          <p data-i18n="s4.r0.body">German banks have stopped issuing MT940 since November 2025 and deliver only camt.053. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940. Pro also adds an export straight into the DATEV Buchungsstapel (EXTF CSV) format.</p>
+          <p data-i18n="s4.r0.body">MT940 was removed from German banks' rulebook in November 2025; many banks already deliver only camt.053. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940. Pro also adds an export straight into the DATEV Buchungsstapel (EXTF CSV) format.</p>
         </li>
         <li>
           <b data-i18n="s4.r1.title">Several files at once.</b>
@@ -725,7 +725,7 @@
       </details>
       <details>
         <summary data-i18n="faq.q8">Can you also convert camt.053 to MT940 for DATEV?</summary>
-        <p data-i18n-html="faq.a8">Yes, as a Pro feature. German banks have delivered the account statement for accounting only as camt.053 since November 2025; MT940 was removed from the banking industry rulebook. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940 (a paid DATEV Bankdatenservice add-on handles camt.053 a different way). So this tool can convert a statement to MT940 (.sta) for a manual DATEV import or any other legacy software, and also directly to the DATEV Buchungsstapel (EXTF CSV) format. Both exports run in the browser just like the rest of the tool: nothing is uploaded. Check your bank account (Konto) and contra account (Gegenkonto) setup in DATEV before the first import, and test with a small file first: the <code>:86:</code> field convention in MT940 varies slightly bank to bank, and the Buchungstext/Gegenkonto in a DATEV import depend on your own chart of accounts.</p>
+        <p data-i18n-html="faq.a8">Yes, as a Pro feature. MT940 was removed from the German banking industry's rulebook in November 2025; many banks already deliver the account statement for accounting only as camt.053. DATEV Kanzlei-Rechnungswesen still has no direct camt.053 file import though: its manual file import still expects MT940 (a paid DATEV Bankdatenservice add-on handles camt.053 a different way). So this tool can convert a statement to MT940 (.sta) for a manual DATEV import or any other legacy software, and also directly to the DATEV Buchungsstapel (EXTF CSV) format. Both exports run in the browser just like the rest of the tool: nothing is uploaded. Check your bank account (Konto) and contra account (Gegenkonto) setup in DATEV before the first import, and test with a small file first: the <code>:86:</code> field convention in MT940 varies slightly bank to bank, and the Buchungstext/Gegenkonto in a DATEV import depend on your own chart of accounts.</p>
       </details>
     </div>
   </section>
