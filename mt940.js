@@ -30,7 +30,7 @@
 //    chars), ?30 Bankkennung, ?31 Kontonummer, ?32-?33 Name, ?34
 //    Textschlüsselergänzung; max 390 characters over 6 lines of 65),
 //    :62F/M:, :64:/:65:.
-//  - https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-geschaeftsvorfallcodes-gvc-mt-940/
+//  - https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-gesch%C3%A4ftsvorfallcodes-gvc-mt-940/
 //    (and the DK "SEPA-Begleittext zu Feld 86" it documents) -- the SEPA
 //    reference tags placed inside the ?20-?29 Verwendungszweck lines:
 //    EREF+ (EndToEndId), KREF+, MREF+ (mandate reference), CRED+
@@ -66,13 +66,25 @@ const UMLAUT_MAP = {
   'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'Ä': 'Ae', 'Ö': 'Oe', 'Ü': 'Ue', 'ß': 'ss',
 };
 
-/** Transliterates umlauts/ß, folds other accented Latin letters to their
- * base form (NFD + strip combining marks), then drops anything still
- * outside the SWIFT X character set. Never throws on non-string input. */
-export function transliterateSwiftX(value) {
+/** Transliterates German umlauts/ß and folds other accented Latin letters
+ * to their base form (NFD + strip combining marks). Never throws on
+ * non-string input. Split out from transliterateSwiftX() below so callers
+ * that need umlaut folding but not the full SWIFT X charset restriction
+ * (e.g. index.html's download-filename sanitizer, which wants to keep
+ * "_" and other characters SWIFT's X charset does not allow) can use just
+ * this step. */
+export function foldDiacritics(value) {
   let s = String(value === null || value === undefined ? '' : value);
   s = s.replace(/[äöüÄÖÜß]/g, (c) => UMLAUT_MAP[c] || c);
   try { s = s.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) { /* normalize always exists in Node20+/modern browsers */ }
+  return s;
+}
+
+/** Transliterates umlauts/ß, folds other accented Latin letters to their
+ * base form, then drops anything still outside the SWIFT X character set.
+ * Never throws on non-string input. */
+export function transliterateSwiftX(value) {
+  let s = foldDiacritics(value);
   // eslint-disable-next-line no-control-regex
   s = s.replace(/[^A-Za-z0-9 \/\-\?:\(\)\.,'+\r\n]/g, '');
   // A stripped character (e.g. "&", an em dash) often leaves a double
@@ -309,7 +321,7 @@ export function toMt940(parsed, opts) {
   return parsed.statements.map((stmt) => toMt940Statement(stmt, opts)).join('\r\n') + '\r\n';
 }
 
-const Mt940Converter = { toMt940, toMt940Statement, transliterateSwiftX };
+const Mt940Converter = { toMt940, toMt940Statement, transliterateSwiftX, foldDiacritics };
 
 if (typeof window !== 'undefined') {
   window.Mt940Converter = Mt940Converter;

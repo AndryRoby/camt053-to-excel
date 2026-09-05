@@ -4,7 +4,7 @@
 import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE, bankFromBic, parseXml } from './camt053.js';
 import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
-import { toMt940, toMt940Statement, transliterateSwiftX } from './mt940.js';
+import { toMt940, toMt940Statement, transliterateSwiftX, foldDiacritics } from './mt940.js';
 import { toDatevBuchungsstapel, toCp1252SafeText, toCp1252Bytes, FORMAT_VERSION as DATEV_FORMAT_VERSION, FORMAT_CATEGORY as DATEV_FORMAT_CATEGORY } from './datev-extf.js';
 import {
   LANGS, DEFAULT_LANG, DICT, COLUMN_LABELS, t, tf, columnLabel, columnLabelsMap,
@@ -968,6 +968,16 @@ eq('transliterateSwiftX: non-X punctuation stripped', transliterateSwiftX('Rechn
 eq('transliterateSwiftX: euro sign and other symbols stripped', transliterateSwiftX('50€ *Test*'), '50 Test');
 eq('transliterateSwiftX: empty/null-ish input never throws', transliterateSwiftX(null), '');
 eq('transliterateSwiftX: allowed characters pass through unchanged', transliterateSwiftX("A-Z 0-9 /-?:().,'+"), "A-Z 0-9 /-?:().,'+");
+
+// ── foldDiacritics() unit behaviour: the umlaut/diacritic step shared with
+// transliterateSwiftX() above, but without its stricter SWIFT X charset
+// restriction -- used by index.html's download-filename sanitizer so a
+// character like "_" (not valid in an MT940 field, fine in a filename)
+// survives instead of being silently dropped.
+eq('foldDiacritics: ü -> ue', foldDiacritics('eingefügter Text'), 'eingefuegter Text');
+eq('foldDiacritics: ß -> ss', foldDiacritics('Straße'), 'Strasse');
+eq('foldDiacritics: keeps "_" (unlike transliterateSwiftX, which would drop it)', foldDiacritics('konto_auszug'), 'konto_auszug');
+eq('foldDiacritics: empty/null-ish input never throws', foldDiacritics(null), '');
 
 // ── synthetic reversal (RC/RD): the SubFmlyCd carrying "RVSL" is the only
 // reversal signal camt053.js's row shape exposes today (RvslInd itself is

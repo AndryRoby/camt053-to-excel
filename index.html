@@ -751,7 +751,7 @@
   import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE } from './camt053.js';
   import { buildXlsx } from './xlsx-writer.js';
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
-  import { toMt940 } from './mt940.js';
+  import { toMt940, foldDiacritics } from './mt940.js';
   import { toDatevBuchungsstapel, toCp1252Bytes } from './datev-extf.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
@@ -1047,7 +1047,14 @@
   }
 
   function baseFilename(name) {
-    const stripped = (name || 'vypis').replace(/\.xml$/i, '').replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'vypis';
+    // Fold umlauts/diacritics first (mt940.js's own helper, shared so the
+    // mapping stays in one place) so e.g. "eingefügter Text" becomes
+    // "eingefuegter Text" instead of losing the "ü" and leaving a bare
+    // hyphen behind ("eingef-gter-Text"). Uses foldDiacritics(), not the
+    // stricter transliterateSwiftX(), so characters like "_" that are
+    // valid in a filename but outside SWIFT's X charset are kept.
+    const ascii = foldDiacritics(name || 'vypis');
+    const stripped = ascii.replace(/\.xml$/i, '').replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'vypis';
     return stripped;
   }
 
