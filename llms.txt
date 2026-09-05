@@ -33,6 +33,7 @@ No account, no login, no cookies for the tool itself, no server-side processing 
 - Tool: https://arling.sk/camt053-to-excel/ (Slovak)
 - Tool, English: https://arling.sk/camt053-to-excel/en/
 - Tool, German: https://arling.sk/camt053-to-excel/de/
+- MT940/DATEV landing page (German banks removed MT940 in November 2025, DATEV's manual import still expects it): https://arling.sk/camt053-to-excel/mt940/ (German), https://arling.sk/camt053-to-excel/mt940/en/ (English)
 - Full reference (column mapping, worked example, FAQ): https://arling.sk/camt053-to-excel/llms-full.txt
 - Source code: https://github.com/AndryRoby/camt053-to-excel
 - Sibling tool (builds a pain.001 payment file from Excel/CSV): https://arling.sk/sepa-pain001-generator/

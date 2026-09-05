@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Convert camt.053 to MT940 for DATEV</title>
+<meta name="description" content="Banks have delivered the statement as camt.053 only since November 2025, but DATEV Kanzlei-Rechnungswesen's manual file import still expects MT940. Convert camt.053 to MT940 (.sta) or straight to a DATEV Buchungsstapel (EXTF) file in your browser, nothing is uploaded." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Convert camt.053 to MT940 for DATEV" />
+<meta property="og:description" content="Banks have delivered the statement as camt.053 only since November 2025, but DATEV's manual import still expects MT940. Converted in your browser, nothing is uploaded." />
+<meta property="og:url" content="https://arling.sk/camt053-to-excel/mt940/en/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://arling.sk/camt053-to-excel/icon-512.png" />
+<link rel="canonical" href="https://arling.sk/camt053-to-excel/mt940/en/" />
+<link rel="alternate" hreflang="de" href="https://arling.sk/camt053-to-excel/mt940/" />
+<link rel="alternate" hreflang="en" href="https://arling.sk/camt053-to-excel/mt940/en/" />
+<link rel="alternate" hreflang="x-default" href="https://arling.sk/camt053-to-excel/mt940/" />
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="../../favicon.ico" />
+<link rel="apple-touch-icon" href="../../icon-192.png" />
+<link rel="manifest" href="../../manifest.json" />
+<link rel="alternate" type="text/plain" href="https://arling.sk/camt053-to-excel/llms.txt" title="llms.txt">
+<script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Convert camt.053 to MT940 for DATEV",
+  "url": "https://arling.sk/camt053-to-excel/mt940/en/",
+  "description": "Banks have delivered the statement as camt.053 only since November 2025, but DATEV Kanzlei-Rechnungswesen's manual file import still expects MT940. Convert camt.053 to MT940 (.sta) or straight to a DATEV Buchungsstapel (EXTF) file in your browser.",
+  "inLanguage": "en",
+  "datePublished": "2026-09-05",
+  "dateModified": "2026-09-05",
+  "isPartOf": { "@type": "WebSite", "name": "camt.053 to Excel", "url": "https://arling.sk/camt053-to-excel/" },
+  "about": {
+    "@type": "SoftwareApplication",
+    "name": "camt.053 to MT940 and DATEV Buchungsstapel",
+    "url": "https://arling.sk/camt053-to-excel/en/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any (web browser)",
+    "offers": [
+      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "EUR" },
+      { "@type": "Offer", "name": "Pro monthly", "price": "9", "priceCurrency": "EUR" },
+      { "@type": "Offer", "name": "Pro yearly", "price": "79", "priceCurrency": "EUR" }
+    ]
+  },
+  "author": { "@type": "Organization", "name": "ARLing s. r. o.", "url": "https://arling.sk/", "email": "andrej@arling.sk" },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "camt.053 to Excel", "item": "https://arling.sk/camt053-to-excel/en/" },
+      { "@type": "ListItem", "position": 2, "name": "camt.053 to MT940", "item": "https://arling.sk/camt053-to-excel/mt940/en/" }
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why can't DATEV import camt.053?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Germany's banking industry (die deutsche Kreditwirtschaft) removed MT940 from its data-exchange rulebook in November 2025; banks have delivered the statement as camt.053 only since then. DATEV Kanzlei-Rechnungswesen still has no direct import for camt.053 files, its manual file import still expects MT940. Sources: taxmain.de/camt-053-in-mt940-umwandeln/, a DATEV community thread on the 23 November 2025 changeover deadline, and DATEV's own page on providing account statements in the new format, all read on 5 September 2026. DATEV offers its paid Bankdatenservice as a separate path for a direct camt.053 upload."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to upload my account data here?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nothing is uploaded. Parsing the camt.053 file and building MT940 or the DATEV Buchungsstapel file both run entirely in your browser, the tool has no backend that processes account data. The browser devtools network tab shows no request carrying the file content. The only network activity is loading the static page and an anonymous usage counter with no account data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does converting to MT940 or DATEV Buchungsstapel cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Converting camt.053 to CSV or Excel is free with no limit. MT940 and DATEV Buchungsstapel export are Pro features: 9 euros a month or 79 euros a year, VAT included, billed through Stripe, one licence key valid across all four ARLing bank tools (SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel, Payment matcher)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my bank still offers MT940 directly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Then you do not need this detour and can download the MT940 file directly from your online banking. Germany's banking industry removed MT940 from its rulebook industry-wide in November 2025; how quickly individual banks reflect that in their own online banking can vary during the transition. This tool is for the case where only camt.053 is left in your inbox."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work with Sparkasse, Volksbank, Commerzbank, Deutsche Bank, UBS or PostFinance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. camt.053 is a bank-independent ISO 20022 format, the tool supports both common versions, camt.053.001.02 and camt.053.001.08, and detects the version automatically. It works with any bank in Germany, Austria or Switzerland that issues camt.053 as its statement, regardless of the bank's name."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --paper:#f6f2ea; --paper-2:#fbf9f4; --ink:#1b1a17; --ink-2:#4a4741; --muted:#66625a; --line:#d9d2c4;
+    --accent:#b23a1d; --accent-soft:#f3e2dc; --ok:#2f6f3e; --warn:#9a6b00;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper:#151412; --paper-2:#1d1b18; --ink:#efe9de; --ink-2:#c9c2b5; --muted:#8f887b; --line:#2e2b26; --accent:#e0623f; --accent-soft:#3a1f17; --ok:#7fbf8e; --warn:#caa552; }
+  }
+  * { box-sizing:border-box; }
+  html { background:var(--paper); }
+  body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.55 var(--sans); -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration-color:var(--line); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  img { max-width:100%; height:auto; display:block; }
+  [hidden] { display:none !important; }
+  .skip { position:absolute; left:-999px; top:8px; background:var(--ink); color:var(--paper); padding:8px 12px; z-index:10; }
+  .skip:focus { left:8px; }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 24px; min-width:0; }
+  code { font:13.5px/1.4 var(--mono); background:var(--paper-2); border:1px solid var(--line); border-radius:3px; padding:1px 5px; overflow-wrap:anywhere; }
+
+  header.top { border-bottom:1px solid var(--line); }
+  header.top .wrap { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px 24px; padding:18px 24px; }
+  .brand { display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 10px; min-width:0; }
+  .wordmark { font:600 21px/1.25 var(--serif); text-decoration:none; overflow-wrap:anywhere; }
+  .wordmark-sub { font:13px/1 var(--sans); color:var(--muted); letter-spacing:.02em; text-decoration:none; white-space:nowrap; }
+  .wordmark-sub:hover { color:var(--accent); }
+  .headnav { display:flex; align-items:center; flex-wrap:wrap; gap:6px 20px; }
+  nav.main { display:flex; flex-wrap:wrap; }
+  nav.main a { font-size:14px; margin-left:20px; text-decoration:none; color:var(--ink-2); white-space:nowrap; }
+  nav.main a:first-child { margin-left:0; }
+  nav.main a:hover { color:var(--accent); }
+  .lang-switch { display:flex; align-items:center; gap:0; }
+  .lang-switch a { display:inline-block; font:600 12px/1 var(--sans); padding:6px 9px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); text-decoration:none; }
+  .lang-switch > :first-child { border-radius:4px 0 0 4px; }
+  .lang-switch > :last-child { border-radius:0 4px 4px 0; }
+  .lang-switch > * + * { margin-left:-1px; }
+  .lang-switch a:hover { border-color:var(--accent); color:var(--accent); position:relative; z-index:1; }
+  .lang-switch .lang-active { background:var(--ink); border-color:var(--ink); color:var(--paper); position:relative; z-index:1; }
+
+  .hero { padding:64px 0 40px; border-bottom:1px solid var(--line); }
+  .hero h1 { font:400 clamp(30px,4.6vw,46px)/1.16 var(--serif); letter-spacing:-.01em; margin:0 0 18px; max-width:22ch; }
+  .hero p.lead { font-size:18px; color:var(--ink-2); max-width:62ch; margin:0 0 26px; }
+  .facts { list-style:none; margin:22px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px 0; color:var(--muted); font-size:14px; }
+  .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
+  .facts b { color:var(--ink); font-weight:600; }
+
+  .btn { display:inline-block; font:600 15px/1 var(--sans); padding:13px 18px; border-radius:4px; text-decoration:none; cursor:pointer; border:2px solid transparent; appearance:none; -webkit-appearance:none; }
+  .btn-solid { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-solid:hover { background:var(--ink); border-color:var(--ink); color:var(--paper); }
+  .btn-line { border:2px solid var(--ink); color:var(--ink); background:transparent; }
+  .btn-line:hover { border-color:var(--accent); color:var(--accent); }
+  .btn + .btn { margin-left:10px; }
+
+  section { padding:44px 0; border-bottom:1px solid var(--line); }
+  section[id], header.top { scroll-margin-top:14px; }
+  .kicker { font:400 14px/1 var(--serif); color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin:0 0 10px; }
+  h2 { font:400 28px/1.2 var(--serif); margin:0 0 8px; letter-spacing:-.005em; max-width:32ch; }
+  .sub { color:var(--ink-2); max-width:66ch; margin:0 0 24px; }
+  .prose p { color:var(--ink-2); max-width:70ch; margin:0 0 14px; }
+  .prose p:last-child { margin-bottom:0; }
+
+  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px 32px; margin:0; padding:0; list-style:none; counter-reset:r; }
+  .rules li { padding-top:14px; border-top:1px solid var(--line); min-width:0; }
+  .rules li::before { counter-increment:r; content:counter(r,decimal-leading-zero); font:400 14px/1 var(--serif); color:var(--accent); display:block; margin-bottom:8px; }
+  .rules b { display:block; font-weight:600; margin-bottom:4px; }
+  .rules p { margin:0; color:var(--ink-2); font-size:15px; overflow-wrap:anywhere; }
+
+  .price-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+  .price-col { border:1px solid var(--line); background:var(--paper-2); padding:22px 24px; min-width:0; }
+  .price-col.is-pro { border-color:var(--accent); }
+  .price-col h3 { font:400 22px/1.2 var(--serif); margin:0 0 6px; }
+  .price-col .price-num { font:400 32px/1 var(--serif); margin:0 0 12px; }
+  .price-col .price-num span { font-size:15px; color:var(--muted); font-family:var(--sans); }
+  .price-col ul { margin:0; padding-left:18px; color:var(--ink-2); font-size:14.5px; }
+  .price-col li + li { margin-top:7px; }
+  .price-col li b { color:var(--ink); }
+  .price-col .btn { margin-top:18px; }
+  .pricing-note { color:var(--ink-2); font-size:14px; margin:18px 0 0; max-width:70ch; }
+
+  .limits { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:16px; }
+  .limits li { border-top:1px solid var(--warn); padding-top:12px; }
+  .limits b { display:block; color:var(--ink); margin-bottom:4px; }
+  .limits p { margin:0; color:var(--ink-2); font-size:15px; max-width:70ch; }
+
+  details { border-top:1px solid var(--line); padding:14px 0; }
+  details:last-of-type { border-bottom:1px solid var(--line); }
+  summary { cursor:pointer; font:400 18px/1.3 var(--serif); list-style:none; display:flex; justify-content:space-between; gap:12px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"+"; color:var(--accent); flex:none; font-family:var(--sans); }
+  details[open] summary::after { content:"\2013"; }
+  details p { color:var(--ink-2); margin:10px 0 0; max-width:70ch; overflow-wrap:anywhere; }
+
+  footer { padding:32px 0 56px; color:var(--muted); font-size:14px; }
+  footer .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px 32px; }
+  footer b { color:var(--ink); font-weight:600; }
+  footer a { color:var(--ink-2); }
+  .footer-note { margin-top:14px; font-size:12px; color:var(--muted); }
+
+  @media (max-width:480px) {
+    .hero { padding:44px 0 32px; }
+    nav.main a { margin-left:12px; }
+    .wordmark-sub { display:none; }
+    .btn + .btn { margin-left:0; margin-top:10px; }
+  }
+
+  .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--paper-2); border-top:1px solid var(--line); }
+  .sticky-cta-inner { display:flex; align-items:center; gap:10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
+  .sticky-cta-text { flex:1 1 auto; min-width:0; font-size:12.5px; color:var(--ink-2); overflow-wrap:anywhere; }
+  .sticky-cta .btn { flex:none; padding:10px 14px; font-size:13.5px; margin:0; }
+  .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:16px/1 var(--sans); padding:0; }
+  .sticky-cta-close:hover { border-color:var(--accent); color:var(--accent); }
+  @media (min-width:761px) { .sticky-cta { display:none !important; } }
+  @media print { .sticky-cta { display:none !important; } }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#how-it-works">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="wordmark" href="../../en/">camt.053 to Excel</a>
+      <a class="wordmark-sub" href="https://arling.sk/">an ARLing tool</a>
+    </div>
+    <div class="headnav">
+      <nav class="main" aria-label="Page">
+        <a href="#how-it-works">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#limits">Limits</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="lang-switch" role="group" aria-label="Page language">
+        <a href="../" hreflang="de" lang="de">DE</a>
+        <a href="./" class="lang-active" aria-current="true" hreflang="en" lang="en">EN</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <h1>Convert camt.053 to MT940, for DATEV.</h1>
+      <p class="lead">Your bank has delivered the statement as camt.053 only since November 2025. DATEV Kanzlei-Rechnungswesen's manual file import still expects MT940. This tool converts camt.053 to MT940 (.sta) or straight to a DATEV Buchungsstapel file (EXTF) in your browser, nothing is uploaded.</p>
+      <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="hero">Convert now</a><a class="btn btn-line" href="#how-it-works">How it works</a>
+      <ul class="facts">
+        <li>MT940 out of the banking rulebook since <b>November 2025</b></li>
+        <li>DATEV's file import still expects MT940</li>
+        <li><b>€0</b> for camt.053 to Excel/CSV, no limit</li>
+        <li>nothing is uploaded</li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="how-it-works">
+    <div class="wrap">
+      <p class="kicker">01</p>
+      <h2>Three steps from camt.053 to MT940 or DATEV.</h2>
+      <p class="sub">Same tool as the free Excel export, only the last clicks are new.</p>
+      <ol class="rules">
+        <li>
+          <b>Download camt.053 from online banking.</b>
+          <p>Sparkasse, Volksbank/Raiffeisenbank, Commerzbank, Deutsche Bank, Erste, Raiffeisen, UBS or PostFinance: the file is usually named "Kontoauszug XML" or simply "camt.053", in the statements or inbox section of online banking.</p>
+        </li>
+        <li>
+          <b>Upload the file or paste the text.</b>
+          <p>The tool reads the file in your browser, checks the opening and closing balance against the sum of entries, and shows a table immediately. Free, with no limit, for Excel or CSV.</p>
+        </li>
+        <li>
+          <b>Click "MT940" or "DATEV" next to the downloads.</b>
+          <p>With a Pro licence the file downloads directly. Without one, the tool shows a preview of the first lines, so you see the result before buying.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <p class="kicker">02</p>
+      <h2>Excel export stays free. MT940 and DATEV are Pro.</h2>
+      <p class="sub">One licence for all four ARLing bank tools: SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel and Payment matcher.</p>
+      <div class="price-cols">
+        <div class="price-col">
+          <h3>Free</h3>
+          <div class="price-num">€0</div>
+          <ul>
+            <li>camt.053 to CSV or Excel, no limit on files or downloads</li>
+            <li>balance check, the remittance/reference field per row</li>
+            <li>no account, no signup</li>
+          </ul>
+          <a class="btn btn-line" href="../../en/" data-umami-event="demo_click" data-umami-event-place="pricing">Convert for free</a>
+        </div>
+        <div class="price-col is-pro">
+          <h3>Pro</h3>
+          <div class="price-num">€9<span> /month</span></div>
+          <ul>
+            <li>export to MT940 (.sta) for a manual DATEV import or other legacy software</li>
+            <li>export straight to the DATEV-Format Buchungsstapel (EXTF CSV)</li>
+            <li>several files at once, a history of recent conversions</li>
+            <li>valid across all four ARLing bank tools with the same key</li>
+          </ul>
+          <a class="btn btn-solid" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="mt940">Buy Pro, €79/year</a>
+          <a class="btn btn-line" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="mt940">or €9/month</a>
+        </div>
+      </div>
+      <p class="pricing-note">Prices include VAT, billed through Stripe, cancel any time. The licence key works immediately across all four tools on the same domain.</p>
+    </div>
+  </section>
+
+  <section id="contents">
+    <div class="wrap">
+      <p class="kicker">03</p>
+      <h2>What's inside the MT940 and DATEV files.</h2>
+      <ol class="rules">
+        <li>
+          <b>MT940 (.sta), SWIFT format.</b>
+          <p><code>:20:</code> reference, <code>:25:</code> account, <code>:28C:</code> statement number, <code>:60F:</code>/<code>:62F:</code> opening and closing balance, <code>:61:</code> per entry with date, amount and debit/credit mark, <code>:86:</code> with a Geschäftsvorfallcode and the structured <code>?00</code>-<code>?34</code> subfields under the German SEPA convention (<code>EREF+</code>, <code>SVWZ+</code>). Lines capped at 65 characters and 6 lines, umlauts transliterated to the SWIFT X character set, CRLF line endings, one message per statement.</p>
+        </li>
+        <li>
+          <b>DATEV-Format "Buchungsstapel" (EXTF CSV).</b>
+          <p>A header row with the format identifier and the "Buchungsstapel" category, then the column-header row and one row per entry. Debit/credit follows the <code>CdtDbtInd</code> field from camt.053: a credit to the configured bank account becomes "Soll" (debit side in DATEV's convention), a debit becomes "Haben". DDMM dates, comma decimals, Windows-1252 encoding with umlauts intact.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="limits">
+    <div class="wrap">
+      <p class="kicker">04</p>
+      <h2>Honest limits.</h2>
+      <p class="sub">Not marketing copy, what to check before relying on this in production.</p>
+      <ul class="limits">
+        <li>
+          <b>The exact wording of the <code>:86:</code> field varies by bank.</b>
+          <p>There is no single Geschäftsvorfallcode convention identical across every institution. Check the result against a small test file before importing a full accounting period.</p>
+        </li>
+        <li>
+          <b>Two header metadata fields of the DATEV EXTF file are generic, not verified per-office.</b>
+          <p>Enter your Beraternummer and Mandantennummer in the tool yourself; the header format follows publicly documented rules that are not individually confirmed for every DATEV version. A test import before production use is recommended.</p>
+        </li>
+        <li>
+          <b>Not a replacement for DATEV's Bankdatenservice.</b>
+          <p>DATEV offers its own paid solution for a direct camt.053 upload. This tool is meant for the manual file import path and is not affiliated with DATEV.</p>
+        </li>
+        <li>
+          <b>MT940 is generated here, not fetched from your bank.</b>
+          <p>Your bank now delivers only camt.053; this tool builds an MT940 file from it following the openly documented SWIFT field rules, for software that reads MT940 only.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <p class="kicker">05</p>
+      <h2>FAQ</h2>
+      <details>
+        <summary>Why can't DATEV import camt.053?</summary>
+        <p>Germany's banking industry (die deutsche Kreditwirtschaft) removed MT940 from its data-exchange rulebook in November 2025; banks have delivered the statement as camt.053 only since then. DATEV Kanzlei-Rechnungswesen still has no direct import for camt.053 files, its manual file import still expects MT940. Sources: <a href="https://taxmain.de/camt-053-in-mt940-umwandeln/" target="_blank" rel="noopener">taxmain.de</a>, a discussion thread in the <a href="https://www.datev-community.de/t5/Betriebliches-Rechnungswesen/Umstellung-auf-neues-CAMT-Format-Ablauf-der-Frist-zum-23-11-2025/td-p/517823" target="_blank" rel="noopener">DATEV community</a> on the 23 November 2025 changeover deadline, and <a href="https://www.datev.de/web/de/berufsgruppenuebergreifend/gesetzliche-themen/payment/kontoumsaetze-bereitstellen-neues-format" target="_blank" rel="noopener">DATEV's own page</a> on the new format, all read on 5 September 2026. DATEV offers its paid Bankdatenservice as a separate path for a direct camt.053 upload.</p>
+      </details>
+      <details>
+        <summary>Is it safe to upload my account data here?</summary>
+        <p>Nothing is uploaded. Parsing the camt.053 file and building MT940 or the DATEV Buchungsstapel file both run entirely in your browser, the tool has no backend that processes account data. The browser devtools network tab shows no request carrying the file content. The only network activity is loading the static page and an anonymous usage counter with no account data.</p>
+      </details>
+      <details>
+        <summary>What does converting to MT940 or DATEV Buchungsstapel cost?</summary>
+        <p>Converting camt.053 to CSV or Excel is free with no limit. MT940 and DATEV Buchungsstapel export are Pro features: 9 euros a month or 79 euros a year, VAT included, billed through Stripe, one licence key valid across all four ARLing bank tools (SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel, Payment matcher).</p>
+      </details>
+      <details>
+        <summary>What if my bank still offers MT940 directly?</summary>
+        <p>Then you do not need this detour and can download the MT940 file directly from your online banking. Germany's banking industry removed MT940 from its rulebook industry-wide in November 2025; how quickly individual banks reflect that in their own online banking can vary during the transition. This tool is for the case where only camt.053 is left in your inbox.</p>
+      </details>
+      <details>
+        <summary>Does this work with Sparkasse, Volksbank, Commerzbank, Deutsche Bank, UBS or PostFinance?</summary>
+        <p>Yes. camt.053 is a bank-independent ISO 20022 format, the tool supports both common versions, <code>camt.053.001.02</code> and <code>camt.053.001.08</code>, and detects the version automatically. It works with any bank in Germany, Austria or Switzerland that issues camt.053 as its statement, regardless of the bank's name.</p>
+      </details>
+      <p class="pricing-note">Sources on MT940's removal and the DATEV import gap: <a href="https://taxmain.de/camt-053-in-mt940-umwandeln/" target="_blank" rel="noopener">taxmain.de/camt-053-in-mt940-umwandeln</a>, <a href="https://www.datev-community.de/t5/Betriebliches-Rechnungswesen/Umstellung-auf-neues-CAMT-Format-Ablauf-der-Frist-zum-23-11-2025/td-p/517823" target="_blank" rel="noopener">DATEV community thread</a>, <a href="https://www.datev.de/web/de/berufsgruppenuebergreifend/gesetzliche-themen/payment/kontoumsaetze-bereitstellen-neues-format" target="_blank" rel="noopener">datev.de</a>, all read on 5 September 2026.</p>
+    </div>
+  </section>
+
+  <section id="closing-cta">
+    <div class="wrap" style="text-align:center;">
+      <p class="sub" style="margin:0 auto 18px;">Upload camt.053, free as Excel or CSV, or straight to MT940 or DATEV Buchungsstapel with a Pro licence.</p>
+      <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="closing">Convert now</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="cols">
+        <div>
+          <b>ARLing s. r. o.</b><br>
+          Ivanská cesta 32E<br>
+          821 04 Bratislava, Slovakia
+        </div>
+        <div>
+          Company ID (IČO) 56583486 · VAT ID (IČ DPH) SK2122352100<br>
+          <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>
+        </div>
+        <div>
+          <a href="../../en/">camt.053 to Excel (main tool)</a> · <a href="../" hreflang="de" lang="de">Deutsch</a><br>
+          <a href="https://arling.sk/bankove-nastroje/">All four bank tools (Pro bundle)</a><br>
+          <a href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener">Source code (GitHub)</a> · <a href="../../llms.txt">llms.txt</a> · <a href="../../sitemap.xml">sitemap.xml</a><br>
+          <a href="https://arling.sk/">All ARLing tools</a> · <a href="https://arling.sk/privacy/">Privacy</a>
+        </div>
+      </div>
+      <p class="footer-note">DATEV is a trademark of DATEV eG; ARLing s. r. o. is not affiliated with it. Cited facts and dates were read from the linked public pages on 5 September 2026 and may have changed since. We measure traffic with our own self-hosted, cookie-free Umami.</p>
+    </div>
+  </footer>
+</main>
+
+<div class="sticky-cta" id="sticky-cta" hidden>
+  <div class="sticky-cta-inner">
+    <span class="sticky-cta-text">Excel export free, MT940/DATEV with Pro.</span>
+    <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="sticky">Convert now</a>
+    <button type="button" class="sticky-cta-close" id="sticky-cta-close" aria-label="Close bar">&times;</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var SLUG = 'camt053-to-excel-mt940';
+  function pingOwner(evt, plan) {
+    try {
+      var url = 'https://homelab.tailbf8f27.ts.net/subscribe/api/ping?e=' + encodeURIComponent(evt) + '&t=' + SLUG + (plan ? '&p=' + encodeURIComponent(plan) : '');
+      if (navigator.sendBeacon) { navigator.sendBeacon(url); }
+      else if (window.fetch) { fetch(url, { keepalive: true, mode: 'no-cors' }).catch(function () {}); }
+    } catch (e) {}
+  }
+  document.querySelectorAll('[data-umami-event="buy_click"],[data-umami-event="trial_click"],[data-umami-event="demo_click"]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      pingOwner(el.getAttribute('data-umami-event'), el.getAttribute('data-umami-event-plan') || '');
+    });
+  });
+
+  var bar = document.getElementById('sticky-cta');
+  if (bar) {
+    var KEY = 'arling_sticky_closed_' + SLUG;
+    var closeBtn = document.getElementById('sticky-cta-close');
+    var hero = document.querySelector('.hero');
+    var isClosed = function () { try { return sessionStorage.getItem(KEY) === '1'; } catch (e) { return false; } };
+    var onScroll = function () {
+      if (isClosed()) { bar.hidden = true; return; }
+      var pastHero = !hero || hero.getBoundingClientRect().bottom <= 0;
+      bar.hidden = !pastHero;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+        bar.hidden = true;
+      });
+    }
+  }
+})();
+</script>
+</body>
+</html>

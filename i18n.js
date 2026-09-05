@@ -100,6 +100,11 @@ export const DICT = {
     en: 'Nothing you upload or paste is sent anywhere. Parsing and building the CSV/Excel both run in your browser.',
     de: 'Nichts von dem, was Sie hochladen oder einfügen, wird versendet. Parsen und der Aufbau von CSV/Excel laufen im Browser.',
   },
+  's2.export.hint': {
+    sk: 'Prišli ste kvôli MT940/DATEV? Nahrajte výpis alebo kliknite na „ukážka“, potom na „Previesť“ a napokon na tlačidlo „MT940“ alebo „DATEV“ pri výsledku nižšie.',
+    en: 'Here for MT940/DATEV? Upload a statement or click “sample”, then “Convert”, then use the “MT940” or “DATEV” button next to the result below.',
+    de: 'Wegen MT940/DATEV hier? Laden Sie einen Kontoauszug hoch oder klicken Sie auf „Beispiel“, dann auf „Umwandeln“ und danach unten beim Ergebnis auf „MT940“ oder „DATEV“.',
+  },
   's2.input.label': { sk: 'Vstup', en: 'Input', de: 'Eingabe' },
   's2.output.label': { sk: 'Výstup', en: 'Output', de: 'Ausgabe' },
   's2.sample.btn': { sk: 'ukážka', en: 'sample', de: 'Beispiel' },
