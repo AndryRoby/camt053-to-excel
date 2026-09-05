@@ -1,6 +1,6 @@
 # camt.053 výpis banky do Excelu
 
-Live: https://arling.sk/camt053-to-excel/
+Live: https://arling.sk/camt053-to-excel/ (Slovak) · https://arling.sk/camt053-to-excel/en/ (English) · https://arling.sk/camt053-to-excel/de/ (German)
 
 **English summary:** a free, client-side tool that turns any camt.053
 XML bank statement (ISO 20022, the standard electronic statement
@@ -128,7 +128,13 @@ project's sibling tool, SEPA pain.001 Doctor, uses for parsing XML.
 
 ## Running it locally
 
-There's no build step. It's static files.
+Static files, no bundler. The only generated files are the English and
+German pages: `en/index.html` and `de/index.html` are prerendered from
+`index.html` plus the dictionary in `i18n.js` by `build-i18n.mjs`
+(plain Node, no dependencies), so each language has its own URL for
+search engines while the tool's runtime stays one code base. After
+editing `index.html` or `i18n.js`, run `node build-i18n.mjs` and
+commit the two folders; `node tests.mjs` fails while they are stale.
 
 ```bash
 git clone https://github.com/AndryRoby/camt053-to-excel.git

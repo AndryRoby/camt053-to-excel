@@ -1,5 +1,7 @@
 # camt.053 výpis banky do Excelu: prevod bankového výpisu na tabuľku
 
+Language versions: Slovak https://arling.sk/camt053-to-excel/ · English https://arling.sk/camt053-to-excel/en/ · German https://arling.sk/camt053-to-excel/de/
+
 **English summary:** a free, client-side tool that turns a camt.053 XML bank statement (ISO 20022) into a plain CSV/Excel table, entirely in the browser. Beyond Tatra banka/SLSP/VÚB/ČSOB in Slovakia, camt.053 is the standard electronic statement format at any bank in Germany, Austria and Switzerland (Sparkasse, Volksbank, Deutsche Bank, Commerzbank, Raiffeisen, Erste, UBS, PostFinance, and others), so the page itself now ships in Slovak, English and German: a language switcher in the header (also reachable via `?lang=sk|en|de`) translates the hero, playground labels, column headers, FAQ, and Pro section, and switches the CSV export defaults (decimal comma + semicolon for SK/DE, decimal point + comma for EN; date format dd.mm.yyyy for SK/DE, yyyy-mm-dd for EN) and the accounting-software CSV presets (DATEV/Lexware/sevDesk generic layouts, offered for DE/EN).
 
 > Free, client-side tool that turns a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, ČSOB, or any German, Austrian or Swiss bank into a plain CSV/Excel table.

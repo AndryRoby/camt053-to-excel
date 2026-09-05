@@ -1,6 +1,6 @@
 # camt.053 výpis banky do Excelu
 
-**English summary:** free, client-side tool that converts any camt.053 XML bank statement (ISO 20022) into a CSV/Excel table. The page is available in Slovak, English and German (a language switcher in the header, `?lang=sk|en|de`), with column headers, the FAQ, the Pro section and CSV export defaults (decimal separator, delimiter, date format) all translated per language, since camt.053 is the standard statement export not just at Tatra banka/SLSP/VÚB/ČSOB but at any bank in Germany, Austria and Switzerland too.
+**English summary:** free, client-side tool that converts any camt.053 XML bank statement (ISO 20022) into a CSV/Excel table. The page is available in Slovak, English and German, each at its own URL: Slovak at https://arling.sk/camt053-to-excel/, English at https://arling.sk/camt053-to-excel/en/, German at https://arling.sk/camt053-to-excel/de/ (a language switcher in the header; the old `?lang=sk|en|de` links on the root URL keep working), with column headers, the FAQ, the Pro section and CSV export defaults (decimal separator, delimiter, date format) all translated per language, since camt.053 is the standard statement export not just at Tatra banka/SLSP/VÚB/ČSOB but at any bank in Germany, Austria and Switzerland too.
 
 > Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from Tatra banka, Slovenská sporiteľňa (SLSP), VÚB, ČSOB, or any German, Austrian or Swiss bank into a CSV/Excel table: upload one or more files, download the table, nothing you upload leaves your browser.
 
@@ -29,7 +29,9 @@ No account, no login, no cookies for the tool itself, no server-side processing 
 
 ## Links
 
-- Tool: https://arling.sk/camt053-to-excel/
+- Tool: https://arling.sk/camt053-to-excel/ (Slovak)
+- Tool, English: https://arling.sk/camt053-to-excel/en/
+- Tool, German: https://arling.sk/camt053-to-excel/de/
 - Full reference (column mapping, worked example, FAQ): https://arling.sk/camt053-to-excel/llms-full.txt
 - Source code: https://github.com/AndryRoby/camt053-to-excel
 - Sibling tool (builds a pain.001 payment file from Excel/CSV): https://arling.sk/sepa-pain001-generator/

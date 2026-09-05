@@ -1,26 +1,27 @@
 <!doctype html>
-<html lang="sk">
+<html lang="en" data-lang-static="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
-<title>camt.053 výpis z banky do Excelu</title>
-<meta name="description" content="Nahrajte alebo vložte výpis z banky vo formáte camt.053 XML (Tatra banka, SLSP, VÚB, ČSOB) a stiahnite tabuľku CSV alebo Excel. Zadarmo, priamo v prehliadači, nič sa neodosiela." />
+<script>try{localStorage.setItem("arling_lang","en")}catch(e){}</script>
+<title>camt.053 bank statement to Excel</title>
+<meta name="description" content="Upload or paste a camt.053 XML bank statement (any bank in Slovakia, Germany, Austria or Switzerland) and download a CSV or Excel table. Free, runs in your browser, nothing is uploaded." />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="camt.053 výpis z banky do Excelu" />
-<meta property="og:description" content="Nahrajte alebo vložte výpis z banky vo formáte camt.053 XML (Tatra banka, SLSP, VÚB, ČSOB) a stiahnite tabuľku CSV alebo Excel. Zadarmo, priamo v prehliadači, nič sa neodosiela." />
-<meta property="og:url" content="https://arling.sk/camt053-to-excel/" />
-<meta property="og:locale" content="sk_SK" />
-<link rel="canonical" href="https://arling.sk/camt053-to-excel/" />
+<meta property="og:title" content="camt.053 bank statement to Excel" />
+<meta property="og:description" content="Upload or paste a camt.053 XML bank statement (any bank in Slovakia, Germany, Austria or Switzerland) and download a CSV or Excel table. Free, runs in your browser, nothing is uploaded." />
+<meta property="og:url" content="https://arling.sk/camt053-to-excel/en/" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://arling.sk/camt053-to-excel/en/" />
 <link rel="alternate" hreflang="sk" href="https://arling.sk/camt053-to-excel/" />
 <link rel="alternate" hreflang="en" href="https://arling.sk/camt053-to-excel/en/" />
 <link rel="alternate" hreflang="de" href="https://arling.sk/camt053-to-excel/de/" />
 <link rel="alternate" hreflang="x-default" href="https://arling.sk/camt053-to-excel/" />
 <meta property="og:image" content="https://arling.sk/camt053-to-excel/icon-512.png" />
-<link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="alternate icon" href="favicon.ico" />
-<link rel="apple-touch-icon" href="icon-192.png" />
-<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="../favicon.ico" />
+<link rel="apple-touch-icon" href="../icon-192.png" />
+<link rel="manifest" href="../manifest.json" />
 <!-- Bez externého font CDN: len systémový font stack (viď body { font-family } nižšie). -->
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
@@ -28,22 +29,26 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "camt.053 výpis z banky do Excelu",
-  "url": "https://arling.sk/camt053-to-excel/",
+  "name": "camt.053 bank statement to Excel",
+  "url": "https://arling.sk/camt053-to-excel/en/",
   "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from any bank in Slovakia, Germany, Austria or Switzerland into a CSV/Excel table. Upload one or more files or paste the XML directly; nothing you upload leaves the browser. Available in Slovak, English and German.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
-  "inLanguage": ["sk", "en", "de"],
+  "inLanguage": [
+    "sk",
+    "en",
+    "de"
+  ],
   "offers": [
     {
       "@type": "Offer",
-      "name": "Zadarmo",
+      "name": "Free",
       "price": "0",
       "priceCurrency": "EUR"
     },
     {
       "@type": "Offer",
-      "name": "Pro (cez balík Bankové nástroje)",
+      "name": "Pro (via the Banking Tools bundle)",
       "price": "9",
       "priceCurrency": "EUR",
       "url": "https://arling.sk/bankove-nastroje/#pro"
@@ -73,58 +78,58 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Kde v internet bankingu nájdem camt.053?",
+      "name": "Where in internet banking do I find camt.053?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "V Tatra banke je to položka „Výpis pre účtovníctvo“: zvoľte účet, obdobie a číslo výpisu, formát XML camt.053 je od roku 2016 jediný ponúkaný. V SLSP, VÚB aj ČSOB hľadajte v sekcii Výpisy/Dokumenty položku s názvom podobným „elektronický výpis“, „výpis pre účtovníctvo“ alebo „XML výpis“: presné pomenovanie sa medzi bankami líši, ale všetky štyri banky ponúkajú camt.053 XML ako štandardný formát výpisu pre účtovníctvo (spoločný „SEPA XML SK štandard“ Slovenskej bankovej asociácie). Rovnaký formát camt.053 (ISO 20022) je štandardným elektronickým výpisom aj v Nemecku, Rakúsku a Švajčiarsku, napríklad v Sparkasse, Volksbank, Deutsche Bank, Commerzbank, Raiffeisen, Erste, UBS alebo PostFinance."
+        "text": "In German, Austrian and Swiss internet banking, camt.053 (ISO 20022) is the standard electronic statement export, usually next to an older MT940 option, offered by any bank, for example Sparkasse, Volksbank, Deutsche Bank, Commerzbank, Raiffeisen, Erste, UBS or PostFinance. Look under statement export, account statement download, or “camt.053 / ISO 20022”. In Slovak internet banking (Tatra banka, SLSP, VÚB, ČSOB) look for “výpis pre účtovníctvo” or “XML výpis”."
       }
     },
     {
       "@type": "Question",
-      "name": "Prečo je suma záporná?",
+      "name": "Why is the amount negative?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Stĺpec Suma má znamienko podľa CdtDbtInd v XML: DBIT (peniaze odišli z účtu) sa zapíše ako záporné číslo, CRDT (peniaze prišli) ako kladné. Vďaka tomu sa dá stĺpec priamo sčítať a porovnať so začiatočným a konečným zostatkom vo výpise, presne to robí súhrn nad tabuľkou."
+        "text": "The amount column carries a sign from CdtDbtInd in the XML: DBIT (money left the account) is written as a negative number, CRDT (money arrived) as a positive one. That lets the column be summed directly and compared against the statement’s own opening and closing balance, which is exactly what the summary above the table does."
       }
     },
     {
       "@type": "Question",
-      "name": "Kde je variabilný symbol?",
+      "name": "Where is the payment reference (VS/SS/KS)?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "camt.053 nemá pre VS, ŠS ani KS samostatné pole. Banky ich zapisujú buď do EndToEndId v poradí /VS.../SS.../KS..., alebo do štruktúrovanej referencie (RmtInf/Strd/CdtrRefInf/Ref), alebo len do voľného textu správy (RmtInf/Ustrd). Nástroj skúša všetky tri miesta v tomto poradí, takže párovanie s faktúrou funguje aj vtedy, keď je vo výpise vidieť len jedno dlhé referenčné číslo."
+        "text": "VS/SS/KS (variabilný/špecifický/konštantný symbol) are Slovak domestic-payment reference numbers; camt.053 has no dedicated field for them. A bank writes them either into EndToEndId as /VS.../SS.../KS..., into a structured reference (RmtInf/Strd/CdtrRefInf/Ref), or only into the free-text message (RmtInf/Ustrd). The tool tries all three places in that order. For a German, Austrian or Swiss statement these columns are usually empty; use the raw message column (RmtInf) instead, which carries the Verwendungszweck text."
       }
     },
     {
       "@type": "Question",
-      "name": "Otvorí to Excel s diakritikou?",
+      "name": "Will Excel open it with accented characters intact?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Áno. Stiahnutý CSV má na začiatku UTF-8 BOM, ktorý aj slovenská verzia Excelu rozpozná automaticky a diakritiku zobrazí správne bez ručného výberu kódovania. Súbor .xlsx je rovno vo formáte, ktorý Excel číta natívne v UTF-8, takže diakritika je v poriadku aj tam."
+        "text": "Yes. The downloaded CSV starts with a UTF-8 BOM, which Excel (including German/Austrian/Swiss locales) recognises automatically and displays accented characters correctly without picking an encoding by hand. The .xlsx file is already in the format Excel reads natively as UTF-8, so accented characters are fine there too."
       }
     },
     {
       "@type": "Question",
-      "name": "Odosielajú sa moje dáta niekam?",
+      "name": "Is my data sent anywhere?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Nie. Parsovanie XML aj generovanie CSV a Excelu beží celé vo vašom prehliadači, nástroj nemá backend. Jedinou sieťovou aktivitou je načítanie statických súborov stránky a anonymné počítadlo použitia (Umami), ktoré zaznamená len to, že prebehla konverzia a koľko mala riadkov, nikdy obsah výpisu (IBAN, sumy, mená)."
+        "text": "No. Parsing the XML and building the CSV/Excel both run entirely in your browser; the tool has no backend. The only network activity is loading the page’s static files and an anonymous usage counter (Umami), which records only that a conversion happened and how many rows it had, never the statement’s content (IBANs, amounts, names)."
       }
     },
     {
       "@type": "Question",
-      "name": "Aké verzie camt.053 podporujete?",
+      "name": "Which camt.053 versions are supported?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "camt.053.001.02 (menný priestor urn:iso:std:iso:20022:tech:xsd:camt.053.001.02), ktorý ako jediný formát výpisu pre účtovníctvo posielajú Tatra banka, SLSP, VÚB aj ČSOB, a novšiu verziu camt.053.001.08, bežnú u bánk v Nemecku, Rakúsku a Švajčiarsku. Nástroj menný priestor v súbore rozpozná automaticky; polia, ktoré číta (dátumy, sumy, protistrana, referencie), sú v oboch verziách rovnaké."
+        "text": "camt.053.001.02 (namespace urn:iso:std:iso:20022:tech:xsd:camt.053.001.02), what Tatra banka, SLSP, VÚB and ČSOB issue, and the newer camt.053.001.08, more common at banks in Germany, Austria and Switzerland. The tool detects the namespace in the file automatically; the fields it reads (dates, amounts, counterparty, references) are the same in both versions."
       }
     },
     {
       "@type": "Question",
-      "name": "Čo dostanem v Pro?",
+      "name": "What do I get with Pro?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky Bankové nástroje pre účtovníkov, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb."
+        "text": "Processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the Banking tools for accountants page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the Pro section."
       }
     }
   ]
@@ -393,25 +398,25 @@
 </head>
 <body>
 
-<a class="skip" href="#playground" data-i18n="skip">Skočiť na konverziu</a>
+<a class="skip" href="#playground" data-i18n="skip">Skip to conversion</a>
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <a class="wordmark" href="https://arling.sk/camt053-to-excel/" data-i18n="wordmark">camt.053 do Excelu</a>
-      <a class="wordmark-sub" href="https://arling.sk/" data-i18n="brand.sub">nástroj ARLing</a>
+      <a class="wordmark" href="https://arling.sk/camt053-to-excel/en/" data-i18n="wordmark">camt.053 to Excel</a>
+      <a class="wordmark-sub" href="https://arling.sk/" data-i18n="brand.sub">an ARLing tool</a>
     </div>
     <div class="headnav">
       <nav class="main" aria-label="Stránka">
-        <a href="#problem" data-i18n="nav.how">Ako to funguje</a>
-        <a href="#playground" data-i18n="nav.convert">Previesť</a>
+        <a href="#problem" data-i18n="nav.how">How it works</a>
+        <a href="#playground" data-i18n="nav.convert">Convert</a>
         <a href="#endpoint" data-i18n="nav.api">API</a>
         <a href="#pro" data-i18n="nav.pro">Pro</a>
-        <a href="#faq" data-i18n="nav.faq">Otázky</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
       </nav>
-      <div class="lang-switch" role="group" aria-label="Jazyk stránky" data-i18n-aria-label="lang.switch.aria">
-        <a href="./" class="lang-active" aria-current="true" data-set-lang="sk" hreflang="sk" aria-label="Slovenčina" data-i18n-aria-label="lang.sk.aria">SK</a>
-        <a href="en/" data-set-lang="en" hreflang="en" aria-label="English" data-i18n-aria-label="lang.en.aria">EN</a>
-        <a href="de/" data-set-lang="de" hreflang="de" aria-label="Deutsch" data-i18n-aria-label="lang.de.aria">DE</a>
+      <div class="lang-switch" role="group" aria-label="Page language" data-i18n-aria-label="lang.switch.aria">
+        <a href="../" data-set-lang="sk" hreflang="sk" aria-label="Slovak" data-i18n-aria-label="lang.sk.aria">SK</a>
+        <a href="../en/" data-set-lang="en" hreflang="en" aria-label="English" data-i18n-aria-label="lang.en.aria" class="lang-active" aria-current="true">EN</a>
+        <a href="../de/" data-set-lang="de" hreflang="de" aria-label="German" data-i18n-aria-label="lang.de.aria">DE</a>
       </div>
     </div>
   </div>
@@ -420,16 +425,16 @@
 <main>
   <div class="hero">
     <div class="wrap">
-      <h1 data-i18n="hero.h1">Výpis z banky v XML (camt.053) na tabuľku za sekundu.</h1>
-      <p class="lead" data-i18n="hero.lead">Nahrajte alebo vložte výpis, ktorý ste stiahli z internet bankingu Tatra banky, SLSP, VÚB alebo ČSOB, a stiahnite tabuľku CSV alebo Excel s dátumami, sumami, protistranou a variabilným symbolom. Bez odosielania, bez účtu.</p>
-      <a class="btn btn-solid" href="#playground" data-i18n="hero.cta">Previesť výpis</a><a class="btn btn-line" href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener" data-i18n="hero.source">Zdrojový kód na GitHube</a>
-      <p class="hero-video"><a href="https://youtu.be/6751B-kkMHQ" target="_blank" rel="noopener" data-umami-event="video_click" data-umami-event-place="hero" data-i18n="hero.video">Video, 2 minúty (po nemecky): výpis z banky do Excelu</a></p>
+      <h1 data-i18n="hero.h1">Bank statement XML (camt.053) to a spreadsheet in seconds.</h1>
+      <p class="lead" data-i18n="hero.lead">Upload or paste the camt.053 statement you downloaded from your bank’s internet banking, and download a CSV or Excel table with dates, amounts, the counterparty and payment reference. Nothing is uploaded, no account needed.</p>
+      <a class="btn btn-solid" href="#playground" data-i18n="hero.cta">Convert a statement</a><a class="btn btn-line" href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener" data-i18n="hero.source">Source code on GitHub</a>
+      <p class="hero-video"><a href="https://youtu.be/6751B-kkMHQ" target="_blank" rel="noopener" data-umami-event="video_click" data-umami-event-place="hero" data-i18n="hero.video">Video, 2 minutes (in German): bank statement to Excel</a></p>
       <ul class="facts">
-        <li data-i18n="hero.fact.banks">4 banky: Tatra banka, SLSP, VÚB, ČSOB</li>
-        <li data-i18n="hero.fact.versions">2 verzie camt.053: .001.02 a .001.08</li>
-        <li data-i18n="hero.fact.tests">311 automatizovaných testov</li>
+        <li data-i18n="hero.fact.banks">any bank exporting camt.053 (ISO 20022)</li>
+        <li data-i18n="hero.fact.versions">2 camt.053 versions: .001.02 and .001.08</li>
+        <li data-i18n="hero.fact.tests">311 automated tests</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
-        <li data-i18n="hero.fact.free">0 €, bez účtu, beží vo vašom prehliadači</li>
+        <li data-i18n="hero.fact.free">€0, no account, runs in your browser</li>
       </ul>
     </div>
   </div>
@@ -437,20 +442,20 @@
   <section id="problem">
     <div class="wrap">
       <p class="kicker">01</p>
-      <h2 data-i18n="s1.h2">Tri dôvody, prečo účtovník potrebuje tabuľku z výpisu, nie len PDF.</h2>
-      <p class="sub" data-i18n="s1.sub">camt.053 XML má všetky dáta, ktoré PDF výpis len vypíše na papier. Problém je, že XML sa nedá otvoriť v Exceli dvojklikom.</p>
+      <h2 data-i18n="s1.h2">Three reasons an accountant needs a table from the statement, not just a PDF.</h2>
+      <p class="sub" data-i18n="s1.sub">camt.053 XML holds all the data a PDF statement only prints on paper. The problem is you can’t double-click an XML file open in Excel.</p>
       <ol class="rules">
         <li>
-          <b data-i18n="s1.r1.title">VS, ŠS a KS nie sú v jednom poli.</b>
-          <p data-i18n-html="s1.r1.body">Banka ich zapisuje do <code>EndToEndId</code>, do štruktúrovanej referencie alebo len do textu správy, podľa toho, ako platbu zadal platiteľ. Nástroj skúša všetky tri miesta v tomto poradí, takže párovanie s faktúrou funguje aj vtedy, keď PDF ukáže len jedno dlhé referenčné číslo.</p>
+          <b data-i18n="s1.r1.title">The payment reference isn’t in one field.</b>
+          <p data-i18n-html="s1.r1.body">A bank writes it into <code>EndToEndId</code>, into a structured reference, or only into the free-text message, depending on how the payer entered it. The tool tries all three places in that order, so matching against an invoice works even when the PDF shows only one long reference number.</p>
         </li>
         <li>
-          <b data-i18n="s1.r2.title">Znamienko rozhoduje o súčte, nie farba v PDF.</b>
-          <p data-i18n-html="s1.r2.body">Suma sa do tabuľky zapíše so znamienkom podľa <code>CdtDbtInd</code> (DBIT záporná, CRDT kladná), takže sa dá priamo sčítať a skontrolovať proti začiatočnému a konečnému zostatku, ktoré výpis sám uvádza.</p>
+          <b data-i18n="s1.r2.title">The sign decides the total, not a colour in a PDF.</b>
+          <p data-i18n-html="s1.r2.body">The amount is written into the table signed by <code>CdtDbtInd</code> (DBIT negative, CRDT positive), so the column can be summed directly and checked against the opening and closing balance the statement itself reports.</p>
         </li>
         <li>
-          <b data-i18n="s1.r3.title">Jeden bankový zápis môže byť viac platieb.</b>
-          <p data-i18n-html="s1.r3.body">Dávkový záznam s viacerými <code>NtryDtls/TxDtls</code> sa rozpíše na samostatný riadok pre každú platbu, takže párovanie podľa VS funguje na úrovni platby, nie na úrovni bankového zápisu.</p>
+          <b data-i18n="s1.r3.title">One bank entry can hold several payments.</b>
+          <p data-i18n-html="s1.r3.body">A batched entry with several <code>NtryDtls/TxDtls</code> blocks is split into a separate row for each payment, so matching by reference works at the payment level, not the bank-entry level.</p>
         </li>
       </ol>
     </div>
@@ -459,23 +464,23 @@
   <section id="playground">
     <div class="wrap">
       <p class="kicker">02</p>
-      <h2 data-i18n="s2.h2">Nahrajte výpis. Dostanete tabuľku, súhrn aj kontrolu zostatku.</h2>
-      <p class="sub" data-i18n="s2.sub">Nič z toho, čo nahráte alebo vložíte, sa neodosiela. Parsovanie aj generovanie CSV/Excelu beží vo vašom prehliadači.</p>
+      <h2 data-i18n="s2.h2">Upload a statement. You get a table, a summary, and a balance check.</h2>
+      <p class="sub" data-i18n="s2.sub">Nothing you upload or paste is sent anywhere. Parsing and building the CSV/Excel both run in your browser.</p>
 
       <div class="play">
         <div class="play-body">
           <div class="pane" id="input-pane">
             <div class="pane-head">
-              <span class="pane-title" data-i18n="s2.input.label">Vstup</span>
+              <span class="pane-title" data-i18n="s2.input.label">Input</span>
               <div class="pane-actions">
-                <button class="icon-btn" id="sample-btn" type="button" title="Načítať malý ukážkový výpis Tatra banky s 3 položkami" data-i18n="s2.sample.btn" data-i18n-title="s2.sample.btn.title">ukážka</button>
-                <button class="icon-btn primary" id="convert-btn" type="button" data-i18n="s2.convert.btn">Previesť ↵</button>
+                <button class="icon-btn" id="sample-btn" type="button" title="Load a small sample statement from a German bank with 4 entries" data-i18n="s2.sample.btn" data-i18n-title="s2.sample.btn.title">sample</button>
+                <button class="icon-btn primary" id="convert-btn" type="button" data-i18n="s2.convert.btn">Convert ↵</button>
               </div>
             </div>
 
             <div id="input-body">
               <div class="form-section">
-                <div class="form-section-title"><span data-i18n="s2.files.title">Súbor(y) camt.053</span><span class="hint-inline"><span data-i18n="s2.files.hint">.xml, max. 20 MB; viac súborov naraz</span> <a class="pro-badge" href="#pro" data-i18n="s2.pro.badge">PRO</a></span></div>
+                <div class="form-section-title"><span data-i18n="s2.files.title">camt.053 file(s)</span><span class="hint-inline"><span data-i18n="s2.files.hint">.xml, max. 20 MB; several files at once</span> <a class="pro-badge" href="#pro" data-i18n="s2.pro.badge">PRO</a></span></div>
                 <div class="field">
                   <input type="file" id="f-file" accept=".xml,text/xml,application/xml" multiple />
                 </div>
@@ -484,26 +489,26 @@
               </div>
 
               <div class="form-section">
-                <div class="form-section-title" data-i18n="s2.paste.title">alebo vložte XML text</div>
-                <textarea id="f-xml-text" class="json-in" spellcheck="false" wrap="off" placeholder="Sem vložte celý obsah camt.053 XML súboru." data-i18n-placeholder="s2.paste.placeholder"></textarea>
+                <div class="form-section-title" data-i18n="s2.paste.title">or paste the XML text</div>
+                <textarea id="f-xml-text" class="json-in" spellcheck="false" wrap="off" placeholder="Paste the full contents of a camt.053 XML file here." data-i18n-placeholder="s2.paste.placeholder"></textarea>
               </div>
 
               <div class="form-section">
-                <div class="form-section-title" data-i18n="s2.columns.title">Stĺpce v tabuľke aj v stiahnutí</div>
+                <div class="form-section-title" data-i18n="s2.columns.title">Columns in the table and the download</div>
                 <div class="col-toggles" id="col-toggles"></div>
               </div>
 
               <div class="form-section">
-                <div class="form-section-title" data-i18n="s2.csv.title">Formát CSV</div>
+                <div class="form-section-title" data-i18n="s2.csv.title">CSV format</div>
                 <div class="csv-opts">
-                  <label><input type="checkbox" id="opt-comma" /> <span data-i18n="s2.csv.comma.label">desatinná čiarka (450,00 namiesto 450.00)</span></label>
-                  <label><span data-i18n="s2.csv.delim.label">oddeľovač</span>
+                  <label><input type="checkbox" id="opt-comma" /> <span data-i18n="s2.csv.comma.label">decimal comma (450,00 instead of 450.00)</span></label>
+                  <label><span data-i18n="s2.csv.delim.label">delimiter</span>
                     <select id="opt-delim">
-                      <option value=";" selected data-i18n="s2.csv.delim.semi">bodkočiarka ; (Excel SK)</option>
-                      <option value="," data-i18n="s2.csv.delim.comma">čiarka ,</option>
+                      <option value=";" selected data-i18n="s2.csv.delim.semi">semicolon ; (Excel DE/SK)</option>
+                      <option value="," data-i18n="s2.csv.delim.comma">comma , (Excel US/UK)</option>
                     </select>
                   </label>
-                  <label id="tpl-wrap"><span data-i18n="s2.tpl.label">Predloha pre softvér</span>
+                  <label id="tpl-wrap"><span data-i18n="s2.tpl.label">Accounting software preset</span>
                     <select id="tpl-select"></select>
                   </label>
                 </div>
@@ -513,15 +518,15 @@
 
           <div class="pane">
             <div class="pane-head">
-              <span class="pane-title" data-i18n="s2.output.label">Výstup</span>
+              <span class="pane-title" data-i18n="s2.output.label">Output</span>
               <div class="pane-actions">
-                <button class="icon-btn" id="pro-history-btn" type="button" disabled data-i18n="s2.history.btn">história</button><a class="pro-badge" href="#pro" data-i18n="s2.pro.badge">PRO</a>
-                <span class="status-pill" id="status-pill" data-i18n="js.status.waiting">čaká sa</span>
+                <button class="icon-btn" id="pro-history-btn" type="button" disabled data-i18n="s2.history.btn">history</button><a class="pro-badge" href="#pro" data-i18n="s2.pro.badge">PRO</a>
+                <span class="status-pill" id="status-pill" data-i18n="js.status.waiting">waiting</span>
               </div>
             </div>
             <div class="pro-history-panel" id="pro-history-panel" hidden></div>
             <div id="output" class="output">
-              <p class="placeholder" data-i18n-html="s2.output.placeholder.full">nahrajte alebo vložte výpis, stlačte <span class="kbd">Previesť</span> alebo <span class="kbd">⌘↵</span><span class="blink"></span></p>
+              <p class="placeholder" data-i18n-html="s2.output.placeholder.full">upload or paste a statement, press <span class="kbd">Convert</span> or <span class="kbd">⌘↵</span><span class="blink"></span></p>
             </div>
           </div>
         </div>
@@ -532,32 +537,32 @@
   <section id="endpoint">
     <div class="wrap">
       <p class="kicker">03</p>
-      <h2 data-i18n="s3.h2">Dve funkcie. XML dnu, riadky von, hneď skontrolované na zostatok.</h2>
-      <p class="sub" data-i18n-html="s3.sub">Žiadny server, žiadny API kľúč, žiadna registrácia. <code>camt053.js</code> je čistý JavaScript: prečítajte si ho, forknite, alebo ho spustite vo vlastnom kóde či CI.</p>
+      <h2 data-i18n="s3.h2">Two functions. XML in, rows out, checked against the balance right away.</h2>
+      <p class="sub" data-i18n-html="s3.sub">No server, no API key, no sign-up. <code>camt053.js</code> is plain JavaScript: read it, fork it, or run it in your own code or CI.</p>
 
       <div class="endpoint">
         <div class="codeblock">
           <div class="codeblock-head">
             <span>camt053.js</span>
-            <span data-i18n="s3.codeblock.label">0 závislostí</span>
+            <span data-i18n="s3.codeblock.label">0 dependencies</span>
           </div>
           <pre><span class="p">import</span> { parse, toRows, toCsv, summarize } <span class="p">from</span> <span class="s">'./camt053.js'</span>;
-<span class="p">// <span data-i18n="s3.code.comment1">alebo globálne: const { parse, toRows, toCsv, summarize } = window.CamtConverter;</span></span>
+<span class="p">// <span data-i18n="s3.code.comment1">or globally: const { parse, toRows, toCsv, summarize } = window.CamtConverter;</span></span>
 
-<span class="p">const</span> parsed  = parse(xmlText);          <span class="p">// <span data-i18n="s3.code.comment2">camt.053.001.02 alebo .001.08</span></span>
-<span class="p">const</span> rows    = toRows(parsed);          <span class="p">// <span data-i18n="s3.code.comment3">1 riadok = 1 platba (VS, suma, protistrana...)</span></span>
+<span class="p">const</span> parsed  = parse(xmlText);          <span class="p">// <span data-i18n="s3.code.comment2">camt.053.001.02 or .001.08</span></span>
+<span class="p">const</span> rows    = toRows(parsed);          <span class="p">// <span data-i18n="s3.code.comment3">1 row = 1 payment (reference, amount, counterparty...)</span></span>
 <span class="p">const</span> csv     = toCsv(rows, { delimiter: <span class="s">';'</span>, bom: <span class="b">true</span> });
-<span class="p">const</span> summary = summarize(parsed);       <span class="p">// <span data-i18n="s3.code.comment4">OPBD + pohyby =? CLBD</span></span>
+<span class="p">const</span> summary = summarize(parsed);       <span class="p">// <span data-i18n="s3.code.comment4">OPBD + movements =? CLBD</span></span>
 
-<span class="p">// <span data-i18n="s3.code.comment5">Excel bez knižnice: minimálny .xlsx ako ZIP (STORED), pozri xlsx-writer.js</span></span>
+<span class="p">// <span data-i18n="s3.code.comment5">Excel with no library: a minimal .xlsx as a ZIP (STORED), see xlsx-writer.js</span></span>
 <span class="p">import</span> { buildXlsx } <span class="p">from</span> <span class="s">'./xlsx-writer.js'</span>;</pre>
         </div>
 
         <div class="endpoint-copy">
-          <p data-i18n-html="s3.copy.p1">Parsovanie XML, výpočet súhrnu aj skladanie CSV/Excelu beží presne tak, ako ho volá formulár vyššie, vo vašom prehliadači. Neexistuje backend ani API kľúč, ktorý by obsah vášho výpisu odniesol inam.</p>
-          <p data-i18n-html="s3.copy.p2">Engine používa vlastný tolerantný XML parser (rovnaký prístup ako sesterský nástroj SEPA pain.001 Doctor), nie <code>DOMParser</code>, takže beží nezmenený aj v Node: presne to spúšťa aj testovacia sada tohto projektu, <code>tests.mjs</code>.</p>
-          <p class="fineprint" data-i18n-html="s3.copy.p3">Zadarmo, otvorené, bez reklamy a bez sledovania nad rámec anonymných počtov použitia. Prípad, ktorý nástroj spracuje zle, nahláste ako <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">issue na GitHube</a>.</p>
-          <p class="fineprint" data-i18n="s3.copy.p4.sk">Nástroj nie je prepojený s Tatra bankou, Slovenskou sporiteľňou, VÚB ani ČSOB a nie je banka. Kontrola zostatku upozorní na nezrovnalosť, nezaručuje ale úplnosť výpisu.</p>
+          <p data-i18n-html="s3.copy.p1">Parsing the XML, computing the summary, and building the CSV/Excel run exactly as the form above calls them, in your browser. There is no backend or API key that could carry your statement’s content anywhere else.</p>
+          <p data-i18n-html="s3.copy.p2">The engine uses its own tolerant XML parser (the same approach as the sibling tool SEPA pain.001 Doctor), not <code>DOMParser</code>, so it also runs unmodified in Node: exactly what this project’s own test suite, <code>tests.mjs</code>, runs.</p>
+          <p class="fineprint" data-i18n-html="s3.copy.p3">Free, open, no ads, and no tracking beyond anonymous usage counts. If the tool gets a case wrong, please report it as an <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">issue on GitHub</a>.</p>
+          <p class="fineprint" data-i18n="s3.copy.p4.sk">This tool is not affiliated with any bank and is not a bank itself. The balance check flags a mismatch, but it does not guarantee a statement is complete.</p>
         </div>
       </div>
     </div>
@@ -566,47 +571,47 @@
   <section id="pro">
     <div class="wrap">
       <p class="kicker">04</p>
-      <h2 data-i18n="s4.h2">Pro: viac súborov naraz a história.</h2>
-      <p class="sub" data-i18n="s4.sub">Prevod jedného výpisu na CSV alebo Excel je a zostáva úplne zadarmo, bez limitu. Pro pridá spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.</p>
+      <h2 data-i18n="s4.h2">Pro: several files at once, plus history.</h2>
+      <p class="sub" data-i18n="s4.sub">Converting a single statement to CSV or Excel is, and stays, completely free, no limit. Pro adds processing several files at once and a conversion history, with one licence shared across the four ARLing banking tools.</p>
 
       <ol class="rules">
         <li>
-          <b data-i18n="s4.r1.title">Viac súborov naraz.</b>
-          <p data-i18n="s4.r1.body">Nahrajte viac výpisov naraz a spracujte ich v jednom kroku namiesto po jednom. Bez Pro sa spracuje vždy len prvý súbor.</p>
+          <b data-i18n="s4.r1.title">Several files at once.</b>
+          <p data-i18n="s4.r1.body">Upload several statements at once and process them in one step instead of one by one. Without Pro, only the first file is processed.</p>
         </li>
         <li>
-          <b data-i18n="s4.r2.title">História konverzií.</b>
-          <p data-i18n="s4.r2.body">Posledné spracované výpisy (názov, dátum, banka, počet položiek) uložené vo vašom prehliadači, dostupné cez tlačidlo „história“ pri výstupe.</p>
+          <b data-i18n="s4.r2.title">Conversion history.</b>
+          <p data-i18n="s4.r2.body">The most recently processed statements (name, date, bank, entry count) stored in your browser, available via the “history” button by the output.</p>
         </li>
         <li>
-          <b data-i18n="s4.r3.title">Prednostná podpora e-mailom.</b>
-          <p data-i18n="s4.r3.body">Otázka alebo prípad, ktorý si nástroj pomýlil? Odpoveď prednostne, priamo od autora nástroja.</p>
+          <b data-i18n="s4.r3.title">Priority email support.</b>
+          <p data-i18n="s4.r3.body">A question, or a case the tool got wrong? A priority reply, directly from the tool’s author.</p>
         </li>
       </ol>
 
       <div class="pro-purchase">
         <div class="pro-cta">
-          <p data-i18n-html="s4.cta.p"><b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky štyri nástroje, DPH v cene, faktúru pošle Stripe.</p>
+          <p data-i18n-html="s4.cta.p"><b>One licence for four tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.</p>
           <div class="pro-buy">
-            <a class="btn btn-solid" id="pro-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.year.btn">Kúpiť Pro, 79&nbsp;€/rok</a>
-            <a class="btn btn-line" id="pro-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.month.btn">alebo 9&nbsp;€/mesiac</a>
+            <a class="btn btn-solid" id="pro-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.year.btn">Buy Pro, €79/year</a>
+            <a class="btn btn-line" id="pro-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.month.btn">or €9/month</a>
           </div>
-          <p class="fineprint" data-i18n="s4.buy.fineprint">Platba cez Stripe, DPH v cene, zrušiť môžete kedykoľvek. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.</p>
-          <p class="pro-bundle-link"><a id="pro-bundle-link" href="https://arling.sk/bankove-nastroje/" data-umami-event="bundle_click" data-umami-event-place="camt" data-i18n="s4.bundle.link">Čo všetko je v balíku</a></p>
+          <p class="fineprint" data-i18n="s4.buy.fineprint">Payment via Stripe, VAT included, cancel anytime. You get the licence key on the confirmation page right after payment.</p>
+          <p class="pro-bundle-link"><a id="pro-bundle-link" href="https://arling.sk/bankove-nastroje/?lang=en" data-umami-event="bundle_click" data-umami-event-place="camt" data-i18n="s4.bundle.link">What is in the bundle</a></p>
         </div>
         <div class="pro-licence-box">
           <div class="pro-licence-status">
-            <span class="status-pill" id="pro-licence-pill" data-i18n="js.status.noLicence">bez licencie</span>
+            <span class="status-pill" id="pro-licence-pill" data-i18n="js.status.noLicence">no licence</span>
             <span id="pro-licence-detail"></span>
           </div>
           <div class="pro-licence-actions" id="pro-licence-actions-active" hidden>
-            <button class="icon-btn" id="pro-licence-remove-btn" type="button" data-i18n="s4.licence.remove.btn">Odstrániť licenciu</button>
+            <button class="icon-btn" id="pro-licence-remove-btn" type="button" data-i18n="s4.licence.remove.btn">Remove licence</button>
           </div>
           <div class="pro-licence-manual">
-            <label for="pro-licence-input" data-i18n="s4.licence.manual.label">Licenčný kľúč nájdete na potvrdzovacej stránke hneď po zaplatení. Kúpili ste ho na inom počítači alebo v inom nástroji? Vložte ho sem.</label>
+            <label for="pro-licence-input" data-i18n="s4.licence.manual.label">The licence key is on the confirmation page right after payment. Bought it on another computer or in another tool? Paste it here.</label>
             <div class="pro-licence-manual-row">
-              <input type="text" id="pro-licence-input" placeholder="Licenčný kľúč (dlhý reťazec s bodkou uprostred)" spellcheck="false" autocomplete="off" data-i18n-placeholder="s4.licence.input.placeholder" />
-              <button class="icon-btn primary" id="pro-licence-activate-btn" type="button" data-i18n="s4.licence.activate.btn">Aktivovať</button>
+              <input type="text" id="pro-licence-input" placeholder="Licence key (a long string with a dot in the middle)" spellcheck="false" autocomplete="off" data-i18n-placeholder="s4.licence.input.placeholder" />
+              <button class="icon-btn primary" id="pro-licence-activate-btn" type="button" data-i18n="s4.licence.activate.btn">Activate</button>
             </div>
             <p class="pro-licence-error" id="pro-licence-error"></p>
           </div>
@@ -618,25 +623,25 @@
   <section id="pricing">
     <div class="wrap">
       <p class="kicker">05</p>
-      <h2 data-i18n="s5.h2">Zadarmo. Bez limitov, natrvalo.</h2>
-      <p class="sub" data-i18n="s5.sub">Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Bez účtu, bez platby, bez limitu na počet výpisov ani stiahnutí.</p>
+      <h2 data-i18n="s5.h2">Free. No limits, for good.</h2>
+      <p class="sub" data-i18n="s5.sub">Built out of a real need: turn a bank statement into a table without retyping XML by hand. No account, no payment, no limit on statements or downloads.</p>
       <div class="ask">
-        <p data-i18n-html="s5.ask.p">Ak vám ušetrí popoludnie, napíšte, čo nástroj spracoval zle. <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">Otvorte issue na GitHube</a>.</p>
+        <p data-i18n-html="s5.ask.p">If it saves you an afternoon, let us know what the tool got wrong. <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.</p>
       </div>
       <div class="ask subscribe-ask" id="subscribe">
-        <p data-i18n-html="s5.subscribe.p"><b>Dajte mi vedieť o novom nástroji.</b> Len nové nástroje. Žiadny newsletter, žiadne zdieľanie. Odhlásenie odpoveďou na mail.</p>
-        <form id="subscribe-form" class="subscribe-form" data-subscribe data-source="camt053-to-excel" data-lang="sk" data-thanks="subscribe-thanks" data-error="subscribe-error" novalidate>
+        <p data-i18n-html="s5.subscribe.p"><b>Let me know about a new tool.</b> New tools only. No newsletter, no sharing. Unsubscribe by replying to the email.</p>
+        <form id="subscribe-form" class="subscribe-form" data-subscribe data-source="camt053-to-excel" data-lang="en" data-thanks="subscribe-thanks" data-error="subscribe-error" novalidate>
           <div class="hp" aria-hidden="true"><input type="text" name="website" id="subscribe-website" tabindex="-1" autocomplete="off"></div>
-          <input type="email" id="subscribe-email" name="email" required autocomplete="email" inputmode="email" placeholder="vas@email.sk" aria-label="E-mailová adresa" data-i18n-placeholder="s5.subscribe.email.placeholder" data-i18n-aria-label="s5.subscribe.email.aria">
-          <button class="btn btn-solid" type="submit" data-i18n="s5.subscribe.btn">Dať vedieť</button>
+          <input type="email" id="subscribe-email" name="email" required autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Email address" data-i18n-placeholder="s5.subscribe.email.placeholder" data-i18n-aria-label="s5.subscribe.email.aria">
+          <button class="btn btn-solid" type="submit" data-i18n="s5.subscribe.btn">Notify me</button>
         </form>
-        <p id="subscribe-thanks" hidden data-i18n="s5.subscribe.thanks">Ďakujeme. Ozveme sa len vtedy, keď bude niečo nové.</p>
-        <p id="subscribe-error" hidden data-i18n-html="s5.subscribe.error">Nepodarilo sa uložiť. Napíšte na <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>.</p>
-        <p class="fineprint subscribe-privacy"><a href="https://arling.sk/privacy/" data-i18n="s5.subscribe.privacy">Súkromie</a></p>
+        <p id="subscribe-thanks" hidden data-i18n="s5.subscribe.thanks">Thanks. We’ll only write when there’s something new.</p>
+        <p id="subscribe-error" hidden data-i18n-html="s5.subscribe.error">Could not save it. Please write to <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>.</p>
+        <p class="fineprint subscribe-privacy"><a href="https://arling.sk/privacy/" data-i18n="s5.subscribe.privacy">Privacy</a></p>
       </div>
       <div class="ask business-ask" id="business">
-        <p data-i18n-html="s5.business.p"><b>Potrebujete to pravidelne?</b> Hromadné spracovanie, párovanie s faktúrami, napojenie na účtovný systém.</p>
-        <a class="btn btn-line" id="business-link" href="mailto:andrej@arling.sk?subject=camt.053%20pre%20firmu" data-umami-event="business_interest" data-i18n="s5.business.btn">Napísať, čo potrebujem</a>
+        <p data-i18n-html="s5.business.p"><b>Need this regularly?</b> Bulk processing, matching against invoices, a connection into your accounting system.</p>
+        <a class="btn btn-line" id="business-link" href="mailto:andrej@arling.sk?subject=camt.053%20for%20a%20business" data-umami-event="business_interest" data-i18n="s5.business.btn">Tell us what you need</a>
       </div>
     </div>
   </section>
@@ -644,36 +649,36 @@
   <section id="faq">
     <div class="wrap">
       <p class="kicker">06</p>
-      <h2 data-i18n="s6.h2">Otázky, ktoré ľudia naozaj hľadajú.</h2>
-      <p class="sub" data-i18n="s6.sub">Priame odpovede na otázky o prevode camt.053 výpisu na tabuľku.</p>
+      <h2 data-i18n="s6.h2">Questions people actually search for.</h2>
+      <p class="sub" data-i18n="s6.sub">Direct answers about converting a camt.053 statement into a table.</p>
 
       <details>
-        <summary data-i18n="faq.q1">Kde v internet bankingu nájdem camt.053?</summary>
-        <p data-i18n-html="faq.a1">V Tatra banke je to položka „Výpis pre účtovníctvo“: zvoľte účet, obdobie a číslo výpisu, formát XML camt.053 je od roku 2016 jediný ponúkaný. V SLSP, VÚB aj ČSOB hľadajte v sekcii Výpisy/Dokumenty položku s názvom podobným „elektronický výpis“, „výpis pre účtovníctvo“ alebo „XML výpis“: presné pomenovanie sa medzi bankami líši, ale všetky štyri banky ponúkajú camt.053 XML ako štandardný formát výpisu pre účtovníctvo.</p>
+        <summary data-i18n="faq.q1">Where in internet banking do I find camt.053?</summary>
+        <p data-i18n-html="faq.a1">In German, Austrian and Swiss internet banking, camt.053 (ISO 20022) is the standard electronic statement export, usually next to an older MT940 option, offered by any bank, for example Sparkasse, Volksbank, Deutsche Bank, Commerzbank, Raiffeisen, Erste, UBS or PostFinance. Look under statement export, account statement download, or “camt.053 / ISO 20022”. In Slovak internet banking (Tatra banka, SLSP, VÚB, ČSOB) look for “výpis pre účtovníctvo” or “XML výpis”.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q2">Prečo je suma záporná?</summary>
-        <p data-i18n-html="faq.a2">Stĺpec Suma má znamienko podľa <code>CdtDbtInd</code> v XML: DBIT (peniaze odišli z účtu) sa zapíše ako záporné číslo, CRDT (peniaze prišli) ako kladné. Vďaka tomu sa dá stĺpec priamo sčítať a porovnať so začiatočným a konečným zostatkom vo výpise, presne to robí súhrn nad tabuľkou.</p>
+        <summary data-i18n="faq.q2">Why is the amount negative?</summary>
+        <p data-i18n-html="faq.a2">The amount column carries a sign from <code>CdtDbtInd</code> in the XML: DBIT (money left the account) is written as a negative number, CRDT (money arrived) as a positive one. That lets the column be summed directly and compared against the statement’s own opening and closing balance, which is exactly what the summary above the table does.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q3">Kde je variabilný symbol?</summary>
-        <p data-i18n-html="faq.a3">camt.053 nemá pre VS, ŠS ani KS samostatné pole. Banky ich zapisujú buď do <code>EndToEndId</code> v poradí <code>/VS.../SS.../KS...</code>, alebo do štruktúrovanej referencie (<code>RmtInf/Strd/CdtrRefInf/Ref</code>), alebo len do voľného textu správy (<code>RmtInf/Ustrd</code>). Nástroj skúša všetky tri miesta v tomto poradí, takže párovanie s faktúrou funguje aj vtedy, keď je vo výpise vidieť len jedno dlhé referenčné číslo. Zdroj, z ktorého sa VS/ŠS/KS zobral, uvidíte ako popis (title) nad bunkou po prejdení myšou.</p>
+        <summary data-i18n="faq.q3">Where is the payment reference (VS/SS/KS)?</summary>
+        <p data-i18n-html="faq.a3">VS/SS/KS (variabilný/špecifický/konštantný symbol) are Slovak domestic-payment reference numbers; camt.053 has no dedicated field for them. A bank writes them either into <code>EndToEndId</code> as <code>/VS.../SS.../KS...</code>, into a structured reference (<code>RmtInf/Strd/CdtrRefInf/Ref</code>), or only into the free-text message (<code>RmtInf/Ustrd</code>). The tool tries all three places in that order. For a German, Austrian or Swiss statement these columns are usually empty; use the raw message column (<code>RmtInf</code>) instead, which carries the Verwendungszweck text.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q4">Otvorí to Excel s diakritikou?</summary>
-        <p data-i18n-html="faq.a4">Áno. Stiahnutý CSV má na začiatku UTF-8 BOM, ktorý aj slovenská verzia Excelu rozpozná automaticky a diakritiku zobrazí správne bez ručného výberu kódovania. Súbor .xlsx je rovno vo formáte, ktorý Excel číta natívne v UTF-8, takže diakritika je v poriadku aj tam.</p>
+        <summary data-i18n="faq.q4">Will Excel open it with accented characters intact?</summary>
+        <p data-i18n-html="faq.a4">Yes. The downloaded CSV starts with a UTF-8 BOM, which Excel (including German/Austrian/Swiss locales) recognises automatically and displays accented characters correctly without picking an encoding by hand. The .xlsx file is already in the format Excel reads natively as UTF-8, so accented characters are fine there too.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q5">Odosielajú sa moje dáta niekam?</summary>
-        <p data-i18n-html="faq.a5">Nie. Parsovanie XML aj generovanie CSV a Excelu beží celé vo vašom prehliadači, nástroj nemá backend. Jedinou sieťovou aktivitou je načítanie statických súborov stránky a anonymné počítadlo použitia (Umami), ktoré zaznamená len to, že prebehla konverzia a koľko mala riadkov, nikdy obsah výpisu (IBAN, sumy, mená).</p>
+        <summary data-i18n="faq.q5">Is my data sent anywhere?</summary>
+        <p data-i18n-html="faq.a5">No. Parsing the XML and building the CSV/Excel both run entirely in your browser; the tool has no backend. The only network activity is loading the page’s static files and an anonymous usage counter (Umami), which records only that a conversion happened and how many rows it had, never the statement’s content (IBANs, amounts, names).</p>
       </details>
       <details>
-        <summary data-i18n="faq.q6">Aké verzie camt.053 podporujete?</summary>
-        <p data-i18n-html="faq.a6"><code>camt.053.001.02</code> (menný priestor <code>urn:iso:std:iso:20022:tech:xsd:camt.053.001.02</code>), ktorý ako jediný formát výpisu pre účtovníctvo posielajú Tatra banka, SLSP, VÚB aj ČSOB, a novšiu verziu <code>camt.053.001.08</code>. Nástroj menný priestor v súbore rozpozná automaticky; polia, ktoré číta (dátumy, sumy, protistrana, referencie), sú v oboch verziách rovnaké.</p>
+        <summary data-i18n="faq.q6">Which camt.053 versions are supported?</summary>
+        <p data-i18n-html="faq.a6"><code>camt.053.001.02</code> (namespace <code>urn:iso:std:iso:20022:tech:xsd:camt.053.001.02</code>), what Tatra banka, SLSP, VÚB and ČSOB issue, and the newer <code>camt.053.001.08</code>, more common at banks in Germany, Austria and Switzerland. The tool detects the namespace in the file automatically; the fields it reads (dates, amounts, counterparty, references) are the same in both versions.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q7">Čo dostanem v Pro?</summary>
-        <p data-i18n-html="faq.a7">Spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.</p>
+        <summary data-i18n="faq.q7">What do I get with Pro?</summary>
+        <p data-i18n-html="faq.a7">Processing several files at once, and a history of past conversions stored in your browser. Converting a single statement to CSV or Excel stays completely free, unchanged. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.</p>
       </details>
     </div>
   </section>
@@ -681,19 +686,19 @@
 
 <footer>
   <div class="wrap cols">
-    <div><b>ARLing s. r. o.</b><br>Ivanská cesta 32E<br>821 04 Bratislava, <span data-i18n="footer.country">Slovensko</span></div>
+    <div><b>ARLing s. r. o.</b><br>Ivanská cesta 32E<br>821 04 Bratislava, <span data-i18n="footer.country">Slovakia</span></div>
     <div>IČO 56583486<br>IČ DPH SK2122352100<br><a href="mailto:andrej@arling.sk">andrej@arling.sk</a></div>
-    <div><span data-i18n="footer.sisters.label">Sesterské nástroje:</span> <a href="https://arling.sk/sepa-pain001-doctor/" data-i18n="footer.tool.doctor">SEPA pain.001 Doctor</a> · <a href="https://arling.sk/sepa-pain001-generator/" data-i18n="footer.tool.generator">SEPA pain.001 Generátor</a> · <a href="https://arling.sk/parovac-platieb/" data-i18n="footer.tool.matcher">Párovač platieb</a><br><span data-i18n="footer.bundle.label">Pro pre všetky štyri:</span> <a href="https://arling.sk/bankove-nastroje/" data-i18n="footer.bundle.name">Bankové nástroje pre účtovníkov</a><br><a href="https://arling.sk/" data-i18n="footer.all.tools">Všetky nástroje ARLing</a> · <a href="llms.txt">llms.txt</a> · <a href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener">GitHub</a> · <a href="https://arling.sk/privacy/" data-i18n="footer.privacy">Súkromie</a></div>
+    <div><span data-i18n="footer.sisters.label">Sibling tools:</span> <a href="https://arling.sk/sepa-pain001-doctor/" data-i18n="footer.tool.doctor">SEPA pain.001 Doctor</a> · <a href="https://arling.sk/sepa-pain001-generator/" data-i18n="footer.tool.generator">SEPA pain.001 Generator</a> · <a href="https://arling.sk/parovac-platieb/" data-i18n="footer.tool.matcher">Payment matcher</a><br><span data-i18n="footer.bundle.label">Pro for all four:</span> <a href="https://arling.sk/bankove-nastroje/" data-i18n="footer.bundle.name">Banking tools for accountants</a><br><a href="https://arling.sk/" data-i18n="footer.all.tools">All ARLing tools</a> · <a href="../llms.txt">llms.txt</a> · <a href="https://github.com/AndryRoby/camt053-to-excel" target="_blank" rel="noopener">GitHub</a> · <a href="https://arling.sk/privacy/" data-i18n="footer.privacy">Privacy</a></div>
   </div>
-  <p class="wrap footer-note" data-i18n="footer.note">Nič neopúšťa váš prehliadač okrem anonymných počtov použitia cez self-hosted Umami (a e-mailu, ak sa prihlásite na odber nižšie).</p>
+  <p class="wrap footer-note" data-i18n="footer.note">Nothing leaves your browser except anonymous usage counts via self-hosted Umami (and an email address, if you sign up for updates below).</p>
 </footer>
 
 <div class="sticky-cta" id="sticky-cta" hidden>
   <div class="sticky-cta-inner">
-    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Licencia Pro pre všetky štyri nástroje, zrušiť kedykoľvek.</span>
+    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Pro licence for all four tools, cancel anytime.</span>
     <span class="sticky-cta-buttons">
-      <a class="btn btn-solid" id="sticky-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.year.btn">Kúpiť Pro, 79&nbsp;€/rok</a>
-      <a class="btn btn-line" id="sticky-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.month.btn">alebo 9&nbsp;€/mesiac</a>
+      <a class="btn btn-solid" id="sticky-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.year.btn">Buy Pro, €79/year</a>
+      <a class="btn btn-line" id="sticky-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.month.btn">or €9/month</a>
     </span>
     <button type="button" class="sticky-cta-close" id="sticky-cta-close" aria-label="Zavrieť lištu">&times;</button>
   </div>
@@ -701,13 +706,13 @@
 
 <!-- Scripts -->
 <script type="module">
-  import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE } from './camt053.js';
-  import { buildXlsx } from './xlsx-writer.js';
-  import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
+  import { parse, toRows, toCsv, summarize, COLUMNS, SAMPLE_CAMT053_XML, SAMPLE_CAMT053_XML_DE } from '../camt053.js';
+  import { buildXlsx } from '../xlsx-writer.js';
+  import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from '../licence.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
     defaultCsvOptsForLang, defaultColumnsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
-  } from './i18n.js';
+  } from '../i18n.js';
 
   const $ = (id) => document.getElementById(id);
 
@@ -1293,7 +1298,7 @@
   // ── init (licencia) ──────────────────────────────────────────────────
   refreshLicenceUI().then(handleSessionIdFromUrl);
 </script>
-<script src="subscribe.js" defer></script>
+<script src="../subscribe.js" defer></script>
 <script>
 (function () {
   var SLUG = 'camt053-to-excel';
