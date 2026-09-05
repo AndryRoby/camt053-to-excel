@@ -252,6 +252,8 @@
   .pro-buy .btn + .btn { margin:0; }
   .pro-cta p.fineprint { font-size:12.5px; color:var(--muted); margin:0 0 10px; }
   .pro-cta p.pro-bundle-link { font-size:13.5px; margin:0; }
+  .pro-cta ul.pro-list { margin:0 0 16px; padding-left:18px; color:var(--ink-2); font-size:14px; }
+  .pro-cta ul.pro-list li + li { margin-top:5px; }
   /* Mobile: the buy box comes right after the intro, the three reasons follow (Paper Sell: price early). */
   @media (max-width:760px) {
     #pro .wrap { display:flex; flex-direction:column; }
@@ -317,6 +319,13 @@
   .pro-export-preview-buy .btn { padding:9px 13px; font-size:13px; margin:0; }
   .pro-export-close { flex:none; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:12px/1 var(--sans); padding:5px 9px; }
   .pro-export-close:hover { border-color:var(--accent); color:var(--accent); }
+  .free-export-exhausted-note { margin:0; font:600 12.5px/1.4 var(--sans); color:var(--warn); }
+
+  /* Free-first-conversion "done" panel: calm confirmation, not an upsell warning. */
+  .free-export-done { border:1px solid var(--ok); background:var(--paper-2); border-radius:4px; padding:14px 16px; margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+  .free-export-done-head { font:600 13.5px/1.3 var(--sans); color:var(--ok); margin:0; }
+  .free-export-done p { margin:0; font-size:12.5px; line-height:1.55; color:var(--ink-2); }
+  .free-first-note { margin:10px 0 0; font-size:14px; font-weight:600; color:var(--ok); }
 
   /* Output */
   .output { flex:1; padding:16px 18px; font:13px/1.5 var(--sans); overflow:auto; min-height:420px; background:var(--paper); }
@@ -458,9 +467,10 @@
       <ul class="facts">
         <li data-i18n="hero.fact.banks">jede Bank mit camt.053-Export (ISO 20022)</li>
         <li data-i18n="hero.fact.versions">2 camt.053-Versionen: .001.02 und .001.08</li>
-        <li data-i18n="hero.fact.tests">503 automatisierte Tests</li>
+        <li data-i18n="hero.fact.tests">546 automatisierte Tests</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
         <li data-i18n="hero.fact.free">0 €, ohne Konto, läuft im Browser</li>
+        <li data-i18n="hero.fact.freeFirst">Die erste Umwandlung ist kostenlos, ohne Konto.</li>
       </ul>
     </div>
   </div>
@@ -612,6 +622,7 @@
       <p class="kicker">04</p>
       <h2 data-i18n="s4.h2">Pro: MT940 und DATEV-Buchungsstapel, mehrere Dateien gleichzeitig.</h2>
       <p class="sub" data-i18n="s4.sub">Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt einen MT940-Export (für den manuellen DATEV-Import oder andere ältere Software) und einen DATEV-Buchungsstapel-Export (EXTF-CSV) hinzu, dazu die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für alle vier ARLing-Banktools.</p>
+      <p class="free-first-note" data-i18n="s4.freeFirst">Die erste Umwandlung ist kostenlos, ohne Konto.</p>
 
       <ol class="rules">
         <li>
@@ -635,11 +646,13 @@
       <div class="pro-purchase">
         <div class="pro-cta">
           <p data-i18n-html="s4.cta.p"><b>Eine Lizenz für vier Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.</p>
+          <ul class="pro-list" data-i18n-html="s4.included.list"><li>MT940-Export (.sta) und DATEV-Buchungsstapel-Export (EXTF-CSV)</li><li>Mehrere Dateien gleichzeitig, Umwandlungsverlauf im Browser</li><li>Ein Lizenzschlüssel für vier Tools: camt.053 nach Excel, SEPA pain.001 Doctor, SEPA-pain.001-Generator, Zahlungsabgleich</li><li>Bevorzugter E-Mail-Support</li></ul>
           <div class="pro-buy">
             <a class="btn btn-solid" id="pro-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.year.btn">Pro kaufen, 79 €/Jahr</a>
             <a class="btn btn-line" id="pro-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="pro" data-i18n="s4.buy.month.btn">oder 9 €/Monat</a>
           </div>
-          <p class="fineprint" data-i18n="s4.buy.fineprint">Zahlung über Stripe, inkl. MwSt., jederzeit kündbar. Den Lizenzschlüssel erhalten Sie direkt nach der Zahlung auf der Bestätigungsseite.</p>
+          <p class="fineprint" data-i18n="s4.buy.fineprint">Zahlung über Stripe, inkl. MwSt., monatlich kündbar, keine Mindestlaufzeit: den Kündigungslink schickt Stripe direkt in der Zahlungsbestätigung. Den Lizenzschlüssel erhalten Sie sofort nach der Zahlung auf der Bestätigungsseite.</p>
+          <p class="fineprint" data-i18n-html="s4.trust">ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slowakei, USt-IdNr. SK2122352100. Die Umwandlung läuft in Ihrem Browser, Ihr Kontoauszug wird nicht hochgeladen. Importiert die MT940- oder DATEV-Datei bei Ihnen nicht, schreiben Sie mit der Fehlermeldung an <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>, wir kümmern uns vorrangig darum. <a href="https://arling.sk/podmienky/">AGB</a> · <a href="https://arling.sk/gdpr/">Datenschutz</a></p>
           <p class="pro-bundle-link"><a id="pro-bundle-link" href="https://arling.sk/bankove-nastroje/?lang=de" data-umami-event="bundle_click" data-umami-event-place="camt" data-i18n="s4.bundle.link">Was im Paket enthalten ist</a></p>
         </div>
         <div class="pro-licence-box">
@@ -742,7 +755,7 @@
 
 <div class="sticky-cta" id="sticky-cta" hidden>
   <div class="sticky-cta-inner">
-    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Pro-Lizenz für alle vier Tools, jederzeit kündbar.</span>
+    <span class="sticky-cta-text" data-i18n="s4.sticky.text">Pro-Lizenz für alle vier Tools, monatlich kündbar, keine Mindestlaufzeit.</span>
     <span class="sticky-cta-buttons">
       <a class="btn btn-solid" id="sticky-buy-yearly-btn" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.year.btn">Pro kaufen, 79 €/Jahr</a>
       <a class="btn btn-line" id="sticky-buy-monthly-btn" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="sticky" data-i18n="s4.buy.month.btn">oder 9 €/Monat</a>
@@ -758,6 +771,7 @@
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from '../licence.js';
   import { toMt940, foldDiacritics } from '../mt940.js';
   import { toDatevBuchungsstapel, toCp1252Bytes } from '../datev-extf.js';
+  import { hasUsedFree, markFreeUsed } from '../free-pass.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
     defaultCsvOptsForLang, defaultColumnsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
@@ -1069,10 +1083,18 @@
 
   // ── Pro exports: MT940 (.sta) and DATEV Buchungsstapel (EXTF CSV) ───────
   // Generating the content is free (client-side, same as every other
-  // export); only the actual download is gated on a valid licence. Without
-  // one, a click shows a small preview (first PREVIEW_LINES lines) plus
-  // the same buy buttons as the Pro section, right under that statement's
-  // card, so the value is visible before asking for a purchase.
+  // export). The download itself has three states, checked in this order
+  // on every click (see the mt940Btn/datevBtn handlers below):
+  //   1. a valid licence -> download, as before;
+  //   2. no licence, but this format's one free export (free-pass.js,
+  //      per browser via localStorage) is not used yet -> download the
+  //      exact same complete file a Pro visitor would get (never
+  //      truncated or watermarked: the whole point is that importing it
+  //      into DATEV proves the tool works), mark it used, and show the
+  //      "first conversion done" panel with the price and buy buttons;
+  //   3. no licence and the free export is used -> the small preview
+  //      (first PREVIEW_LINES lines) plus the buy buttons, as before,
+  //      with a line noting the free export is already spent.
   const PREVIEW_LINES = 8;
 
   function mt940Filename(entry) {
@@ -1094,12 +1116,29 @@
     };
   }
 
+  // Wires the "ping the owner" beacon (see the IIFE near the end of this
+  // file) onto buy buttons created dynamically after that IIFE's own
+  // querySelectorAll scan already ran once at page load.
+  function wireBuyPings(slot) {
+    slot.querySelectorAll('a[data-umami-event="buy_click"]').forEach((el) => {
+      el.addEventListener('click', () => {
+        try { if (window.arlingPingOwner) window.arlingPingOwner('buy_click', el.getAttribute('data-umami-event-plan') || ''); } catch (e) {}
+      });
+    });
+  }
+
+  function buyButtonsHtml(spot) {
+    return `<a class="btn btn-solid" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="${spot}">${esc(t('s4.buy.year.btn'))}</a>
+      <a class="btn btn-line" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="${spot}">${esc(t('s4.buy.month.btn'))}</a>`;
+  }
+
   function renderProExportPreview(idx, kind, content) {
     const slot = $('pro-export-slot-' + idx);
     if (!slot) return;
     const lines = content.split(/\r\n|\n/).filter((l) => l.length > 0).slice(0, PREVIEW_LINES).join('\n');
     const titleKey = kind === 'mt940' ? 'js.pro.preview.title.mt940' : 'js.pro.preview.title.datev';
     slot.innerHTML = `<div class="pro-export-preview">
+      <p class="free-export-exhausted-note">${esc(t('js.free.exhausted'))}</p>
       <div class="pro-export-preview-head">
         <span class="pro-export-preview-title">${esc(t(titleKey))}</span>
         <button type="button" class="pro-export-close" data-close-preview="1">${esc(t('js.pro.preview.close'))}</button>
@@ -1108,17 +1147,26 @@
       <p class="pro-export-preview-note">${esc(tf('js.pro.preview.note', { n: PREVIEW_LINES }))}</p>
       <div class="pro-export-preview-buy">
         <span>${esc(t('js.pro.preview.buyPrompt'))}</span>
-        <a class="btn btn-solid" href="https://buy.stripe.com/cNi9ANcYi19FaoW09D4ko02" data-umami-event="buy_click" data-umami-event-plan="year" data-umami-event-place="camt" data-umami-event-spot="export_preview">${esc(t('s4.buy.year.btn'))}</a>
-        <a class="btn btn-line" href="https://buy.stripe.com/5kQ4gt2jE7y354Cg8B4ko01" data-umami-event="buy_click" data-umami-event-plan="month" data-umami-event-place="camt" data-umami-event-spot="export_preview">${esc(t('s4.buy.month.btn'))}</a>
+        ${buyButtonsHtml('export_preview')}
       </div>
     </div>`;
     const closeBtn = slot.querySelector('[data-close-preview="1"]');
     if (closeBtn) closeBtn.addEventListener('click', () => { slot.innerHTML = ''; });
-    slot.querySelectorAll('a[data-umami-event="buy_click"]').forEach((el) => {
-      el.addEventListener('click', () => {
-        try { if (window.arlingPingOwner) window.arlingPingOwner('buy_click', el.getAttribute('data-umami-event-plan') || ''); } catch (e) {}
-      });
-    });
+    wireBuyPings(slot);
+  }
+
+  // The panel shown right after a visitor's one free MT940/DATEV download:
+  // calm confirmation, not an upsell warning, since nothing went wrong.
+  function renderFreeExportDone(idx) {
+    const slot = $('pro-export-slot-' + idx);
+    if (!slot) return;
+    slot.innerHTML = `<div class="free-export-done">
+      <p class="free-export-done-head">${esc(t('js.free.done.head'))}</p>
+      <p>${esc(t('js.free.done.body'))}</p>
+      <p>${esc(t('js.free.done.price'))}</p>
+      <div class="pro-export-preview-buy">${buyButtonsHtml('free_export_done')}</div>
+    </div>`;
+    wireBuyPings(slot);
   }
 
   function buildEntryHtml(entry, idx) {
@@ -1186,9 +1234,15 @@
           if (proExportSlot) proExportSlot.innerHTML = '';
           triggerDownload(new Blob([content], { type: 'application/octet-stream' }), mt940Filename(entry));
           track('mt940_download', { bank: entry.parsed.bank || '' });
+        } else if (!hasUsedFree('mt940')) {
+          markFreeUsed('mt940');
+          triggerDownload(new Blob([content], { type: 'application/octet-stream' }), mt940Filename(entry));
+          renderFreeExportDone(i);
+          track('free_export_used', { format: 'mt940' });
         } else {
           renderProExportPreview(i, 'mt940', content);
           track('mt940_preview', { bank: entry.parsed.bank || '' });
+          track('free_export_exhausted', { format: 'mt940' });
         }
       });
       const datevBtn = output.querySelector(`[data-export-datev="${i}"]`);
@@ -1198,9 +1252,15 @@
           if (proExportSlot) proExportSlot.innerHTML = '';
           triggerDownload(new Blob([toCp1252Bytes(content)], { type: 'text/csv' }), datevFilename());
           track('datev_download', { bank: entry.parsed.bank || '' });
+        } else if (!hasUsedFree('datev')) {
+          markFreeUsed('datev');
+          triggerDownload(new Blob([toCp1252Bytes(content)], { type: 'text/csv' }), datevFilename());
+          renderFreeExportDone(i);
+          track('free_export_used', { format: 'datev' });
         } else {
           renderProExportPreview(i, 'datev', content);
           track('datev_preview', { bank: entry.parsed.bank || '' });
+          track('free_export_exhausted', { format: 'datev' });
         }
       });
       const cpBtn = output.querySelector(`[data-copy-tsv="${i}"]`);

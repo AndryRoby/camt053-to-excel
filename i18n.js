@@ -55,9 +55,10 @@ export const DICT = {
     de: 'jede Bank mit camt.053-Export (ISO 20022)',
   },
   'hero.fact.versions': { sk: '2 verzie camt.053: .001.02 a .001.08', en: '2 camt.053 versions: .001.02 and .001.08', de: '2 camt.053-Versionen: .001.02 und .001.08' },
-  'hero.fact.tests': { sk: '503 automatizovaných testov', en: '503 automated tests', de: '503 automatisierte Tests' },
+  'hero.fact.tests': { sk: '546 automatizovaných testov', en: '546 automated tests', de: '546 automatisierte Tests' },
   'hero.fact.maxsize': { sk: 'max. 20 MB', en: 'max. 20 MB', de: 'max. 20 MB' },
   'hero.fact.free': { sk: '0 €, bez účtu, beží vo vašom prehliadači', en: '€0, no account, runs in your browser', de: '0 €, ohne Konto, läuft im Browser' },
+  'hero.fact.freeFirst': { sk: 'Prvý prevod je zadarmo, bez konta.', en: 'The first conversion is free, no account.', de: 'Die erste Umwandlung ist kostenlos, ohne Konto.' },
 
   // ── section 01: three reasons ───────────────────────────────────────
   's1.h2': {
@@ -176,6 +177,7 @@ export const DICT = {
     en: 'Converting a single statement to CSV or Excel is, and stays, completely free, no limit. Pro adds an MT940 export (for a manual DATEV import or any other legacy software) and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a conversion history, with one licence shared across the four ARLing banking tools.',
     de: 'Die Umwandlung eines einzelnen Auszugs in CSV oder Excel ist und bleibt vollständig kostenlos, ohne Limit. Pro fügt einen MT940-Export (für den manuellen DATEV-Import oder andere ältere Software) und einen DATEV-Buchungsstapel-Export (EXTF-CSV) hinzu, dazu die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für alle vier ARLing-Banktools.',
   },
+  's4.freeFirst': { sk: 'Prvý prevod je zadarmo, bez konta.', en: 'The first conversion is free, no account.', de: 'Die erste Umwandlung ist kostenlos, ohne Konto.' },
   's4.r0.title': { sk: 'MT940 a DATEV Buchungsstapel export.', en: 'MT940 and DATEV Buchungsstapel export.', de: 'MT940- und DATEV-Buchungsstapel-Export.' },
   's4.r0.body': {
     sk: 'MT940 vypadlo z pravidiel nemeckého bankového styku v novembri 2025, mnohé banky už výpis posielajú iba ako camt.053. DATEV Kanzlei-Rechnungswesen ale priamy import camt.053 nemá, ručný import súborov stále čaká MT940. Pro k tomu pridá aj export priamo do formátu DATEV Buchungsstapel (EXTF CSV).',
@@ -207,10 +209,20 @@ export const DICT = {
   },
   's4.buy.year.btn': { sk: 'Kúpiť Pro, 79 €/rok', en: 'Buy Pro, €79/year', de: 'Pro kaufen, 79 €/Jahr' },
   's4.buy.month.btn': { sk: 'alebo 9 €/mesiac', en: 'or €9/month', de: 'oder 9 €/Monat' },
+  's4.included.list': {
+    sk: '<li>Export do MT940 (.sta) a DATEV Buchungsstapel (EXTF CSV)</li><li>Viac súborov naraz, história konverzií v prehliadači</li><li>Jeden licenčný kľúč pre štyri nástroje: camt.053 do Excelu, SEPA pain.001 Doctor, SEPA pain.001 Generátor, Párovač platieb</li><li>Prednostná podpora e-mailom</li>',
+    en: '<li>MT940 (.sta) and DATEV Buchungsstapel (EXTF CSV) export</li><li>Several files at once, conversion history in the browser</li><li>One licence key for four tools: camt.053 to Excel, SEPA pain.001 Doctor, SEPA pain.001 Generator, Payment matcher</li><li>Priority email support</li>',
+    de: '<li>MT940-Export (.sta) und DATEV-Buchungsstapel-Export (EXTF-CSV)</li><li>Mehrere Dateien gleichzeitig, Umwandlungsverlauf im Browser</li><li>Ein Lizenzschlüssel für vier Tools: camt.053 nach Excel, SEPA pain.001 Doctor, SEPA-pain.001-Generator, Zahlungsabgleich</li><li>Bevorzugter E-Mail-Support</li>',
+  },
   's4.buy.fineprint': {
-    sk: 'Platba cez Stripe, DPH v cene, zrušiť môžete kedykoľvek. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
-    en: 'Payment via Stripe, VAT included, cancel anytime. You get the licence key on the confirmation page right after payment.',
-    de: 'Zahlung über Stripe, inkl. MwSt., jederzeit kündbar. Den Lizenzschlüssel erhalten Sie direkt nach der Zahlung auf der Bestätigungsseite.',
+    sk: 'Platba cez Stripe, DPH v cene, mesačne zrušiteľné, žiadna viazanosť: odkaz na zrušenie nájdete priamo v potvrdení platby od Stripe. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
+    en: 'Payment via Stripe, VAT included, cancel monthly, no minimum term: the cancellation link is right in Stripe’s payment confirmation email. You get the licence key on the confirmation page right after payment.',
+    de: 'Zahlung über Stripe, inkl. MwSt., monatlich kündbar, keine Mindestlaufzeit: den Kündigungslink schickt Stripe direkt in der Zahlungsbestätigung. Den Lizenzschlüssel erhalten Sie sofort nach der Zahlung auf der Bestätigungsseite.',
+  },
+  's4.trust': {
+    sk: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, IČ DPH SK2122352100. Prevod beží vo vašom prehliadači, výpis sa nikam neposiela. Ak sa vám MT940 alebo DATEV súbor neimportuje, napíšte s chybovou hláškou na <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>, budeme to riešiť prednostne. <a href="https://arling.sk/podmienky/">Podmienky</a> · <a href="https://arling.sk/gdpr/">GDPR</a>',
+    en: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slovakia, VAT ID SK2122352100. The conversion runs in your browser, your statement is never uploaded. If the MT940 or DATEV file does not import for you, write to <a href="mailto:andrej@arling.sk">andrej@arling.sk</a> with the error message, we prioritise fixing it. <a href="https://arling.sk/podmienky/">Terms</a> · <a href="https://arling.sk/gdpr/">Privacy (GDPR)</a>',
+    de: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slowakei, USt-IdNr. SK2122352100. Die Umwandlung läuft in Ihrem Browser, Ihr Kontoauszug wird nicht hochgeladen. Importiert die MT940- oder DATEV-Datei bei Ihnen nicht, schreiben Sie mit der Fehlermeldung an <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>, wir kümmern uns vorrangig darum. <a href="https://arling.sk/podmienky/">AGB</a> · <a href="https://arling.sk/gdpr/">Datenschutz</a>',
   },
   's4.bundle.link': { sk: 'Čo všetko je v balíku', en: 'What is in the bundle', de: 'Was im Paket enthalten ist' },
   's4.licence.manual.label': {
@@ -221,7 +233,7 @@ export const DICT = {
   's4.licence.input.placeholder': { sk: 'Licenčný kľúč (dlhý reťazec s bodkou uprostred)', en: 'Licence key (a long string with a dot in the middle)', de: 'Lizenzschlüssel (langer Text mit Punkt in der Mitte)' },
   's4.licence.activate.btn': { sk: 'Aktivovať', en: 'Activate', de: 'Aktivieren' },
   's4.licence.remove.btn': { sk: 'Odstrániť licenciu', en: 'Remove licence', de: 'Lizenz entfernen' },
-  's4.sticky.text': { sk: 'Licencia Pro pre všetky štyri nástroje, zrušiť kedykoľvek.', en: 'Pro licence for all four tools, cancel anytime.', de: 'Pro-Lizenz für alle vier Tools, jederzeit kündbar.' },
+  's4.sticky.text': { sk: 'Licencia Pro pre všetky štyri nástroje, mesačne zrušiteľná, žiadna viazanosť.', en: 'Pro licence for all four tools, cancel monthly, no minimum term.', de: 'Pro-Lizenz für alle vier Tools, monatlich kündbar, keine Mindestlaufzeit.' },
 
   // ── section 05: pricing / ask ────────────────────────────────────────
   's5.h2': { sk: 'Zadarmo. Bez limitov, natrvalo.', en: 'Free. No limits, for good.', de: 'Kostenlos. Ohne Limits, dauerhaft.' },
@@ -384,6 +396,19 @@ export const DICT = {
   },
   'js.pro.preview.buyPrompt': { sk: 'Odomknúť Pro:', en: 'Unlock Pro:', de: 'Pro freischalten:' },
   'js.pro.preview.close': { sk: 'Zavrieť ukážku', en: 'Close preview', de: 'Vorschau schließen' },
+
+  'js.free.exhausted': { sk: 'Svoj bezplatný prevod ste už využili.', en: 'You have already used your free conversion.', de: 'Sie haben Ihre kostenlose Umwandlung schon genutzt.' },
+  'js.free.done.head': { sk: 'Váš prvý prevod je hotový', en: 'Your first conversion is done', de: 'Ihre erste Umwandlung ist fertig' },
+  'js.free.done.body': {
+    sk: 'Toto bol váš bezplatný prevod: súbor je úplný a bez vodoznaku, naimportujte ho do DATEV a skontrolujte výsledok.',
+    en: 'That was your free conversion: the file is complete and unwatermarked, import it into DATEV and check the result.',
+    de: 'Das war Ihre kostenlose Umwandlung: die Datei ist vollständig und ohne Wasserzeichen, importieren Sie sie in DATEV und prüfen Sie das Ergebnis.',
+  },
+  'js.free.done.price': {
+    sk: '9 € mesačne alebo 79 € ročne za všetky štyri bankové nástroje ARLing, DPH v cene, zrušiť môžete kedykoľvek.',
+    en: '9 € a month or 79 € a year for all four ARLing banking tools, VAT included, cancel any time.',
+    de: '9 € im Monat oder 79 € im Jahr für alle vier ARLing-Banktools, inklusive Umsatzsteuer, jederzeit kündbar.',
+  },
 
   's2.datev.title': { sk: 'Nastavenia DATEV Buchungsstapel (Pro)', en: 'DATEV Buchungsstapel settings (Pro)', de: 'Einstellungen DATEV-Buchungsstapel (Pro)' },
   's2.datev.hint': {

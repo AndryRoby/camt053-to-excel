@@ -6,6 +6,7 @@ import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
 import { toMt940, toMt940Statement, transliterateSwiftX, foldDiacritics } from './mt940.js';
 import { toDatevBuchungsstapel, toCp1252SafeText, toCp1252Bytes, FORMAT_VERSION as DATEV_FORMAT_VERSION, FORMAT_CATEGORY as DATEV_FORMAT_CATEGORY } from './datev-extf.js';
+import { FREE_EXPORT_KEY, FREE_EXPORT_KINDS, hasUsedFree, markFreeUsed, freeRemaining } from './free-pass.js';
 import {
   LANGS, DEFAULT_LANG, DICT, COLUMN_LABELS, t, tf, columnLabel, columnLabelsMap,
   formatAmountForLang, formatDateForLang, defaultCsvOptsForLang, localeTagForLang,
@@ -1080,6 +1081,110 @@ eq('toCp1252SafeText: characters outside Latin-1 (e.g. euro sign, emoji) are dro
   const bytes = toCp1252Bytes(toCp1252SafeText('Bürobedarf'));
   eq('toCp1252Bytes: "ü" encodes as byte 0xFC (Windows-1252/Latin-1)', bytes[1], 0xfc);
   eq('toCp1252Bytes: output length equals the safe string length (1 byte per char)', bytes.length, 'Bürobedarf'.length);
+}
+
+// ═══════════════════════════ free-pass.js (free first conversion) ════════
+// One free MT940 export and one free DATEV Buchungsstapel export per
+// browser, gated ahead of the licence check in index.html. Every test
+// below uses its own fake in-memory store (not the shared globalThis.
+// localStorage polyfill installed at the top of this file) so these
+// assertions can't leak state into, or pick up state from, any other
+// section.
+
+function fakeStore(initial) {
+  const map = new Map(Object.entries(initial || {}));
+  return {
+    getItem: (k) => (map.has(k) ? map.get(k) : null),
+    setItem: (k, v) => { map.set(String(k), String(v)); },
+    removeItem: (k) => { map.delete(String(k)); },
+  };
+}
+function throwingStore() {
+  return {
+    getItem: () => { throw new Error('blocked'); },
+    setItem: () => { throw new Error('blocked'); },
+    removeItem: () => { throw new Error('blocked'); },
+  };
+}
+
+eq('free-pass FREE_EXPORT_KEY: exact localStorage key', FREE_EXPORT_KEY, 'arling_free_export');
+deepEq('free-pass FREE_EXPORT_KINDS: mt940 and datev', FREE_EXPORT_KINDS, ['mt940', 'datev']);
+
+{
+  const store = fakeStore();
+  eq('hasUsedFree: unused store -> mt940 not used yet', hasUsedFree('mt940', store), false);
+  eq('hasUsedFree: unused store -> datev not used yet', hasUsedFree('datev', store), false);
+  deepEq('freeRemaining: both formats available on an unused store', freeRemaining(store), { mt940: true, datev: true });
+
+  eq('markFreeUsed: reports success on a working store', markFreeUsed('mt940', store, new Date('2026-09-05T10:00:00Z')), true);
+  eq('hasUsedFree: mt940 now used after markFreeUsed', hasUsedFree('mt940', store), true);
+  eq('hasUsedFree: datev independent of mt940, still unused', hasUsedFree('datev', store), false);
+  deepEq('freeRemaining: only datev left after mt940 is used', freeRemaining(store), { mt940: false, datev: true });
+
+  includes('markFreeUsed: persists an ISO date string under the documented key', store.getItem(FREE_EXPORT_KEY), '2026-09-05');
+
+  markFreeUsed('datev', store);
+  eq('hasUsedFree: datev now used too, one free export per format', hasUsedFree('datev', store), true);
+  deepEq('freeRemaining: none left once both formats are used', freeRemaining(store), { mt940: false, datev: false });
+}
+
+// A throwing store (private-mode Safari, blocked site data) must never
+// block a real buyer: every read resolves to "free still available", and
+// a write that cannot persist reports that failure honestly instead of
+// throwing back into the caller.
+{
+  const store = throwingStore();
+  eq('hasUsedFree: a throwing store still returns "not used" (free export not blocked)', hasUsedFree('mt940', store), false);
+  eq('markFreeUsed: a throwing store reports failure instead of throwing', markFreeUsed('mt940', store), false);
+  eq('hasUsedFree: still "not used" after a failed markFreeUsed on a throwing store', hasUsedFree('mt940', store), false);
+  deepEq('freeRemaining: a throwing store reports both formats still available', freeRemaining(store), { mt940: true, datev: true });
+}
+
+// No store at all (`null` simulates "no localStorage exists", distinct
+// from the `undefined` default which falls back to the real one).
+eq('hasUsedFree: null store (no localStorage) -> free still available', hasUsedFree('mt940', null), false);
+eq('markFreeUsed: null store (no localStorage) -> reports failure, not a throw', markFreeUsed('mt940', null), false);
+
+// Malformed stored JSON degrades to "free still available" rather than
+// throwing or wrongly blocking every future export.
+{
+  const store = fakeStore({ [FREE_EXPORT_KEY]: '{not json' });
+  eq('hasUsedFree: malformed JSON in storage -> treated as free still available', hasUsedFree('mt940', store), false);
+  eq('markFreeUsed: malformed JSON in storage is overwritten cleanly', markFreeUsed('mt940', store), true);
+  eq('hasUsedFree: mt940 correctly used after overwriting malformed storage', hasUsedFree('mt940', store), true);
+}
+
+// The licensed path in index.html never calls markFreeUsed at all: reading
+// the state (hasUsedFree/freeRemaining), however many times a licensed
+// download re-checks it, must never itself consume the free export.
+{
+  const store = fakeStore();
+  hasUsedFree('mt940', store); hasUsedFree('mt940', store); freeRemaining(store);
+  eq('hasUsedFree/freeRemaining are read-only: repeated calls never consume the free export', hasUsedFree('mt940', store), false);
+}
+
+// The free path must hand out the exact same bytes a licensed download
+// gets: free-pass.js only gates *when* the download fires, never *what*
+// gets generated. In index.html, `content` is computed once by
+// toMt940()/toDatevBuchungsstapel() before the licence-vs-free-vs-
+// exhausted branch runs, so proving those generators are deterministic
+// for the same input is exactly what makes the free file byte-identical
+// to the licensed one.
+{
+  const freeMt940 = toMt940(pDeForMt940);
+  const licensedMt940 = toMt940(pDeForMt940);
+  eq('free path == licensed path: MT940 content is byte-identical either way', freeMt940, licensedMt940);
+
+  // opts.now pins the header's own "Erzeugt am" timestamp (millisecond
+  // resolution): two real calls a moment apart would legitimately each
+  // stamp their own creation time, which is correct DATEV EXTF behaviour,
+  // not something this determinism test is about. Pinning it isolates the
+  // one thing that must never differ between the free and licensed path:
+  // the transaction content itself.
+  const datevOpts = { advisorNumber: 12345, clientNumber: 6789, bankAccount: 1200, now: new Date('2026-09-08T12:00:00Z') };
+  const freeDatev = toDatevBuchungsstapel(pDeForMt940, datevOpts);
+  const licensedDatev = toDatevBuchungsstapel(pDeForMt940, datevOpts);
+  eq('free path == licensed path: DATEV Buchungsstapel content is byte-identical either way', freeDatev, licensedDatev);
 }
 
 // ═══════════════════════════ summary ═══════════════════════════════════
