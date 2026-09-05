@@ -127,7 +127,11 @@ generated client-side exactly like the free CSV/Excel export, just
 gated on a licence (the same "Bankové nástroje" / Banking tools bundle
 licence used across all four ARLing bank tools) for the actual download;
 without a licence, clicking either button shows a preview of the first
-eight lines instead.
+eight lines instead. A dedicated landing page for this pair of exports
+lives at `mt940/index.html` (German) and `mt940/en/index.html`
+(English); its CTA links to the converter with `?export=mt940`, which
+`index.html` reads to show a hint and highlight the MT940 button once a
+statement is converted.
 
 - **MT940 (`.sta`)**, built by `mt940.js`: one SWIFT MT940 message per
   camt.053 `<Stmt>`, with the German `:86:` structured subfield

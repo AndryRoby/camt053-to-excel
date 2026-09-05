@@ -816,10 +816,29 @@ includes('i18n sample loaded: German names the German statement with 4 Positione
 
   const sitemap = norm(readFileSync(new URL('./sitemap.xml', import.meta.url), 'utf8'));
   for (const l of ['sk', 'en', 'de']) includes(`sitemap lists the ${l} URL`, sitemap, `<loc>${langUrl(l)}</loc>`);
-  eq('sitemap: three URLs', (sitemap.match(/<loc>/g) || []).length, 3);
+  includes('sitemap lists the mt940 landing page (DE)', sitemap, '<loc>https://arling.sk/camt053-to-excel/mt940/</loc>');
+  includes('sitemap lists the mt940 landing page (EN)', sitemap, '<loc>https://arling.sk/camt053-to-excel/mt940/en/</loc>');
+  eq('sitemap: five URLs', (sitemap.match(/<loc>/g) || []).length, 5);
   const llms = norm(readFileSync(new URL('./llms.txt', import.meta.url), 'utf8'));
   includes('llms.txt mentions the German URL', llms, langUrl('de'));
   includes('llms.txt mentions the English URL', llms, langUrl('en'));
+  includes('llms.txt mentions the mt940 landing page', llms, 'https://arling.sk/camt053-to-excel/mt940/');
+
+  // ── mt940/ landing pages (hand-authored, DE primary + EN sibling) ──────
+  const mt940De = norm(readFileSync(new URL('./mt940/index.html', import.meta.url), 'utf8'));
+  const mt940En = norm(readFileSync(new URL('./mt940/en/index.html', import.meta.url), 'utf8'));
+  includes('mt940/de: canonical', mt940De, '<link rel="canonical" href="https://arling.sk/camt053-to-excel/mt940/" />');
+  includes('mt940/de: hreflang en sibling', mt940De, 'hreflang="en" href="https://arling.sk/camt053-to-excel/mt940/en/"');
+  includes('mt940/en: canonical', mt940En, '<link rel="canonical" href="https://arling.sk/camt053-to-excel/mt940/en/" />');
+  includes('mt940/en: hreflang de sibling', mt940En, 'hreflang="de" href="https://arling.sk/camt053-to-excel/mt940/"');
+  includes('mt940/de: CTA links to the converter with the export flag', mt940De, 'href="../de/?export=mt940"');
+  includes('mt940/en: CTA links to the converter with the export flag', mt940En, 'href="../../en/?export=mt940"');
+  for (const [label, html] of [['de', mt940De], ['en', mt940En]]) {
+    const ld = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    eq(`mt940/${label}: two JSON-LD blocks parse`, ld.length, 2);
+    eq(`mt940/${label}: FAQPage has 5 questions`, ld[1].mainEntity.length, 5);
+    ok(`mt940/${label}: no em dash on the page`, !html.includes('—'));
+  }
 }
 
 // ═══════════════════════════ mt940.js (Pro export) ═══════════════════════

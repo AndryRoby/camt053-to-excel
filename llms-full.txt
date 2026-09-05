@@ -272,7 +272,12 @@ exports straight into the DATEV-Format "Buchungsstapel" (EXTF CSV), with
 a small Konto/Sachkontenlänge/Beraternummer/Mandantennummer/
 Wirtschaftsjahr-Beginn options block. Both exports run client-side like
 the rest of the tool; without a Pro licence, the button shows a preview
-of the file's first 8 lines instead of downloading it.
+of the file's first 8 lines instead of downloading it. A dedicated
+landing page for this pair of exports lives at
+https://arling.sk/camt053-to-excel/mt940/ (German) and
+https://arling.sk/camt053-to-excel/mt940/en/ (English), linking to the
+converter with `?export=mt940`, which highlights the MT940 button once
+a statement is converted.
 
 **Is there a developer API, not just the page UI?**
 Yes: `camt053.js` is a plain ES module exporting `parse` (XML string to

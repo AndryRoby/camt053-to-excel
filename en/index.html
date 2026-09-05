@@ -339,6 +339,8 @@
   .card-actions { display:flex; gap:6px; flex-wrap:wrap; }
   .warn-banner { border:1px solid var(--warn); background:var(--accent-soft); color:var(--ink); padding:10px 14px; font-size:12.5px; line-height:1.55; border-radius:4px; }
   .warn-banner.fail { border-color:var(--accent); }
+  .export-hint { border:1px solid var(--accent); background:var(--accent-soft); color:var(--ink); padding:10px 14px; font-size:13px; line-height:1.5; border-radius:4px; margin:0 0 20px; }
+  .export-highlight { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
 
   .exp-table { width:100%; border-collapse:collapse; font-size:12.5px; table-layout:fixed; }
   .exp-table td { padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; overflow-wrap:anywhere; }
@@ -490,6 +492,7 @@
       <p class="kicker">02</p>
       <h2 data-i18n="s2.h2">Upload a statement. You get a table, a summary, and a balance check.</h2>
       <p class="sub" data-i18n="s2.sub">Nothing you upload or paste is sent anywhere. Parsing and building the CSV/Excel both run in your browser.</p>
+      <p class="export-hint" id="export-hint" hidden data-i18n="s2.export.hint">Here for MT940/DATEV? Upload a statement or click “sample”, then “Convert”, then use the “MT940” or “DATEV” button next to the result below.</p>
 
       <div class="play">
         <div class="play-body">
@@ -761,6 +764,20 @@
   } from '../i18n.js';
 
   const $ = (id) => document.getElementById(id);
+
+  // ── landing hint (?export=mt940, linked from the MT940/DATEV page) ────
+  const wantsExportHighlight = new URLSearchParams(location.search).get('export') === 'mt940';
+  if (wantsExportHighlight) {
+    const hint = $('export-hint');
+    if (hint) hint.hidden = false;
+  }
+  function applyExportHighlight() {
+    if (!wantsExportHighlight) return;
+    const btn = output.querySelector('[data-export-mt940]');
+    if (!btn) return;
+    btn.classList.add('export-highlight');
+    btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   // ── Pro: history (metadata only, no file content kept) ─────────────────
   const HISTORY_KEY = 'arling_camt053_pro_history';
@@ -1203,6 +1220,7 @@
         track('download_csv', { bank: 'all', count: okResults.length });
       });
     }
+    applyExportHighlight();
   }
 
   function renderPlaceholderError(message) {
