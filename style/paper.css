@@ -580,12 +580,16 @@ body.noc header{position:fixed;top:0;left:0;right:0;z-index:50;
   transition:background .3s var(--ease),border-color .3s var(--ease),backdrop-filter .3s var(--ease)}
 body.noc.posunute header{background:rgba(10,9,8,.72);border-bottom-color:var(--line);
   backdrop-filter:saturate(150%) blur(14px);-webkit-backdrop-filter:saturate(150%) blur(14px)}
-/* Pevná hlavička prekrýva obsah, preto úvodná sekcia začína pod ňou. */
-body.noc main>:first-child{padding-top:66px}
+/* Pevná hlavička prekrýva obsah, preto úvodná sekcia začína pod ňou. Výšku
+   meria /style/vzhlad.js do --hlavicka, lebo na úzkej obrazovke a v nemčine
+   sa hlavička zalamuje a pevné číslo by nadpis prekrylo. 66 px je len záloha
+   pre prípad, že skript nebeží. */
+:root{--hlavicka:66px}
+body.noc main>:first-child{padding-top:var(--hlavicka)}
 
 /* Hero cez celú výšku, obsah na stred. Vzor to má takto a je to jediný dôvod,
    prečo tá stránka pôsobí priestranne: nič iné tam nad ohybom nie je. */
-.hero-noc{min-height:calc(100vh - 66px);display:flex;flex-direction:column;justify-content:center;
+.hero-noc{min-height:calc(100vh - var(--hlavicka));display:flex;flex-direction:column;justify-content:center;
   align-items:center;text-align:center;padding:clamp(48px,9vh,120px) 0;position:relative;z-index:2}
 .hero-noc h1{margin:0;max-width:17ch}
 .hero-noc .lead{font-size:clamp(17px,1.5vw,21px);line-height:1.6;
@@ -611,7 +615,6 @@ body.noc .hero-noc{padding-top:clamp(48px,9vh,120px);padding-bottom:clamp(48px,9
 @media (max-width:720px){
   .hero-noc{min-height:0;padding:clamp(40px,8vh,72px) 0 clamp(44px,9vh,80px)}
   .hero-noc .fakty{gap:10px 18px;font-size:12.5px}
-  body.noc main>:first-child{padding-top:56px}
 }
 @media (prefers-reduced-motion:reduce){
   body.noc header,body.noc .karta,body.noc .btn-solid{transition:none}
@@ -666,3 +669,8 @@ body.noc .hero-noc{padding-top:clamp(48px,9vh,120px);padding-bottom:clamp(48px,9
   mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 100%)}
 body.noc .zar-plocha{opacity:1}
 @media (prefers-reduced-motion:reduce){ .zar-plocha{transition:none} }
+
+/* Plátno v hero blokoch, ktoré nie sú .hero-noc (produktové stránky majú
+   vlastný úvod). Rovnaké pravidlá: pod obsahom, cez celú šírku, bez hrán. */
+.hero,.hero-alt{position:relative;isolation:isolate}
+.hero>*:not(.zar-plocha),.hero-alt>*:not(.zar-plocha){position:relative;z-index:1}

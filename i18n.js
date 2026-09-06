@@ -236,11 +236,11 @@ export const DICT = {
   's4.sticky.text': { sk: 'Licencia Pro pre všetky štyri nástroje, mesačne zrušiteľná, žiadna viazanosť.', en: 'Pro licence for all four tools, cancel monthly, no minimum term.', de: 'Pro-Lizenz für alle vier Tools, monatlich kündbar, keine Mindestlaufzeit.' },
 
   // ── section 05: pricing / ask ────────────────────────────────────────
-  's5.h2': { sk: 'Zadarmo. Bez limitov, natrvalo.', en: 'Free. No limits, for good.', de: 'Kostenlos. Ohne Limits, dauerhaft.' },
+  's5.h2': { sk: 'Celá tabuľka zadarmo, bez limitu.', en: 'The full table, free, no limit.', de: 'Die vollständige Tabelle, kostenlos, ohne Limit.' },
   's5.sub': {
-    sk: 'Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Bez účtu, bez platby, bez limitu na počet výpisov ani stiahnutí.',
-    en: 'Built out of a real need: turn a bank statement into a table without retyping XML by hand. No account, no payment, no limit on statements or downloads.',
-    de: 'Entstanden aus echtem Bedarf: einen Kontoauszug in eine Tabelle umwandeln, ohne XML von Hand abzutippen. Kein Konto, keine Zahlung, kein Limit bei Auszügen oder Downloads.',
+    sk: 'Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Prevod aj celá tabuľka na obrazovke sú zadarmo, bez účtu a bez limitu na počet výpisov. Bez licencie sa stiahne prvých 20 riadkov s hlavičkou o ukážke; celý súbor je súčasťou licencie.',
+    en: 'Built out of a real need: turn a bank statement into a table without retyping XML by hand. The conversion and the full table on screen are free, no account, no limit on statements. Without a licence the download gives you the first 20 rows with a sample header; the whole file is part of the licence.',
+    de: 'Entstanden aus echtem Bedarf: einen Kontoauszug in eine Tabelle umwandeln, ohne XML von Hand abzutippen. Die Umwandlung und die vollständige Tabelle am Bildschirm sind kostenlos, ohne Konto und ohne Limit bei der Zahl der Auszüge. Ohne Lizenz enthält der Download die ersten 20 Zeilen mit Muster-Kopfzeile; die vollständige Datei gehört zur Lizenz.',
   },
   's5.ask.p': {
     sk: 'Ak vám ušetrí popoludnie, napíšte, čo nástroj spracoval zle. <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">Otvorte issue na GitHube</a>.',
@@ -432,7 +432,9 @@ export const DICT = {
 
   'js.sample.loaded': { sk: 'ukážka vložená (výpis Tatra banky, 3 položky), stlačte {kbd1} alebo {kbd2}', en: 'sample loaded (German bank statement, 4 entries), press {kbd1} or {kbd2}', de: 'Beispiel geladen (deutscher Kontoauszug, 4 Positionen), drücken Sie {kbd1} oder {kbd2}' },
 
-  'js.tableNote': { sk: 'Zobrazených prvých {shown} z {total} riadkov. Stiahnutie CSV/Excel obsahuje všetkých {total}.', en: 'Showing the first {shown} of {total} rows. The CSV/Excel download contains all {total}.', de: 'Angezeigt werden die ersten {shown} von {total} Zeilen. Der CSV/Excel-Download enthält alle {total}.' },
+  'js.tableNote': { sk: 'Zobrazených prvých {shown} z {total} riadkov.', en: 'Showing the first {shown} of {total} rows.', de: 'Angezeigt werden die ersten {shown} von {total} Zeilen.' },
+  'js.tableNote.pro': { sk: 'Stiahnutie CSV alebo Excelu obsahuje všetkých {total} riadkov.', en: 'The CSV or Excel download contains all {total} rows.', de: 'Der CSV- oder Excel-Download enthält alle {total} Zeilen.' },
+  'js.tableNote.free': { sk: 'Bez licencie sa stiahne prvých 20 riadkov ako ukážka. Celý súbor je súčasťou licencie.', en: 'Without a licence the download gives you the first 20 rows as a sample. The whole file is part of the licence.', de: 'Ohne Lizenz enthält der Download die ersten 20 Zeilen als Muster. Die vollständige Datei gehört zur Lizenz.' },
 
   'js.summary.statementCount': { sk: 'Počet výpisov (statements)', en: 'Number of statements', de: 'Anzahl der Auszüge' },
   'js.summary.entryCount': { sk: 'Počet položiek', en: 'Number of entries', de: 'Anzahl der Positionen' },

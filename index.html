@@ -726,7 +726,7 @@
   <section id="pricing" class="deep">
     <div class="wrap">
       <p class="kicker">05</p>
-      <h2 class="r" data-i18n="s5.h2">Zadarmo. Bez limitov, natrvalo.</h2>
+      <h2 class="r" data-i18n="s5.h2">Celá tabuľka zadarmo, bez limitu.</h2>
       <p class="sub r d1" data-i18n="s5.sub">Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Bez účtu, bez platby, bez limitu na počet výpisov ani stiahnutí.</p>
       <div class="rule"></div>
       <div class="ask r d1">
@@ -1102,7 +1102,7 @@
       }).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
-    const note = rows.length > TABLE_ROW_LIMIT ? `<p class="table-note">${esc(tf('js.tableNote', { shown: TABLE_ROW_LIMIT, total: rows.length }))}</p>` : '';
+    const note = rows.length > TABLE_ROW_LIMIT ? `<p class="table-note">${esc(tf('js.tableNote', { shown: TABLE_ROW_LIMIT, total: rows.length }) + ' ' + (licenceState.valid ? tf('js.tableNote.pro', { total: entry.rows.length }) : t('js.tableNote.free')))}</p>` : '';
     return `<div class="table-scroll"><table class="data-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div>${note}`;
   }
 
