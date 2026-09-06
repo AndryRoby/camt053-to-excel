@@ -6,7 +6,7 @@ import { buildXlsx, buildZip, crc32, colLetter } from './xlsx-writer.js';
 import { parse as parseLicence, verify as verifyLicence, isValid as isValidLicence, load as loadLicence, save as saveLicence, clear as clearLicence, todayIso as licenceTodayIso, STORAGE_KEY as LICENCE_STORAGE_KEY, DEFAULT_PLAN } from './licence.js';
 import { toMt940, toMt940Statement, transliterateSwiftX, foldDiacritics } from './mt940.js';
 import { toDatevBuchungsstapel, toCp1252SafeText, toCp1252Bytes, FORMAT_VERSION as DATEV_FORMAT_VERSION, FORMAT_CATEGORY as DATEV_FORMAT_CATEGORY } from './datev-extf.js';
-import { FREE_EXPORT_KEY, FREE_EXPORT_KINDS, hasUsedFree, markFreeUsed, freeRemaining } from './free-pass.js';
+import { UKAZKA_RIADKOV, orez, hlavicka, priponaUkazky } from './ukazka.js';
 import {
   LANGS, DEFAULT_LANG, DICT, COLUMN_LABELS, t, tf, columnLabel, columnLabelsMap,
   formatAmountForLang, formatDateForLang, defaultCsvOptsForLang, localeTagForLang,
@@ -1083,109 +1083,66 @@ eq('toCp1252SafeText: characters outside Latin-1 (e.g. euro sign, emoji) are dro
   eq('toCp1252Bytes: output length equals the safe string length (1 byte per char)', bytes.length, 'Bürobedarf'.length);
 }
 
-// ═══════════════════════════ free-pass.js (free first conversion) ════════
-// One free MT940 export and one free DATEV Buchungsstapel export per
-// browser, gated ahead of the licence check in index.html. Every test
-// below uses its own fake in-memory store (not the shared globalThis.
-// localStorage polyfill installed at the top of this file) so these
-// assertions can't leak state into, or pick up state from, any other
-// section.
+// ═════════════════════════ ukazka.js (nahlad zadarmo, subor za peniaze) ═════
+// Toto je jedina cast nastroja, ktora rozhoduje o tom, ci sa da zaplatit obist,
+// takze sa testuje tvrdsie nez zvysok. Kluc: bez licencie musi orez zabrat VZDY,
+// aj pri prazdnom vstupe, aj pri nezmysloch, a nikdy nesmie hodit vynimku.
 
-function fakeStore(initial) {
-  const map = new Map(Object.entries(initial || {}));
-  return {
-    getItem: (k) => (map.has(k) ? map.get(k) : null),
-    setItem: (k, v) => { map.set(String(k), String(v)); },
-    removeItem: (k) => { map.delete(String(k)); },
-  };
-}
-function throwingStore() {
-  return {
-    getItem: () => { throw new Error('blocked'); },
-    setItem: () => { throw new Error('blocked'); },
-    removeItem: () => { throw new Error('blocked'); },
-  };
-}
-
-eq('free-pass FREE_EXPORT_KEY: exact localStorage key', FREE_EXPORT_KEY, 'arling_free_export');
-deepEq('free-pass FREE_EXPORT_KINDS: mt940 and datev', FREE_EXPORT_KINDS, ['mt940', 'datev']);
+eq('ukazka: limit je 20 riadkov', UKAZKA_RIADKOV, 20);
 
 {
-  const store = fakeStore();
-  eq('hasUsedFree: unused store -> mt940 not used yet', hasUsedFree('mt940', store), false);
-  eq('hasUsedFree: unused store -> datev not used yet', hasUsedFree('datev', store), false);
-  deepEq('freeRemaining: both formats available on an unused store', freeRemaining(store), { mt940: true, datev: true });
+  const riadky = [];
+  for (let i = 0; i < 348; i++) riadky.push({ i });
 
-  eq('markFreeUsed: reports success on a working store', markFreeUsed('mt940', store, new Date('2026-09-05T10:00:00Z')), true);
-  eq('hasUsedFree: mt940 now used after markFreeUsed', hasUsedFree('mt940', store), true);
-  eq('hasUsedFree: datev independent of mt940, still unused', hasUsedFree('datev', store), false);
-  deepEq('freeRemaining: only datev left after mt940 is used', freeRemaining(store), { mt940: false, datev: true });
+  const bez = orez(riadky, false);
+  eq('orez bez licencie: vrati presne 20 riadkov', bez.rows.length, 20);
+  eq('orez bez licencie: hlasi, ze orezal', bez.orezane, true);
+  eq('orez bez licencie: pozna povodny pocet', bez.spolu, 348);
+  eq('orez bez licencie: prvy riadok je prvy riadok vypisu, nie nahodny', bez.rows[0].i, 0);
+  eq('orez bez licencie: dvadsiaty riadok je index 19', bez.rows[19].i, 19);
 
-  includes('markFreeUsed: persists an ISO date string under the documented key', store.getItem(FREE_EXPORT_KEY), '2026-09-05');
-
-  markFreeUsed('datev', store);
-  eq('hasUsedFree: datev now used too, one free export per format', hasUsedFree('datev', store), true);
-  deepEq('freeRemaining: none left once both formats are used', freeRemaining(store), { mt940: false, datev: false });
+  const s = orez(riadky, true);
+  eq('orez s licenciou: vrati vsetky riadky', s.rows.length, 348);
+  eq('orez s licenciou: nehlasi orezanie', s.orezane, false);
 }
 
-// A throwing store (private-mode Safari, blocked site data) must never
-// block a real buyer: every read resolves to "free still available", and
-// a write that cannot persist reports that failure honestly instead of
-// throwing back into the caller.
 {
-  const store = throwingStore();
-  eq('hasUsedFree: a throwing store still returns "not used" (free export not blocked)', hasUsedFree('mt940', store), false);
-  eq('markFreeUsed: a throwing store reports failure instead of throwing', markFreeUsed('mt940', store), false);
-  eq('hasUsedFree: still "not used" after a failed markFreeUsed on a throwing store', hasUsedFree('mt940', store), false);
-  deepEq('freeRemaining: a throwing store reports both formats still available', freeRemaining(store), { mt940: true, datev: true });
+  // Kratky vypis nesmie vyzerat ako ukazka, inak by sme klamali o tom, co chyba.
+  const kratke = [{ i: 1 }, { i: 2 }];
+  const r = orez(kratke, false);
+  eq('orez: vypis kratsi nez limit sa neoreze', r.rows.length, 2);
+  eq('orez: kratky vypis sa nehlasi ako ukazka', r.orezane, false);
+
+  const presne = [];
+  for (let i = 0; i < 20; i++) presne.push({ i });
+  eq('orez: presne 20 riadkov sa este neoreze', orez(presne, false).orezane, false);
+
+  const o21 = [];
+  for (let i = 0; i < 21; i++) o21.push({ i });
+  eq('orez: 21 riadkov sa uz oreze', orez(o21, false).orezane, true);
 }
 
-// No store at all (`null` simulates "no localStorage exists", distinct
-// from the `undefined` default which falls back to the real one).
-eq('hasUsedFree: null store (no localStorage) -> free still available', hasUsedFree('mt940', null), false);
-eq('markFreeUsed: null store (no localStorage) -> reports failure, not a throw', markFreeUsed('mt940', null), false);
-
-// Malformed stored JSON degrades to "free still available" rather than
-// throwing or wrongly blocking every future export.
 {
-  const store = fakeStore({ [FREE_EXPORT_KEY]: '{not json' });
-  eq('hasUsedFree: malformed JSON in storage -> treated as free still available', hasUsedFree('mt940', store), false);
-  eq('markFreeUsed: malformed JSON in storage is overwritten cleanly', markFreeUsed('mt940', store), true);
-  eq('hasUsedFree: mt940 correctly used after overwriting malformed storage', hasUsedFree('mt940', store), true);
+  // Nikdy nehodit vynimku: ked padne orez, padne cely export a nikto nic nestiahne.
+  eq('orez: prazdne pole', orez([], false).rows.length, 0);
+  eq('orez: prazdne pole sa nehlasi ako ukazka', orez([], false).orezane, false);
+  eq('orez: undefined namiesto riadkov nespadne', orez(undefined, false).spolu, 0);
+  eq('orez: null namiesto riadkov nespadne', orez(null, true).spolu, 0);
 }
 
-// The licensed path in index.html never calls markFreeUsed at all: reading
-// the state (hasUsedFree/freeRemaining), however many times a licensed
-// download re-checks it, must never itself consume the free export.
 {
-  const store = fakeStore();
-  hasUsedFree('mt940', store); hasUsedFree('mt940', store); freeRemaining(store);
-  eq('hasUsedFree/freeRemaining are read-only: repeated calls never consume the free export', hasUsedFree('mt940', store), false);
+  const h = hlavicka('sk', 20, 348, 'https://arling.sk/bankove-nastroje/');
+  includes('hlavicka sk: obsahuje slovo o ukazke', h, 'UK\u00c1\u017dKA');
+  includes('hlavicka sk: obsahuje pocet zobrazenych', h, '20');
+  includes('hlavicka sk: obsahuje celkovy pocet', h, '348');
+  includes('hlavicka sk: obsahuje adresu na kupu', h, 'arling.sk/bankove-nastroje/');
+  includes('hlavicka en: je po anglicky', hlavicka('en', 20, 348, 'x'), 'SAMPLE');
+  includes('hlavicka de: je po nemecky', hlavicka('de', 20, 348, 'x'), 'MUSTER');
+  includes('hlavicka: neznamy jazyk spadne na anglictinu', hlavicka('hu', 20, 348, 'x'), 'SAMPLE');
 }
 
-// The free path must hand out the exact same bytes a licensed download
-// gets: free-pass.js only gates *when* the download fires, never *what*
-// gets generated. In index.html, `content` is computed once by
-// toMt940()/toDatevBuchungsstapel() before the licence-vs-free-vs-
-// exhausted branch runs, so proving those generators are deterministic
-// for the same input is exactly what makes the free file byte-identical
-// to the licensed one.
-{
-  const freeMt940 = toMt940(pDeForMt940);
-  const licensedMt940 = toMt940(pDeForMt940);
-  eq('free path == licensed path: MT940 content is byte-identical either way', freeMt940, licensedMt940);
-
-  // opts.now pins the header's own "Erzeugt am" timestamp (millisecond
-  // resolution): two real calls a moment apart would legitimately each
-  // stamp their own creation time, which is correct DATEV EXTF behaviour,
-  // not something this determinism test is about. Pinning it isolates the
-  // one thing that must never differ between the free and licensed path:
-  // the transaction content itself.
-  const datevOpts = { advisorNumber: 12345, clientNumber: 6789, bankAccount: 1200, now: new Date('2026-09-08T12:00:00Z') };
-  const freeDatev = toDatevBuchungsstapel(pDeForMt940, datevOpts);
-  const licensedDatev = toDatevBuchungsstapel(pDeForMt940, datevOpts);
-  eq('free path == licensed path: DATEV Buchungsstapel content is byte-identical either way', freeDatev, licensedDatev);
-}
+eq('pripona: ukazka ma vlastnu priponu v nazve suboru', priponaUkazky(true), '-ukazka');
+eq('pripona: ostry subor ju nema', priponaUkazky(false), '');
 
 // ═══════════════════════════ summary ═══════════════════════════════════
 
