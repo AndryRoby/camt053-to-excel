@@ -30,6 +30,10 @@ export const DICT = {
   'nav.api': { sk: 'API', en: 'API', de: 'API' },
   'nav.pro': { sk: 'Pro', en: 'Pro', de: 'Pro' },
   'nav.faq': { sk: 'Otázky', en: 'FAQ', de: 'FAQ' },
+  // Tieto dva odkazy vedú mimo tohto nástroja na hlavný arling.sk, preto majú
+  // vlastný kľúč tu a nie v zdieľanom navigačnom bloku iných nástrojov.
+  'nav.tools': { sk: 'Nástroje', en: 'Tools', de: 'Tools' },
+  'nav.howwework': { sk: 'Ako pracujeme', en: 'How we work', de: 'Wie wir arbeiten' },
   'lang.switch.aria': { sk: 'Jazyk stránky', en: 'Page language', de: 'Sprache der Seite' },
   'lang.sk.aria': { sk: 'Slovenčina', en: 'Slovak', de: 'Slowakisch' },
   'lang.en.aria': { sk: 'English', en: 'English', de: 'Englisch' },
@@ -340,6 +344,18 @@ export const DICT = {
     sk: 'Nič neopúšťa váš prehliadač okrem anonymných počtov použitia cez self-hosted Umami (a e-mailu, ak sa prihlásite na odber nižšie).',
     en: 'Nothing leaves your browser except anonymous usage counts via self-hosted Umami (and an email address, if you sign up for updates below).',
     de: 'Nichts verlässt Ihren Browser außer anonymen Nutzungszahlen über das selbst gehostete Umami (und einer E-Mail-Adresse, falls Sie sich unten anmelden).',
+  },
+  // Spodná lišta pätičky (odkazy na arling.sk/privacy, podmienky, mapu stránky
+  // a vetu o Umami). GDPR a Impressum sa neprekladajú zámerne: GDPR je
+  // medzinárodná skratka, Impressum je nemecký právny pojem potrebný práve
+  // pre nemeckú verziu.
+  'footer.privacyLink': { sk: 'ochrana údajov', en: 'privacy', de: 'Datenschutz' },
+  'footer.terms': { sk: 'podmienky', en: 'terms', de: 'AGB' },
+  'footer.sitemapLink': { sk: 'mapa stránky', en: 'sitemap', de: 'Sitemap' },
+  'footer.disclaimer': {
+    sk: 'Nástroje sú poskytované tak, ako sú, bez záruky. Anonymné počty návštev cez vlastné Umami.',
+    en: 'Tools are provided as-is, without warranty. Anonymous visit counts via our own self-hosted Umami.',
+    de: 'Die Tools werden bereitgestellt, wie sie sind, ohne Gewähr. Anonyme Besucherzahlen über unser eigenes, selbst gehostetes Umami.',
   },
 
   // ── meta / SEO ───────────────────────────────────────────────────────
