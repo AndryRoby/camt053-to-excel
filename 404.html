@@ -7,43 +7,95 @@
 <meta name="robots" content="noindex" />
 <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 <link rel="alternate icon" href="./favicon.ico" />
+<link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style/paper.css">
 <style>
-  :root {
-    --paper:#f6f2ea; --paper-2:#fbf9f4; --ink:#1b1a17; --ink-2:#4a4741; --muted:#66625a; --line:#d9d2c4;
-    --accent:#b23a1d; --accent-soft:#f3e2dc;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
-    color-scheme: light dark;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --paper:#151412; --paper-2:#1d1b18; --ink:#efe9de; --ink-2:#c9c2b5; --muted:#8f887b; --line:#2e2b26; --accent:#e0623f; --accent-soft:#3a1f17; }
-  }
-  * { box-sizing:border-box; }
-  html { background:var(--paper); }
-  body {
-    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
-    color:var(--ink); background:var(--paper); font:16px/1.55 var(--sans); -webkit-font-smoothing:antialiased;
-  }
-  a { color:inherit; text-decoration-color:var(--line); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-  .card { max-width:480px; width:100%; text-align:center; }
-  .kicker { font:400 14px/1 var(--serif); color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin:0 0 14px; }
-  h1 { font:400 clamp(26px,4.5vw,34px)/1.2 var(--serif); letter-spacing:-.01em; margin:0 0 14px; }
-  p.sub { color:var(--ink-2); font-size:15.5px; margin:0 0 28px; }
-  .btn { display:inline-block; font:600 15px/1 var(--sans); padding:13px 20px; border-radius:4px; text-decoration:none; }
-  .btn-solid { background:var(--accent); color:#fff; }
-  .btn-solid:hover { background:var(--ink); color:var(--paper); }
-  code { font:14px/1.4 var(--mono); background:var(--paper-2); border:1px solid var(--line); border-radius:3px; padding:1px 5px; }
+  /* Len rozloženie tejto jednej stránky. Vzhľad je v /style/paper.css. */
+  :root { color-scheme:light; }
+  body { min-height:100vh; display:flex; flex-direction:column; }
+  main { flex:1; display:flex; align-items:center; }
+  .miss { max-width:640px; }
+  .miss .kicker { margin-bottom:14px; }
+  .miss .lead { margin-bottom:clamp(22px,2.4vw,32px); }
+  code { background:var(--card); border:1px solid var(--line); border-radius:3px; padding:1px 5px; }
+  .brand { min-width:0; }
+  .brand .mark { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); flex:none; }
+  .brand .sect { color:var(--muted); font-family:var(--ui); font-size:13px; border-left:1px solid var(--line);
+    padding-left:11px; text-decoration:none; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .brand .sect:hover { color:var(--accent); }
+  /* Na úzkom telefóne sa názov časti odsunie, aby sa monogram nescvrkol na nulu
+     a aby si rozloženie nevynútilo šírku väčšiu než telefón (merané na 320 a 360 px). */
+  @media (max-width:400px) { .brand .sect { display:none; } }
 </style>
 </head>
 <body>
-  <div class="card">
-    <p class="kicker">camt.053 do Excelu</p>
-    <h1>Táto stránka neexistuje.</h1>
-    <p class="sub">Ani banka by tento výpis neuznala. Vráťte sa a namiesto neho si previeďte svoj <code>camt.053</code> výpis na tabuľku.</p>
-    <a class="btn btn-solid" href="./">Späť na camt.053 do Excelu</a>
+<div class="wash" aria-hidden="true" style="overflow:hidden"><i></i><i></i></div>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <a class="mark" href="https://arling.sk/">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><defs><path id="m" fill-rule="evenodd" d="M16 2.5 L29 29.5 H3 Z M16 12.4 L22.4 25.6 H9.6 Z"/><clipPath id="mr"><rect x="16" width="16" height="32"/></clipPath></defs><use href="#m" fill="#141413"/><use href="#m" fill="#b23a1d" clip-path="url(#mr)"/></svg>
+        <b>ARLing</b>
+      </a>
+      <a class="sect" href="./">camt.053 do Excelu</a>
+    </div>
   </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div class="miss">
+      <p class="kicker r">camt.053 do Excelu</p>
+      <h1 id="h1"><span class="l">Táto stránka</span><span class="l">neexistuje.</span></h1>
+      <p class="lead r d1">Ani banka by tento výpis neuznala. Vráťte sa a namiesto neho si previeďte svoj <code>camt.053</code> výpis na tabuľku.</p>
+      <div class="cta r d2"><a class="btn btn-solid" href="./" data-umami-event="back_home" data-umami-event-place="404">Späť na camt.053 do Excelu</a></div>
+    </div>
+    <div class="r d3">
+      <div class="shot">
+        <div class="chrome"><i></i><i></i><i></i></div>
+        <img src="./press/camt053-tabulka.png" width="748" height="744" loading="lazy" decoding="async"
+             alt="Výstup nástroja: súhrn výpisu, kontrola zostatku a tabuľka platieb s dátumami, sumami, protistranou a variabilným symbolom." />
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>ARLing s. r. o., Bratislava</div>
+    <div><a href="./">camt.053 do Excelu</a> &middot; <a href="https://arling.sk/">Všetky nástroje ARLing</a></div>
+  </div>
+</footer>
+
+<script>
+/* Pohyb, ops/design/paper-v2.md sekcia 7: nadpis po slovách, pokojný príchod.
+   Žiadna knižnica, žiadna slučka, prefers-reduced-motion vypína všetko. */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.querySelector('.hero') || document.querySelector('.miss');
+  var h1 = document.getElementById('h1');
+  if (h1) {
+    var i = 0;
+    Array.prototype.forEach.call(h1.querySelectorAll('.l'), function (line) {
+      line.innerHTML = line.textContent.split(' ').map(function (w) {
+        var d = (i++ * 0.06).toFixed(2);
+        var safe = w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return '<span class="w" style="transition-delay:' + d + 's">' + safe + '</span>';
+      }).join(' ');
+    });
+  }
+  if (reduce) {
+    if (hero) hero.classList.add('in');
+    if (h1) h1.classList.add('in');
+    return;
+  }
+  setTimeout(function () {
+    if (hero) hero.classList.add('in');
+    if (h1) h1.classList.add('in');
+  }, 40);
+})();
+</script>
 </body>
 </html>

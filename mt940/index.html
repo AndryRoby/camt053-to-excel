@@ -21,6 +21,9 @@
 <link rel="apple-touch-icon" href="../icon-192.png" />
 <link rel="manifest" href="../manifest.json" />
 <link rel="alternate" type="text/plain" href="https://arling.sk/camt053-to-excel/llms.txt" title="llms.txt">
+<link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style/paper.css">
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
 <script type="application/ld+json">
@@ -107,139 +110,131 @@
 </script>
 
 <style>
-  :root {
-    --paper:#f6f2ea; --paper-2:#fbf9f4; --ink:#1b1a17; --ink-2:#4a4741; --muted:#66625a; --line:#d9d2c4;
-    --accent:#b23a1d; --accent-soft:#f3e2dc; --ok:#2f6f3e; --warn:#9a6b00;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
-    color-scheme: light dark;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --paper:#151412; --paper-2:#1d1b18; --ink:#efe9de; --ink-2:#c9c2b5; --muted:#8f887b; --line:#2e2b26; --accent:#e0623f; --accent-soft:#3a1f17; --ok:#7fbf8e; --warn:#caa552; }
-  }
-  * { box-sizing:border-box; }
-  html { background:var(--paper); }
-  body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.55 var(--sans); -webkit-font-smoothing:antialiased; }
-  a { color:inherit; text-decoration-color:var(--line); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-  img { max-width:100%; height:auto; display:block; }
+  /* Len to, čo je vlastné tejto stránke. Vzhľad je v /style/paper.css. */
+  :root { color-scheme:light; --warn:#8a6a1f; }
+  h2 { max-width:20em; }
+  .sub { color:var(--body); max-width:64ch; margin:0 0 24px; }
+  code { background:var(--card); border:1px solid var(--line); border-radius:3px; padding:1px 5px; overflow-wrap:anywhere; }
   [hidden] { display:none !important; }
-  .skip { position:absolute; left:-999px; top:8px; background:var(--ink); color:var(--paper); padding:8px 12px; z-index:10; }
-  .skip:focus { left:8px; }
-  .wrap { max-width:1040px; margin:0 auto; padding:0 24px; min-width:0; }
-  code { font:13.5px/1.4 var(--mono); background:var(--paper-2); border:1px solid var(--line); border-radius:3px; padding:1px 5px; overflow-wrap:anywhere; }
+  section[id] { scroll-margin-top:78px; }
 
-  header.top { border-bottom:1px solid var(--line); }
-  header.top .wrap { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px 24px; padding:18px 24px; }
-  .brand { display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 10px; min-width:0; }
-  .wordmark { font:600 21px/1.25 var(--serif); text-decoration:none; overflow-wrap:anywhere; }
-  .wordmark-sub { font:13px/1 var(--sans); color:var(--muted); letter-spacing:.02em; text-decoration:none; white-space:nowrap; }
-  .wordmark-sub:hover { color:var(--accent); }
-  .headnav { display:flex; align-items:center; flex-wrap:wrap; gap:6px 20px; }
-  nav.main { display:flex; flex-wrap:wrap; }
-  nav.main a { font-size:14px; margin-left:20px; text-decoration:none; color:var(--ink-2); white-space:nowrap; }
-  nav.main a:first-child { margin-left:0; }
-  nav.main a:hover { color:var(--accent); }
-  .lang-switch { display:flex; align-items:center; gap:0; }
-  .lang-switch a { display:inline-block; font:600 12px/1 var(--sans); padding:6px 9px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); text-decoration:none; }
-  .lang-switch > :first-child { border-radius:4px 0 0 4px; }
-  .lang-switch > :last-child { border-radius:0 4px 4px 0; }
+  .brand { min-width:0; }
+  .brand .mark { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); flex:none; }
+  .brand .sect { color:var(--muted); font-family:var(--ui); font-size:13px; border-left:1px solid var(--line);
+    padding-left:11px; text-decoration:none; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .brand .sect:hover { color:var(--accent); }
+  /* Na úzkom telefóne sa názov časti odsunie, aby sa monogram nescvrkol na nulu
+     a aby si rozloženie nevynútilo šírku väčšiu než telefón (merané na 320 a 360 px). */
+  @media (max-width:400px) { .brand .sect { display:none; } }
+  .headnav { display:flex; align-items:center; gap:8px 22px; }
+  .lang-switch { display:flex; align-items:center; }
+  .lang-switch a { display:inline-block; font:500 12px/1 var(--ui); padding:7px 9px; border:1px solid var(--line);
+    background:var(--card); color:var(--body); text-decoration:none; }
+  .lang-switch > :first-child { border-radius:9px 0 0 9px; }
+  .lang-switch > :last-child { border-radius:0 9px 9px 0; }
   .lang-switch > * + * { margin-left:-1px; }
   .lang-switch a:hover { border-color:var(--accent); color:var(--accent); position:relative; z-index:1; }
   .lang-switch .lang-active { background:var(--ink); border-color:var(--ink); color:var(--paper); position:relative; z-index:1; }
+  /* Pri zalomení hlavičky na telefóne ide navigácia na vlastný riadok a posúva sa do strany,
+     tak ako to predpokladá /style/paper.css. Bez toho si hlavička vynúti šírku väčšiu než
+     telefón (merané 427 px pri 390 px). */
+  @media (max-width:720px) {
+    .headnav { display:contents; }
+    .bar nav { flex-wrap:wrap; row-gap:2px; }
+    .bar nav a { white-space:nowrap; }
+  }
 
-  .hero { padding:64px 0 40px; border-bottom:1px solid var(--line); }
-  .hero h1 { font:400 clamp(30px,4.6vw,46px)/1.16 var(--serif); letter-spacing:-.01em; margin:0 0 18px; max-width:22ch; }
-  .hero p.lead { font-size:18px; color:var(--ink-2); max-width:62ch; margin:0 0 26px; }
-  .facts { list-style:none; margin:22px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px 0; color:var(--muted); font-size:14px; }
+  .facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 0;
+    font-family:var(--ui); font-size:14px; color:var(--muted); }
+  .facts li { max-width:100%; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }
 
-  .btn { display:inline-block; font:600 15px/1 var(--sans); padding:13px 18px; border-radius:4px; text-decoration:none; cursor:pointer; border:2px solid transparent; appearance:none; -webkit-appearance:none; }
-  .btn-solid { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .btn-solid:hover { background:var(--ink); border-color:var(--ink); color:var(--paper); }
-  .btn-line { border:2px solid var(--ink); color:var(--ink); background:transparent; }
-  .btn-line:hover { border-color:var(--accent); color:var(--accent); }
-  .btn + .btn { margin-left:10px; }
-
-  section { padding:44px 0; border-bottom:1px solid var(--line); }
-  section[id], header.top { scroll-margin-top:14px; }
-  .kicker { font:400 14px/1 var(--serif); color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin:0 0 10px; }
-  h2 { font:400 28px/1.2 var(--serif); margin:0 0 8px; letter-spacing:-.005em; max-width:32ch; }
-  .sub { color:var(--ink-2); max-width:66ch; margin:0 0 24px; }
-  .prose p { color:var(--ink-2); max-width:70ch; margin:0 0 14px; }
+  .prose p { max-width:70ch; margin:0 0 14px; }
   .prose p:last-child { margin-bottom:0; }
 
-  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px 32px; margin:0; padding:0; list-style:none; counter-reset:r; }
+  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:26px var(--gap);
+    margin:0; padding:0; list-style:none; counter-reset:r; }
   .rules li { padding-top:14px; border-top:1px solid var(--line); min-width:0; }
-  .rules li::before { counter-increment:r; content:counter(r,decimal-leading-zero); font:400 14px/1 var(--serif); color:var(--accent); display:block; margin-bottom:8px; }
-  .rules b { display:block; font-weight:600; margin-bottom:4px; }
-  .rules p { margin:0; color:var(--ink-2); font-size:15px; overflow-wrap:anywhere; }
+  .rules li::before { counter-increment:r; content:counter(r,decimal-leading-zero);
+    font:500 12px/1 var(--ui); letter-spacing:.12em; color:var(--accent); display:block; margin-bottom:9px; }
+  .rules b { display:block; font:600 17px/1.35 var(--display); color:var(--ink); margin-bottom:5px; }
+  .rules p { margin:0; font-size:clamp(15px,1.05vw,17px); overflow-wrap:anywhere; }
+  .band .rules li { border-top-color:#3a3733; }
+  .band .rules b { color:#fffdf8; }
+  .band .rules p { color:#cfc9bc; }
+  .band .sub { color:#b9b3a7; }
+  .band code { background:#211f1d; border-color:#3a3733; color:#e9e4d8; }
+  .band .rule { background:rgba(255,253,248,.18); }
 
-  .price-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
-  .price-col { border:1px solid var(--line); background:var(--paper-2); padding:22px 24px; min-width:0; }
-  .price-col.is-pro { border-color:var(--accent); }
-  .price-col h3 { font:400 22px/1.2 var(--serif); margin:0 0 6px; }
-  .price-col .price-num { font:400 32px/1 var(--serif); margin:0 0 12px; }
-  .price-col .price-num span { font-size:15px; color:var(--muted); font-family:var(--sans); }
-  .price-col ul { margin:0; padding-left:18px; color:var(--ink-2); font-size:14.5px; }
+  /* Cenník: karta smie niesť plán */
+  .price-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:20px; }
+  .price-col h3 { margin:0 0 4px; }
+  .price-col .price-num { font:600 clamp(28px,2.4vw,36px)/1 var(--display); color:var(--ink); margin:6px 0 14px; }
+  .price-col .price-num span { font:400 14px/1 var(--ui); color:var(--muted); }
+  .price-col ul { margin:0; padding-left:18px; font-family:var(--ui); font-size:14.5px; }
   .price-col li + li { margin-top:7px; }
   .price-col li b { color:var(--ink); }
-  .price-col .btn { margin-top:18px; }
-  .pricing-note { color:var(--ink-2); font-size:14px; margin:18px 0 0; max-width:70ch; }
+  .price-col .btn { margin-top:18px; margin-right:10px; }
+  .pricing-note { font-family:var(--ui); font-size:13.5px; color:var(--muted); margin:18px 0 0; max-width:70ch; }
 
-  .limits { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:16px; }
-  .limits li { border-top:1px solid var(--warn); padding-top:12px; }
-  .limits b { display:block; color:var(--ink); margin-bottom:4px; }
-  .limits p { margin:0; color:var(--ink-2); font-size:15px; max-width:70ch; }
+  .limits { margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:24px var(--gap); }
+  .limits li { border-top:1px solid var(--warn); padding-top:14px; }
+  .limits b { display:block; font:600 17px/1.35 var(--display); color:var(--ink); margin-bottom:5px; }
+  .limits p { margin:0; font-size:clamp(15px,1.05vw,17px); max-width:60ch; }
 
   .sources { padding-left:20px; margin:0; }
-  .sources li { font-size:13.5px; color:var(--muted); margin-top:4px; }
+  .sources li { font-family:var(--ui); font-size:13.5px; color:var(--muted); margin-top:4px; }
 
-  details { border-top:1px solid var(--line); padding:14px 0; }
+  details { border-top:1px solid var(--line); padding:16px 0; max-width:56em; }
   details:last-of-type { border-bottom:1px solid var(--line); }
-  summary { cursor:pointer; font:400 18px/1.3 var(--serif); list-style:none; display:flex; justify-content:space-between; gap:12px; }
+  summary { cursor:pointer; font:600 clamp(17px,1.5vw,20px)/1.35 var(--display); color:var(--ink);
+    list-style:none; display:flex; justify-content:space-between; gap:12px; }
   summary::-webkit-details-marker { display:none; }
-  summary::after { content:"+"; color:var(--accent); flex:none; font-family:var(--sans); }
+  summary::after { content:"+"; color:var(--accent); flex:none; font-family:var(--ui); }
   details[open] summary::after { content:"\2013"; }
-  details p { color:var(--ink-2); margin:10px 0 0; max-width:70ch; overflow-wrap:anywhere; }
+  details p { margin:10px 0 0; max-width:70ch; overflow-wrap:anywhere; }
 
-  footer { padding:32px 0 56px; color:var(--muted); font-size:14px; }
-  footer .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px 32px; }
+  footer { border-top:1px solid var(--line); }
+  footer .cols { gap:20px 32px; }
   footer b { color:var(--ink); font-weight:600; }
-  footer a { color:var(--ink-2); }
-  .footer-note { margin-top:14px; font-size:12px; color:var(--muted); }
+  .footer-note { margin-top:16px; font-size:12px; color:var(--muted); max-width:none; }
 
-  @media (max-width:480px) {
-    .hero { padding:44px 0 32px; }
-    nav.main a { margin-left:12px; }
-    .wordmark-sub { display:none; }
-    .btn + .btn { margin-left:0; margin-top:10px; }
-  }
+  .closing { text-align:center; }
+  .closing .sub { margin:0 auto 20px; }
+  .closing .cta { justify-content:center; }
 
-  .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--paper-2); border-top:1px solid var(--line); }
-  .sticky-cta-inner { display:flex; align-items:center; gap:10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
-  .sticky-cta-text { flex:1 1 auto; min-width:0; font-size:12.5px; color:var(--ink-2); overflow-wrap:anywhere; }
-  .sticky-cta .btn { flex:none; padding:10px 14px; font-size:13.5px; margin:0; }
-  .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:16px/1 var(--sans); padding:0; }
+  .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--card); border-top:1px solid var(--line); }
+  .sticky-cta-inner { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
+  .sticky-cta-text { flex:1 1 160px; min-width:0; font-family:var(--ui); font-size:12.5px; color:var(--body); overflow-wrap:anywhere; }
+  .sticky-cta .btn { flex:none; height:40px; padding:0 14px; font-size:13.5px; white-space:nowrap; }
+  .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper);
+    color:var(--body); border-radius:8px; cursor:pointer; font:16px/1 var(--ui); padding:0; }
   .sticky-cta-close:hover { border-color:var(--accent); color:var(--accent); }
   @media (min-width:761px) { .sticky-cta { display:none !important; } }
-  @media print { .sticky-cta { display:none !important; } }
+  @media print { .sticky-cta, .wash { display:none !important; } }
+
+  /* Bočný register: v ľavom okraji, čísla sekcií */
+  .rail { left:auto; right:calc(50% + var(--wrap) / 2 + 16px); align-items:flex-end; }
+  .rail a { flex-direction:row-reverse; font-variant-numeric:tabular-nums; }
+  @media (max-width:1560px) { .rail { display:none; } }
 </style>
 </head>
 <body>
+<div class="wash" aria-hidden="true" style="overflow:hidden"><i></i><i></i></div>
 
 <a class="skip" href="#so-gehts">Zum Inhalt springen</a>
-<header class="top">
-  <div class="wrap">
+<header>
+  <div class="wrap bar">
     <div class="brand">
-      <a class="wordmark" href="../de/">camt.053 nach Excel</a>
-      <a class="wordmark-sub" href="https://arling.sk/">ein ARLing-Tool</a>
+      <a class="mark" href="https://arling.sk/">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><defs><path id="m" fill-rule="evenodd" d="M16 2.5 L29 29.5 H3 Z M16 12.4 L22.4 25.6 H9.6 Z"/><clipPath id="mr"><rect x="16" width="16" height="32"/></clipPath></defs><use href="#m" fill="#141413"/><use href="#m" fill="#b23a1d" clip-path="url(#mr)"/></svg>
+        <b>ARLing</b>
+      </a>
+      <a class="sect" href="../de/">camt.053 nach Excel</a>
     </div>
     <div class="headnav">
-      <nav class="main" aria-label="Seite">
+      <nav aria-label="Seite">
         <a href="#so-gehts">So geht's</a>
         <a href="#preis">Preis</a>
         <a href="#grenzen">Grenzen</a>
@@ -254,35 +249,46 @@
 </header>
 
 <main>
-  <div class="hero">
-    <div class="wrap">
-      <h1>camt.053 in MT940 umwandeln, für DATEV.</h1>
-      <p class="lead">MT940 wurde im November 2025 aus dem Regelwerk der deutschen Kreditwirtschaft gestrichen, viele Banken liefern den Kontoauszug bereits nur noch als camt.053. DATEV Kanzlei-Rechnungswesen erwartet beim manuellen Dateiimport aber weiterhin MT940. Dieses Tool wandelt camt.053 im Browser in MT940 (.sta) oder direkt in eine DATEV-Buchungsstapel-Datei (EXTF) um, nichts wird hochgeladen.</p>
-      <a class="btn btn-solid" href="../de/?export=mt940" data-umami-event="trial_click" data-umami-event-place="hero">Jetzt umwandeln</a><a class="btn btn-line" href="#so-gehts">So funktioniert's</a>
-      <ul class="facts">
+  <div class="wrap hero" id="hero">
+    <div>
+      <h1 id="h1"><span class="l">camt.053 in MT940</span><span class="l">umwandeln, für DATEV.</span></h1>
+      <p class="lead r d1">MT940 wurde im November 2025 aus dem Regelwerk der deutschen Kreditwirtschaft gestrichen, viele Banken liefern den Kontoauszug bereits nur noch als camt.053. DATEV Kanzlei-Rechnungswesen erwartet beim manuellen Dateiimport aber weiterhin MT940. Dieses Tool wandelt camt.053 im Browser in MT940 (.sta) oder direkt in eine DATEV-Buchungsstapel-Datei (EXTF) um, nichts wird hochgeladen.</p>
+      <div class="cta r d2">
+        <a class="btn btn-solid" href="../de/?export=mt940" data-umami-event="trial_click" data-umami-event-place="hero">Jetzt umwandeln</a>
+        <a class="btn btn-line" href="#so-gehts" data-umami-event="howto_click" data-umami-event-place="hero">So funktioniert's</a>
+      </div>
+      <ul class="facts proof r d3">
         <li>MT940 seit <b>November 2025</b> nicht mehr im Bankenregelwerk</li>
         <li>DATEV-Dateiimport erwartet weiterhin MT940</li>
         <li><b>0 €</b> für camt.053 zu Excel/CSV, ohne Limit</li>
         <li>nichts wird hochgeladen</li>
       </ul>
     </div>
+    <div class="r d2">
+      <div class="shot">
+        <div class="chrome"><i></i><i></i><i></i></div>
+        <img src="../press/mt940-datev-de.png" width="748" height="1159" loading="lazy" decoding="async"
+             alt="Ausgabe des Tools: Kontoauszug camt.053 umgewandelt, Saldenprüfung, Buchungstabelle und die Schaltflächen für MT940 (.sta) und DATEV Buchungsstapel." />
+      </div>
+    </div>
   </div>
 
-  <section id="so-gehts">
+  <section id="so-gehts" class="deep">
     <div class="wrap">
       <p class="kicker">01</p>
-      <h2>In drei Schritten von camt.053 zu MT940 oder DATEV.</h2>
-      <p class="sub">Alles läuft im selben Werkzeug wie der kostenlose Excel-Export, nur die letzten Klicks sind neu.</p>
+      <h2 class="r">In drei Schritten von camt.053 zu MT940 oder DATEV.</h2>
+      <p class="sub r d1">Alles läuft im selben Werkzeug wie der kostenlose Excel-Export, nur die letzten Klicks sind neu.</p>
+      <div class="rule"></div>
       <ol class="rules">
-        <li>
+        <li class="r d1">
           <b>camt.053 aus dem Online-Banking laden.</b>
           <p>Sparkasse, Volksbank/Raiffeisenbank, Commerzbank, Deutsche Bank, Erste, Raiffeisen, UBS oder PostFinance: die Datei heißt meist „Kontoauszug XML" oder direkt „camt.053", im Auszugs- oder Postfach-Bereich des Online-Bankings.</p>
         </li>
-        <li>
+        <li class="r d2">
           <b>Datei hochladen oder Text einfügen.</b>
           <p>Das Tool liest die Datei im Browser, prüft Anfangs- und Endsaldo gegen die Summe der Buchungen und zeigt sofort eine Tabelle. Kostenlos, ohne Limit auf Excel oder CSV.</p>
         </li>
-        <li>
+        <li class="r d3">
           <b>Bei den Downloads „MT940" oder „DATEV" klicken.</b>
           <p>Die erste MT940- oder DATEV-Datei ist auch ohne Lizenz kostenlos und vollständig, damit Sie den DATEV-Import prüfen können. Jede weitere zeigt eine Vorschau der ersten Zeilen, mit Pro lädt die Datei direkt herunter.</p>
         </li>
@@ -293,10 +299,11 @@
   <section id="preis">
     <div class="wrap">
       <p class="kicker">02</p>
-      <h2>Excel-Export bleibt kostenlos. MT940 und DATEV sind Pro.</h2>
-      <p class="sub">Eine Lizenz für alle vier ARLing-Banktools: SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 nach Excel und Zahlungsabgleich.</p>
+      <h2 class="r">Excel-Export bleibt kostenlos. MT940 und DATEV sind Pro.</h2>
+      <p class="sub r d1">Eine Lizenz für alle vier ARLing-Banktools: SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 nach Excel und Zahlungsabgleich.</p>
+      <div class="rule"></div>
       <div class="price-cols">
-        <div class="price-col">
+        <div class="card plan price-col r d1">
           <h3>Kostenlos</h3>
           <div class="price-num">0&nbsp;€</div>
           <ul>
@@ -306,7 +313,7 @@
           </ul>
           <a class="btn btn-line" href="../de/" data-umami-event="demo_click" data-umami-event-place="pricing">Kostenlos umwandeln</a>
         </div>
-        <div class="price-col is-pro">
+        <div class="card plan pick price-col is-pro r d2">
           <h3>Pro</h3>
           <div class="price-num">9&nbsp;€<span> /Monat</span></div>
           <ul>
@@ -324,16 +331,17 @@
     </div>
   </section>
 
-  <section id="inhalt">
+  <section id="inhalt" class="band">
     <div class="wrap">
       <p class="kicker">03</p>
-      <h2>Was in der MT940- und der DATEV-Datei steckt.</h2>
+      <h2 class="r">Was in der MT940- und der DATEV-Datei steckt.</h2>
+      <div class="rule"></div>
       <ol class="rules">
-        <li>
+        <li class="r d4">
           <b>MT940 (.sta), SWIFT-Format.</b>
           <p><code>:20:</code> Referenz, <code>:25:</code> Konto, <code>:28C:</code> Blattnummer, <code>:60F:</code>/<code>:62F:</code> Anfangs- und Endsaldo, <code>:61:</code> je Buchungssatz mit Datum, Betrag und Soll/Haben-Kennzeichen, <code>:86:</code> mit Geschäftsvorfallcode und den strukturierten <code>?00</code>–<code>?34</code>-Unterfeldern nach der SEPA-Konvention (<code>EREF+</code>, <code>SVWZ+</code>). Zeilen auf 65 Zeichen und 6 Zeilen begrenzt, Umlaute in den SWIFT-X-Zeichensatz übertragen, CRLF-Zeilenenden, eine Nachricht je Auszug.</p>
         </li>
-        <li>
+        <li class="r d1">
           <b>DATEV-Format „Buchungsstapel" (EXTF CSV).</b>
           <p>Kopfzeile mit Format-Kennung und Kategorie „Buchungsstapel", darunter die Spaltenkopfzeile und eine Zeile je Buchung. Soll/Haben folgt dem Feld <code>CdtDbtInd</code> aus camt.053: Gutschrift auf das eingestellte Bankkonto wird Soll, Belastung wird Haben. Datumsformat TTMM, Dezimalkomma, Zeichensatz Windows-1252 mit erhaltenen Umlauten.</p>
         </li>
@@ -344,22 +352,23 @@
   <section id="grenzen">
     <div class="wrap">
       <p class="kicker">04</p>
-      <h2>Ehrliche Grenzen.</h2>
-      <p class="sub">Kein Marketingtext, sondern was vor dem produktiven Einsatz zu prüfen ist.</p>
+      <h2 class="r">Ehrliche Grenzen.</h2>
+      <p class="sub r d1">Kein Marketingtext, sondern was vor dem produktiven Einsatz zu prüfen ist.</p>
+      <div class="rule"></div>
       <ul class="limits">
-        <li>
+        <li class="r d2">
           <b>Die genaue Formulierung im Feld <code>:86:</code> unterscheidet sich zwischen Banken.</b>
           <p>Es gibt keinen einzigen, für alle Institute identischen Geschäftsvorfallcode-Standard. Prüfen Sie das Ergebnis mit einer kleinen Testdatei, bevor Sie eine ganze Buchhaltungsperiode importieren.</p>
         </li>
-        <li>
+        <li class="r d3">
           <b>Zwei Kopf-Metadatenfelder der DATEV-EXTF-Datei sind generisch, nicht kanzleispezifisch geprüft.</b>
           <p>Beraternummer und Mandantennummer tragen Sie im Tool selbst ein, das Format der Kopfzeile folgt öffentlich dokumentierten, aber nicht für jede DATEV-Version einzeln bestätigten Regeln. Ein Testimport vor dem produktiven Einsatz ist empfehlenswert.</p>
         </li>
-        <li>
+        <li class="r d4">
           <b>Kein Ersatz für den DATEV Bankdatenservice.</b>
           <p>DATEV bietet für den direkten camt.053-Upload eine eigene, kostenpflichtige Lösung an. Dieses Tool ist für den manuellen Dateiimport gedacht und ist nicht mit DATEV verbunden.</p>
         </li>
-        <li>
+        <li class="r d1">
           <b>MT940 wird selbst erzeugt, nicht von der Bank bezogen.</b>
           <p>Liefert Ihre Bank nur noch camt.053, baut dieses Tool daraus eine MT940-Datei nach den offen dokumentierten SWIFT-Feldregeln, für Software, die ausschließlich MT940 einliest.</p>
         </li>
@@ -367,27 +376,28 @@
     </div>
   </section>
 
-  <section id="faq">
+  <section id="faq" class="deep">
     <div class="wrap">
       <p class="kicker">05</p>
-      <h2>FAQ</h2>
-      <details>
+      <h2 class="r">FAQ</h2>
+      <div class="rule"></div>
+      <details class="r d1">
         <summary>Warum kann DATEV camt.053 nicht importieren?</summary>
         <p>Die deutsche Kreditwirtschaft hat MT940 im November 2025 aus ihrem Regelwerk für den Datenträgeraustausch gestrichen; viele Banken liefern den Kontoauszug seither bereits ausschließlich als camt.053 aus. DATEV Kanzlei-Rechnungswesen hat aber weiterhin keinen direkten Import für camt.053-Dateien, der manuelle Dateiimport erwartet dort nach wie vor MT940. Quellen: <a href="https://taxmain.de/camt-053-in-mt940-umwandeln/" target="_blank" rel="noopener">taxmain.de</a>, ein Diskussionsfaden in der <a href="https://www.datev-community.de/t5/Betriebliches-Rechnungswesen/Umstellung-auf-neues-CAMT-Format-Ablauf-der-Frist-zum-23-11-2025/td-p/517823" target="_blank" rel="noopener">DATEV-Community</a> zum Umstellungstermin 23. November 2025, und die <a href="https://www.datev.de/web/de/berufsgruppenuebergreifend/gesetzliche-themen/payment/kontoumsaetze-bereitstellen-neues-format" target="_blank" rel="noopener">DATEV-Seite</a> zum neuen Format, alle abgerufen am 5. September 2026. DATEV bietet für den camt.053-Upload separat den kostenpflichtigen Bankdatenservice an, das ist ein anderer Weg als der manuelle Dateiimport.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Ist das sicher, meine Kontodaten hier hochzuladen?</summary>
         <p>Es wird nichts hochgeladen. Das Parsen der camt.053-Datei und der Aufbau von MT940 oder der DATEV-Buchungsstapel-Datei laufen vollständig im Browser, das Tool hat keinen Server, der Kontodaten verarbeitet. Im Netzwerk-Reiter der Entwicklertools ist kein Request mit dem Dateiinhalt zu sehen. Die einzige Netzwerkaktivität ist das Laden der statischen Seite und ein anonymer Nutzungszähler ohne Kontodaten.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Was kostet die Umwandlung nach MT940 oder DATEV Buchungsstapel?</summary>
         <p>Die Umwandlung von camt.053 nach CSV oder Excel ist kostenlos und ohne Limit. MT940- und DATEV-Buchungsstapel-Export sind Pro-Funktionen: 9 Euro im Monat oder 79 Euro im Jahr, Preise inklusive Umsatzsteuer, Abrechnung über Stripe, ein Lizenzschlüssel gültig für alle vier ARLing-Banktools (SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 nach Excel, Zahlungsabgleich).</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Was, wenn meine Bank MT940 noch direkt anbietet?</summary>
         <p>Dann brauchen Sie diesen Umweg nicht und können die MT940-Datei direkt aus dem Online-Banking herunterladen. Die deutsche Kreditwirtschaft hat MT940 branchenweit im November 2025 aus dem Regelwerk gestrichen, wie schnell einzelne Banken das im Online-Banking selbst nachvollziehen, kann in der Übergangszeit unterschiedlich sein. Dieses Tool ist für den Fall gedacht, dass im Postfach nur noch camt.053 liegt.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Funktioniert das mit Sparkasse, Volksbank, Commerzbank, Deutsche Bank, UBS oder PostFinance?</summary>
         <p>Ja. camt.053 ist ein bankunabhängiges ISO-20022-Format, das Tool unterstützt die beiden gebräuchlichen Versionen <code>camt.053.001.02</code> und <code>camt.053.001.08</code> und erkennt die Version automatisch. Es funktioniert mit jeder Bank in Deutschland, Österreich und der Schweiz, die camt.053 als Kontoauszug ausstellt, unabhängig vom Namen der Bank.</p>
       </details>
@@ -395,10 +405,10 @@
     </div>
   </section>
 
-  <section id="closing-cta">
-    <div class="wrap" style="text-align:center;">
-      <p class="sub" style="margin:0 auto 18px;">camt.053 hochladen, kostenlos als Excel oder CSV, mit Pro-Lizenz direkt als MT940 oder DATEV Buchungsstapel.</p>
-      <a class="btn btn-solid" href="../de/?export=mt940" data-umami-event="trial_click" data-umami-event-place="closing">Jetzt umwandeln</a>
+  <section id="closing-cta" class="closing">
+    <div class="wrap">
+      <p class="sub r d1">camt.053 hochladen, kostenlos als Excel oder CSV, mit Pro-Lizenz direkt als MT940 oder DATEV Buchungsstapel.</p>
+      <div class="cta r d2"><a class="btn btn-solid" href="../de/?export=mt940" data-umami-event="trial_click" data-umami-event-place="closing">Jetzt umwandeln</a></div>
     </div>
   </section>
 
@@ -469,6 +479,91 @@
         bar.hidden = true;
       });
     }
+  }
+})();
+</script>
+<nav class="rail" aria-hidden="true">
+  <a href="#so-gehts" tabindex="-1"><i></i><span>01</span></a>
+  <a href="#preis" tabindex="-1"><i></i><span>02</span></a>
+  <a href="#inhalt" tabindex="-1"><i></i><span>03</span></a>
+  <a href="#grenzen" tabindex="-1"><i></i><span>04</span></a>
+  <a href="#faq" tabindex="-1"><i></i><span>05</span></a>
+</nav>
+
+<script>
+/* Pohyb podla ops/design/paper-v2.md, sekcia 7: nadpis po slovach, pokojne
+   prichody sekcii, bocny register. Ziadna kniznica, ziadna slucka. */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.querySelector('.hero');
+  var h1 = document.getElementById('h1');
+
+  function splitHeading() {
+    if (!h1) return;
+    var lines = Array.prototype.slice.call(h1.querySelectorAll('.l'));
+    if (!lines.length) {
+      var t = (h1.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!t) return;
+      h1.innerHTML = '<span class="l"></span>';
+      h1.firstChild.textContent = t;
+      lines = [h1.firstChild];
+    }
+    var i = 0;
+    lines.forEach(function (line) {
+      line.innerHTML = line.textContent.replace(/\s+/g, ' ').trim().split(' ').map(function (w) {
+        var d = (i++ * 0.05).toFixed(2);
+        var safe = w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return '<span class="w" style="transition-delay:' + d + 's">' + safe + '</span>';
+      }).join(' ');
+    });
+    h1.classList.remove('in');
+    if (reduce) { h1.classList.add('in'); return; }
+    setTimeout(function () { h1.classList.add('in'); }, 40);
+  }
+  document.addEventListener('arling:langchange', splitHeading);
+
+  if (reduce) {
+    document.querySelectorAll('.r, section, .rail').forEach(function (e) { e.classList.add('in'); });
+    if (hero) hero.classList.add('in');
+  } else {
+    setTimeout(function () { if (hero) hero.classList.add('in'); }, 40);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.04 });
+    document.querySelectorAll('section').forEach(function (s) { io.observe(s); });
+  }
+  splitHeading();
+
+  var rail = document.querySelector('.rail');
+  if (rail) {
+    var links = Array.prototype.slice.call(rail.querySelectorAll('a'));
+    var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var railIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = targets.indexOf(en.target);
+        if (i < 0 || !en.isIntersecting) return;
+        links.forEach(function (a, j) { a.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      });
+      rail.classList.add('on');
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    targets.forEach(function (t) { if (t) railIo.observe(t); });
+  }
+
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.bar nav a[href^="#"]'));
+  if (navLinks.length) {
+    var navTargets = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var navIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = navTargets.indexOf(en.target);
+        if (i < 0 || !en.isIntersecting) return;
+        navLinks.forEach(function (a, j) {
+          if (j === i) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    navTargets.forEach(function (t) { if (t) navIo.observe(t); });
   }
 })();
 </script>

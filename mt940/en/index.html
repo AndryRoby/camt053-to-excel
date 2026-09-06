@@ -21,6 +21,9 @@
 <link rel="apple-touch-icon" href="../../icon-192.png" />
 <link rel="manifest" href="../../manifest.json" />
 <link rel="alternate" type="text/plain" href="https://arling.sk/camt053-to-excel/llms.txt" title="llms.txt">
+<link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style/paper.css">
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
 <script type="application/ld+json">
@@ -107,136 +110,131 @@
 </script>
 
 <style>
-  :root {
-    --paper:#f6f2ea; --paper-2:#fbf9f4; --ink:#1b1a17; --ink-2:#4a4741; --muted:#66625a; --line:#d9d2c4;
-    --accent:#b23a1d; --accent-soft:#f3e2dc; --ok:#2f6f3e; --warn:#9a6b00;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
-    color-scheme: light dark;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --paper:#151412; --paper-2:#1d1b18; --ink:#efe9de; --ink-2:#c9c2b5; --muted:#8f887b; --line:#2e2b26; --accent:#e0623f; --accent-soft:#3a1f17; --ok:#7fbf8e; --warn:#caa552; }
-  }
-  * { box-sizing:border-box; }
-  html { background:var(--paper); }
-  body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.55 var(--sans); -webkit-font-smoothing:antialiased; }
-  a { color:inherit; text-decoration-color:var(--line); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-  img { max-width:100%; height:auto; display:block; }
+  /* Len to, čo je vlastné tejto stránke. Vzhľad je v /style/paper.css. */
+  :root { color-scheme:light; --warn:#8a6a1f; }
+  h2 { max-width:20em; }
+  .sub { color:var(--body); max-width:64ch; margin:0 0 24px; }
+  code { background:var(--card); border:1px solid var(--line); border-radius:3px; padding:1px 5px; overflow-wrap:anywhere; }
   [hidden] { display:none !important; }
-  .skip { position:absolute; left:-999px; top:8px; background:var(--ink); color:var(--paper); padding:8px 12px; z-index:10; }
-  .skip:focus { left:8px; }
-  .wrap { max-width:1040px; margin:0 auto; padding:0 24px; min-width:0; }
-  code { font:13.5px/1.4 var(--mono); background:var(--paper-2); border:1px solid var(--line); border-radius:3px; padding:1px 5px; overflow-wrap:anywhere; }
+  section[id] { scroll-margin-top:78px; }
 
-  header.top { border-bottom:1px solid var(--line); }
-  header.top .wrap { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px 24px; padding:18px 24px; }
-  .brand { display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 10px; min-width:0; }
-  .wordmark { font:600 21px/1.25 var(--serif); text-decoration:none; overflow-wrap:anywhere; }
-  .wordmark-sub { font:13px/1 var(--sans); color:var(--muted); letter-spacing:.02em; text-decoration:none; white-space:nowrap; }
-  .wordmark-sub:hover { color:var(--accent); }
-  .headnav { display:flex; align-items:center; flex-wrap:wrap; gap:6px 20px; }
-  nav.main { display:flex; flex-wrap:wrap; }
-  nav.main a { font-size:14px; margin-left:20px; text-decoration:none; color:var(--ink-2); white-space:nowrap; }
-  nav.main a:first-child { margin-left:0; }
-  nav.main a:hover { color:var(--accent); }
-  .lang-switch { display:flex; align-items:center; gap:0; }
-  .lang-switch a { display:inline-block; font:600 12px/1 var(--sans); padding:6px 9px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); text-decoration:none; }
-  .lang-switch > :first-child { border-radius:4px 0 0 4px; }
-  .lang-switch > :last-child { border-radius:0 4px 4px 0; }
+  .brand { min-width:0; }
+  .brand .mark { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); flex:none; }
+  .brand .sect { color:var(--muted); font-family:var(--ui); font-size:13px; border-left:1px solid var(--line);
+    padding-left:11px; text-decoration:none; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .brand .sect:hover { color:var(--accent); }
+  /* Na úzkom telefóne sa názov časti odsunie, aby sa monogram nescvrkol na nulu
+     a aby si rozloženie nevynútilo šírku väčšiu než telefón (merané na 320 a 360 px). */
+  @media (max-width:400px) { .brand .sect { display:none; } }
+  .headnav { display:flex; align-items:center; gap:8px 22px; }
+  .lang-switch { display:flex; align-items:center; }
+  .lang-switch a { display:inline-block; font:500 12px/1 var(--ui); padding:7px 9px; border:1px solid var(--line);
+    background:var(--card); color:var(--body); text-decoration:none; }
+  .lang-switch > :first-child { border-radius:9px 0 0 9px; }
+  .lang-switch > :last-child { border-radius:0 9px 9px 0; }
   .lang-switch > * + * { margin-left:-1px; }
   .lang-switch a:hover { border-color:var(--accent); color:var(--accent); position:relative; z-index:1; }
   .lang-switch .lang-active { background:var(--ink); border-color:var(--ink); color:var(--paper); position:relative; z-index:1; }
+  /* Pri zalomení hlavičky na telefóne ide navigácia na vlastný riadok a posúva sa do strany,
+     tak ako to predpokladá /style/paper.css. Bez toho si hlavička vynúti šírku väčšiu než
+     telefón (merané 427 px pri 390 px). */
+  @media (max-width:720px) {
+    .headnav { display:contents; }
+    .bar nav { flex-wrap:wrap; row-gap:2px; }
+    .bar nav a { white-space:nowrap; }
+  }
 
-  .hero { padding:64px 0 40px; border-bottom:1px solid var(--line); }
-  .hero h1 { font:400 clamp(30px,4.6vw,46px)/1.16 var(--serif); letter-spacing:-.01em; margin:0 0 18px; max-width:22ch; }
-  .hero p.lead { font-size:18px; color:var(--ink-2); max-width:62ch; margin:0 0 26px; }
-  .facts { list-style:none; margin:22px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px 0; color:var(--muted); font-size:14px; }
+  .facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 0;
+    font-family:var(--ui); font-size:14px; color:var(--muted); }
+  .facts li { max-width:100%; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }
 
-  .btn { display:inline-block; font:600 15px/1 var(--sans); padding:13px 18px; border-radius:4px; text-decoration:none; cursor:pointer; border:2px solid transparent; appearance:none; -webkit-appearance:none; }
-  .btn-solid { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .btn-solid:hover { background:var(--ink); border-color:var(--ink); color:var(--paper); }
-  .btn-line { border:2px solid var(--ink); color:var(--ink); background:transparent; }
-  .btn-line:hover { border-color:var(--accent); color:var(--accent); }
-  .btn + .btn { margin-left:10px; }
-
-  section { padding:44px 0; border-bottom:1px solid var(--line); }
-  section[id], header.top { scroll-margin-top:14px; }
-  .kicker { font:400 14px/1 var(--serif); color:var(--accent); letter-spacing:.06em; text-transform:uppercase; margin:0 0 10px; }
-  h2 { font:400 28px/1.2 var(--serif); margin:0 0 8px; letter-spacing:-.005em; max-width:32ch; }
-  .sub { color:var(--ink-2); max-width:66ch; margin:0 0 24px; }
-  .prose p { color:var(--ink-2); max-width:70ch; margin:0 0 14px; }
+  .prose p { max-width:70ch; margin:0 0 14px; }
   .prose p:last-child { margin-bottom:0; }
 
-  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px 32px; margin:0; padding:0; list-style:none; counter-reset:r; }
+  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:26px var(--gap);
+    margin:0; padding:0; list-style:none; counter-reset:r; }
   .rules li { padding-top:14px; border-top:1px solid var(--line); min-width:0; }
-  .rules li::before { counter-increment:r; content:counter(r,decimal-leading-zero); font:400 14px/1 var(--serif); color:var(--accent); display:block; margin-bottom:8px; }
-  .rules b { display:block; font-weight:600; margin-bottom:4px; }
-  .rules p { margin:0; color:var(--ink-2); font-size:15px; overflow-wrap:anywhere; }
+  .rules li::before { counter-increment:r; content:counter(r,decimal-leading-zero);
+    font:500 12px/1 var(--ui); letter-spacing:.12em; color:var(--accent); display:block; margin-bottom:9px; }
+  .rules b { display:block; font:600 17px/1.35 var(--display); color:var(--ink); margin-bottom:5px; }
+  .rules p { margin:0; font-size:clamp(15px,1.05vw,17px); overflow-wrap:anywhere; }
+  .band .rules li { border-top-color:#3a3733; }
+  .band .rules b { color:#fffdf8; }
+  .band .rules p { color:#cfc9bc; }
+  .band .sub { color:#b9b3a7; }
+  .band code { background:#211f1d; border-color:#3a3733; color:#e9e4d8; }
+  .band .rule { background:rgba(255,253,248,.18); }
 
-  .price-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
-  .price-col { border:1px solid var(--line); background:var(--paper-2); padding:22px 24px; min-width:0; }
-  .price-col.is-pro { border-color:var(--accent); }
-  .price-col h3 { font:400 22px/1.2 var(--serif); margin:0 0 6px; }
-  .price-col .price-num { font:400 32px/1 var(--serif); margin:0 0 12px; }
-  .price-col .price-num span { font-size:15px; color:var(--muted); font-family:var(--sans); }
-  .price-col ul { margin:0; padding-left:18px; color:var(--ink-2); font-size:14.5px; }
+  /* Cenník: karta smie niesť plán */
+  .price-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:20px; }
+  .price-col h3 { margin:0 0 4px; }
+  .price-col .price-num { font:600 clamp(28px,2.4vw,36px)/1 var(--display); color:var(--ink); margin:6px 0 14px; }
+  .price-col .price-num span { font:400 14px/1 var(--ui); color:var(--muted); }
+  .price-col ul { margin:0; padding-left:18px; font-family:var(--ui); font-size:14.5px; }
   .price-col li + li { margin-top:7px; }
   .price-col li b { color:var(--ink); }
-  .price-col .btn { margin-top:18px; }
-  .pricing-note { color:var(--ink-2); font-size:14px; margin:18px 0 0; max-width:70ch; }
+  .price-col .btn { margin-top:18px; margin-right:10px; }
+  .pricing-note { font-family:var(--ui); font-size:13.5px; color:var(--muted); margin:18px 0 0; max-width:70ch; }
 
-  .limits { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:16px; }
-  .limits li { border-top:1px solid var(--warn); padding-top:12px; }
-  .limits b { display:block; color:var(--ink); margin-bottom:4px; }
-  .limits p { margin:0; color:var(--ink-2); font-size:15px; max-width:70ch; }
+  .limits { margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:24px var(--gap); }
+  .limits li { border-top:1px solid var(--warn); padding-top:14px; }
+  .limits b { display:block; font:600 17px/1.35 var(--display); color:var(--ink); margin-bottom:5px; }
+  .limits p { margin:0; font-size:clamp(15px,1.05vw,17px); max-width:60ch; }
 
-  details { border-top:1px solid var(--line); padding:14px 0; }
+  .sources { padding-left:20px; margin:0; }
+  .sources li { font-family:var(--ui); font-size:13.5px; color:var(--muted); margin-top:4px; }
+
+  details { border-top:1px solid var(--line); padding:16px 0; max-width:56em; }
   details:last-of-type { border-bottom:1px solid var(--line); }
-  summary { cursor:pointer; font:400 18px/1.3 var(--serif); list-style:none; display:flex; justify-content:space-between; gap:12px; }
+  summary { cursor:pointer; font:600 clamp(17px,1.5vw,20px)/1.35 var(--display); color:var(--ink);
+    list-style:none; display:flex; justify-content:space-between; gap:12px; }
   summary::-webkit-details-marker { display:none; }
-  summary::after { content:"+"; color:var(--accent); flex:none; font-family:var(--sans); }
+  summary::after { content:"+"; color:var(--accent); flex:none; font-family:var(--ui); }
   details[open] summary::after { content:"\2013"; }
-  details p { color:var(--ink-2); margin:10px 0 0; max-width:70ch; overflow-wrap:anywhere; }
+  details p { margin:10px 0 0; max-width:70ch; overflow-wrap:anywhere; }
 
-  footer { padding:32px 0 56px; color:var(--muted); font-size:14px; }
-  footer .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px 32px; }
+  footer { border-top:1px solid var(--line); }
+  footer .cols { gap:20px 32px; }
   footer b { color:var(--ink); font-weight:600; }
-  footer a { color:var(--ink-2); }
-  .footer-note { margin-top:14px; font-size:12px; color:var(--muted); }
+  .footer-note { margin-top:16px; font-size:12px; color:var(--muted); max-width:none; }
 
-  @media (max-width:480px) {
-    .hero { padding:44px 0 32px; }
-    nav.main a { margin-left:12px; }
-    .wordmark-sub { display:none; }
-    .btn + .btn { margin-left:0; margin-top:10px; }
-  }
+  .closing { text-align:center; }
+  .closing .sub { margin:0 auto 20px; }
+  .closing .cta { justify-content:center; }
 
-  .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--paper-2); border-top:1px solid var(--line); }
-  .sticky-cta-inner { display:flex; align-items:center; gap:10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
-  .sticky-cta-text { flex:1 1 auto; min-width:0; font-size:12.5px; color:var(--ink-2); overflow-wrap:anywhere; }
-  .sticky-cta .btn { flex:none; padding:10px 14px; font-size:13.5px; margin:0; }
-  .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper); color:var(--ink-2); border-radius:4px; cursor:pointer; font:16px/1 var(--sans); padding:0; }
+  .sticky-cta { position:fixed; left:0; right:0; bottom:0; z-index:30; background:var(--card); border-top:1px solid var(--line); }
+  .sticky-cta-inner { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; max-width:1040px; margin:0 auto; padding:10px 14px; }
+  .sticky-cta-text { flex:1 1 160px; min-width:0; font-family:var(--ui); font-size:12.5px; color:var(--body); overflow-wrap:anywhere; }
+  .sticky-cta .btn { flex:none; height:40px; padding:0 14px; font-size:13.5px; white-space:nowrap; }
+  .sticky-cta-close { flex:none; width:30px; height:30px; border:1px solid var(--line); background:var(--paper);
+    color:var(--body); border-radius:8px; cursor:pointer; font:16px/1 var(--ui); padding:0; }
   .sticky-cta-close:hover { border-color:var(--accent); color:var(--accent); }
   @media (min-width:761px) { .sticky-cta { display:none !important; } }
-  @media print { .sticky-cta { display:none !important; } }
+  @media print { .sticky-cta, .wash { display:none !important; } }
+
+  /* Bočný register: v ľavom okraji, čísla sekcií */
+  .rail { left:auto; right:calc(50% + var(--wrap) / 2 + 16px); align-items:flex-end; }
+  .rail a { flex-direction:row-reverse; font-variant-numeric:tabular-nums; }
+  @media (max-width:1560px) { .rail { display:none; } }
 </style>
 </head>
 <body>
+<div class="wash" aria-hidden="true" style="overflow:hidden"><i></i><i></i></div>
 
 <a class="skip" href="#how-it-works">Skip to content</a>
-<header class="top">
-  <div class="wrap">
+<header>
+  <div class="wrap bar">
     <div class="brand">
-      <a class="wordmark" href="../../en/">camt.053 to Excel</a>
-      <a class="wordmark-sub" href="https://arling.sk/">an ARLing tool</a>
+      <a class="mark" href="https://arling.sk/">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><defs><path id="m" fill-rule="evenodd" d="M16 2.5 L29 29.5 H3 Z M16 12.4 L22.4 25.6 H9.6 Z"/><clipPath id="mr"><rect x="16" width="16" height="32"/></clipPath></defs><use href="#m" fill="#141413"/><use href="#m" fill="#b23a1d" clip-path="url(#mr)"/></svg>
+        <b>ARLing</b>
+      </a>
+      <a class="sect" href="../../en/">camt.053 to Excel</a>
     </div>
     <div class="headnav">
-      <nav class="main" aria-label="Page">
+      <nav aria-label="Page">
         <a href="#how-it-works">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#limits">Limits</a>
@@ -251,35 +249,46 @@
 </header>
 
 <main>
-  <div class="hero">
-    <div class="wrap">
-      <h1>Convert camt.053 to MT940, for DATEV.</h1>
-      <p class="lead">MT940 was removed from German banks' rulebook in November 2025; many banks already deliver the statement as camt.053 only. DATEV Kanzlei-Rechnungswesen's manual file import still expects MT940. This tool converts camt.053 to MT940 (.sta) or straight to a DATEV Buchungsstapel file (EXTF) in your browser, nothing is uploaded.</p>
-      <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="hero">Convert now</a><a class="btn btn-line" href="#how-it-works">How it works</a>
-      <ul class="facts">
+  <div class="wrap hero" id="hero">
+    <div>
+      <h1 id="h1"><span class="l">Convert camt.053</span><span class="l">to MT940, for DATEV.</span></h1>
+      <p class="lead r d1">MT940 was removed from German banks' rulebook in November 2025; many banks already deliver the statement as camt.053 only. DATEV Kanzlei-Rechnungswesen's manual file import still expects MT940. This tool converts camt.053 to MT940 (.sta) or straight to a DATEV Buchungsstapel file (EXTF) in your browser, nothing is uploaded.</p>
+      <div class="cta r d2">
+        <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="hero">Convert now</a>
+        <a class="btn btn-line" href="#how-it-works" data-umami-event="howto_click" data-umami-event-place="hero">How it works</a>
+      </div>
+      <ul class="facts proof r d3">
         <li>MT940 out of the banking rulebook since <b>November 2025</b></li>
         <li>DATEV's file import still expects MT940</li>
         <li><b>€0</b> for camt.053 to Excel/CSV, no limit</li>
         <li>nothing is uploaded</li>
       </ul>
     </div>
+    <div class="r d2">
+      <div class="shot">
+        <div class="chrome"><i></i><i></i><i></i></div>
+        <img src="../../press/mt940-datev-en.png" width="748" height="1159" loading="lazy" decoding="async"
+             alt="Tool output: a camt.053 statement converted, with the balance check, the table of entries and the buttons for MT940 (.sta) and DATEV Buchungsstapel." />
+      </div>
+    </div>
   </div>
 
-  <section id="how-it-works">
+  <section id="how-it-works" class="deep">
     <div class="wrap">
       <p class="kicker">01</p>
-      <h2>Three steps from camt.053 to MT940 or DATEV.</h2>
-      <p class="sub">Same tool as the free Excel export, only the last clicks are new.</p>
+      <h2 class="r">Three steps from camt.053 to MT940 or DATEV.</h2>
+      <p class="sub r d1">Same tool as the free Excel export, only the last clicks are new.</p>
+      <div class="rule"></div>
       <ol class="rules">
-        <li>
+        <li class="r d1">
           <b>Download camt.053 from online banking.</b>
           <p>Sparkasse, Volksbank/Raiffeisenbank, Commerzbank, Deutsche Bank, Erste, Raiffeisen, UBS or PostFinance: the file is usually named "Kontoauszug XML" or simply "camt.053", in the statements or inbox section of online banking.</p>
         </li>
-        <li>
+        <li class="r d2">
           <b>Upload the file or paste the text.</b>
           <p>The tool reads the file in your browser, checks the opening and closing balance against the sum of entries, and shows a table immediately. Free, with no limit, for Excel or CSV.</p>
         </li>
-        <li>
+        <li class="r d3">
           <b>Click "MT940" or "DATEV" next to the downloads.</b>
           <p>The first MT940 or DATEV file is free and complete even without a licence, so you can check the DATEV import. Every one after that shows a preview of the first lines; with Pro the file downloads directly.</p>
         </li>
@@ -290,10 +299,11 @@
   <section id="pricing">
     <div class="wrap">
       <p class="kicker">02</p>
-      <h2>Excel export stays free. MT940 and DATEV are Pro.</h2>
-      <p class="sub">One licence for all four ARLing bank tools: SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel and Payment matcher.</p>
+      <h2 class="r">Excel export stays free. MT940 and DATEV are Pro.</h2>
+      <p class="sub r d1">One licence for all four ARLing bank tools: SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel and Payment matcher.</p>
+      <div class="rule"></div>
       <div class="price-cols">
-        <div class="price-col">
+        <div class="card plan price-col r d1">
           <h3>Free</h3>
           <div class="price-num">€0</div>
           <ul>
@@ -303,7 +313,7 @@
           </ul>
           <a class="btn btn-line" href="../../en/" data-umami-event="demo_click" data-umami-event-place="pricing">Convert for free</a>
         </div>
-        <div class="price-col is-pro">
+        <div class="card plan pick price-col is-pro r d2">
           <h3>Pro</h3>
           <div class="price-num">€9<span> /month</span></div>
           <ul>
@@ -321,16 +331,17 @@
     </div>
   </section>
 
-  <section id="contents">
+  <section id="contents" class="band">
     <div class="wrap">
       <p class="kicker">03</p>
-      <h2>What's inside the MT940 and DATEV files.</h2>
+      <h2 class="r">What's inside the MT940 and DATEV files.</h2>
+      <div class="rule"></div>
       <ol class="rules">
-        <li>
+        <li class="r d4">
           <b>MT940 (.sta), SWIFT format.</b>
           <p><code>:20:</code> reference, <code>:25:</code> account, <code>:28C:</code> statement number, <code>:60F:</code>/<code>:62F:</code> opening and closing balance, <code>:61:</code> per entry with date, amount and debit/credit mark, <code>:86:</code> with a Geschäftsvorfallcode and the structured <code>?00</code>-<code>?34</code> subfields under the German SEPA convention (<code>EREF+</code>, <code>SVWZ+</code>). Lines capped at 65 characters and 6 lines, umlauts transliterated to the SWIFT X character set, CRLF line endings, one message per statement.</p>
         </li>
-        <li>
+        <li class="r d1">
           <b>DATEV-Format "Buchungsstapel" (EXTF CSV).</b>
           <p>A header row with the format identifier and the "Buchungsstapel" category, then the column-header row and one row per entry. Debit/credit follows the <code>CdtDbtInd</code> field from camt.053: a credit to the configured bank account becomes "Soll" (debit side in DATEV's convention), a debit becomes "Haben". DDMM dates, comma decimals, Windows-1252 encoding with umlauts intact.</p>
         </li>
@@ -341,22 +352,23 @@
   <section id="limits">
     <div class="wrap">
       <p class="kicker">04</p>
-      <h2>Honest limits.</h2>
-      <p class="sub">Not marketing copy, what to check before relying on this in production.</p>
+      <h2 class="r">Honest limits.</h2>
+      <p class="sub r d1">Not marketing copy, what to check before relying on this in production.</p>
+      <div class="rule"></div>
       <ul class="limits">
-        <li>
+        <li class="r d2">
           <b>The exact wording of the <code>:86:</code> field varies by bank.</b>
           <p>There is no single Geschäftsvorfallcode convention identical across every institution. Check the result against a small test file before importing a full accounting period.</p>
         </li>
-        <li>
+        <li class="r d3">
           <b>Two header metadata fields of the DATEV EXTF file are generic, not verified per-office.</b>
           <p>Enter your Beraternummer and Mandantennummer in the tool yourself; the header format follows publicly documented rules that are not individually confirmed for every DATEV version. A test import before production use is recommended.</p>
         </li>
-        <li>
+        <li class="r d4">
           <b>Not a replacement for DATEV's Bankdatenservice.</b>
           <p>DATEV offers its own paid solution for a direct camt.053 upload. This tool is meant for the manual file import path and is not affiliated with DATEV.</p>
         </li>
-        <li>
+        <li class="r d1">
           <b>MT940 is generated here, not fetched from your bank.</b>
           <p>If your bank now delivers only camt.053, this tool builds an MT940 file from it following the openly documented SWIFT field rules, for software that reads MT940 only.</p>
         </li>
@@ -364,27 +376,28 @@
     </div>
   </section>
 
-  <section id="faq">
+  <section id="faq" class="deep">
     <div class="wrap">
       <p class="kicker">05</p>
-      <h2>FAQ</h2>
-      <details>
+      <h2 class="r">FAQ</h2>
+      <div class="rule"></div>
+      <details class="r d1">
         <summary>Why can't DATEV import camt.053?</summary>
         <p>Germany's banking industry (die deutsche Kreditwirtschaft) removed MT940 from its data-exchange rulebook in November 2025; many banks already deliver the statement as camt.053 only. DATEV Kanzlei-Rechnungswesen still has no direct import for camt.053 files, its manual file import still expects MT940. Sources: <a href="https://taxmain.de/camt-053-in-mt940-umwandeln/" target="_blank" rel="noopener">taxmain.de</a>, a discussion thread in the <a href="https://www.datev-community.de/t5/Betriebliches-Rechnungswesen/Umstellung-auf-neues-CAMT-Format-Ablauf-der-Frist-zum-23-11-2025/td-p/517823" target="_blank" rel="noopener">DATEV community</a> on the 23 November 2025 changeover deadline, and <a href="https://www.datev.de/web/de/berufsgruppenuebergreifend/gesetzliche-themen/payment/kontoumsaetze-bereitstellen-neues-format" target="_blank" rel="noopener">DATEV's own page</a> on the new format, all read on 5 September 2026. DATEV offers its paid Bankdatenservice as a separate path for a direct camt.053 upload.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Is it safe to upload my account data here?</summary>
         <p>Nothing is uploaded. Parsing the camt.053 file and building MT940 or the DATEV Buchungsstapel file both run entirely in your browser, the tool has no backend that processes account data. The browser devtools network tab shows no request carrying the file content. The only network activity is loading the static page and an anonymous usage counter with no account data.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>What does converting to MT940 or DATEV Buchungsstapel cost?</summary>
         <p>Converting camt.053 to CSV or Excel is free with no limit. MT940 and DATEV Buchungsstapel export are Pro features: 9 euros a month or 79 euros a year, VAT included, billed through Stripe, one licence key valid across all four ARLing bank tools (SEPA pain.001 Doctor, SEPA pain.001 Generator, camt.053 to Excel, Payment matcher).</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>What if my bank still offers MT940 directly?</summary>
         <p>Then you do not need this detour and can download the MT940 file directly from your online banking. Germany's banking industry removed MT940 from its rulebook industry-wide in November 2025; how quickly individual banks reflect that in their own online banking can vary during the transition. This tool is for the case where only camt.053 is left in your inbox.</p>
       </details>
-      <details>
+      <details class="r d1">
         <summary>Does this work with Sparkasse, Volksbank, Commerzbank, Deutsche Bank, UBS or PostFinance?</summary>
         <p>Yes. camt.053 is a bank-independent ISO 20022 format, the tool supports both common versions, <code>camt.053.001.02</code> and <code>camt.053.001.08</code>, and detects the version automatically. It works with any bank in Germany, Austria or Switzerland that issues camt.053 as its statement, regardless of the bank's name.</p>
       </details>
@@ -392,10 +405,10 @@
     </div>
   </section>
 
-  <section id="closing-cta">
-    <div class="wrap" style="text-align:center;">
-      <p class="sub" style="margin:0 auto 18px;">Upload camt.053, free as Excel or CSV, or straight to MT940 or DATEV Buchungsstapel with a Pro licence.</p>
-      <a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="closing">Convert now</a>
+  <section id="closing-cta" class="closing">
+    <div class="wrap">
+      <p class="sub r d1">Upload camt.053, free as Excel or CSV, or straight to MT940 or DATEV Buchungsstapel with a Pro licence.</p>
+      <div class="cta r d2"><a class="btn btn-solid" href="../../en/?export=mt940" data-umami-event="trial_click" data-umami-event-place="closing">Convert now</a></div>
     </div>
   </section>
 
@@ -466,6 +479,91 @@
         bar.hidden = true;
       });
     }
+  }
+})();
+</script>
+<nav class="rail" aria-hidden="true">
+  <a href="#how-it-works" tabindex="-1"><i></i><span>01</span></a>
+  <a href="#pricing" tabindex="-1"><i></i><span>02</span></a>
+  <a href="#contents" tabindex="-1"><i></i><span>03</span></a>
+  <a href="#limits" tabindex="-1"><i></i><span>04</span></a>
+  <a href="#faq" tabindex="-1"><i></i><span>05</span></a>
+</nav>
+
+<script>
+/* Pohyb podla ops/design/paper-v2.md, sekcia 7: nadpis po slovach, pokojne
+   prichody sekcii, bocny register. Ziadna kniznica, ziadna slucka. */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.querySelector('.hero');
+  var h1 = document.getElementById('h1');
+
+  function splitHeading() {
+    if (!h1) return;
+    var lines = Array.prototype.slice.call(h1.querySelectorAll('.l'));
+    if (!lines.length) {
+      var t = (h1.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!t) return;
+      h1.innerHTML = '<span class="l"></span>';
+      h1.firstChild.textContent = t;
+      lines = [h1.firstChild];
+    }
+    var i = 0;
+    lines.forEach(function (line) {
+      line.innerHTML = line.textContent.replace(/\s+/g, ' ').trim().split(' ').map(function (w) {
+        var d = (i++ * 0.05).toFixed(2);
+        var safe = w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return '<span class="w" style="transition-delay:' + d + 's">' + safe + '</span>';
+      }).join(' ');
+    });
+    h1.classList.remove('in');
+    if (reduce) { h1.classList.add('in'); return; }
+    setTimeout(function () { h1.classList.add('in'); }, 40);
+  }
+  document.addEventListener('arling:langchange', splitHeading);
+
+  if (reduce) {
+    document.querySelectorAll('.r, section, .rail').forEach(function (e) { e.classList.add('in'); });
+    if (hero) hero.classList.add('in');
+  } else {
+    setTimeout(function () { if (hero) hero.classList.add('in'); }, 40);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.04 });
+    document.querySelectorAll('section').forEach(function (s) { io.observe(s); });
+  }
+  splitHeading();
+
+  var rail = document.querySelector('.rail');
+  if (rail) {
+    var links = Array.prototype.slice.call(rail.querySelectorAll('a'));
+    var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var railIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = targets.indexOf(en.target);
+        if (i < 0 || !en.isIntersecting) return;
+        links.forEach(function (a, j) { a.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      });
+      rail.classList.add('on');
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    targets.forEach(function (t) { if (t) railIo.observe(t); });
+  }
+
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.bar nav a[href^="#"]'));
+  if (navLinks.length) {
+    var navTargets = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var navIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = navTargets.indexOf(en.target);
+        if (i < 0 || !en.isIntersecting) return;
+        navLinks.forEach(function (a, j) {
+          if (j === i) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    navTargets.forEach(function (t) { if (t) navIo.observe(t); });
   }
 })();
 </script>
