@@ -4,7 +4,7 @@
 <script src="/style/vzhlad.js?v=93c2659f"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net 'sha256-oKt5icHdpL28dx3VA7hIPA/KAdEU0mpegDmExIO2JWU=' 'sha256-BxNZjvSF3tofReAyJ6JQjxn2zVvjtSjitemE4jS/zQY=' 'sha256-HUya1y1riOnt06b8ltikKRywMNGOC/6naZ89q1gxIpU=' 'sha256-BaIR75TQS8j6hEHfN/hREDF4ii5+OziOVzgDS7KT+wY=' 'sha256-NLH26Gs4M2CUiKiv1LKpGx12C+4ywDxKpN2X4yrDrc4='; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net 'sha256-MweY8vUo10MubWQ+MScmO7dfgMzsbriQcH9Im3zfS7A=' 'sha256-iIJm6zYi+vIciJXct0gpTC1xZ10WH+v81L2TnsuUy5I=' 'sha256-HUya1y1riOnt06b8ltikKRywMNGOC/6naZ89q1gxIpU=' 'sha256-BaIR75TQS8j6hEHfN/hREDF4ii5+OziOVzgDS7KT+wY=' 'sha256-NLH26Gs4M2CUiKiv1LKpGx12C+4ywDxKpN2X4yrDrc4='; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0a0908">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -30,7 +30,7 @@
 <!-- Vzhľad: jediný zdroj je /style/paper.css (ops/design/paper v AI-OS, rozkopírovaný skriptom sync-paper.mjs). Fonty hostíme sami, žiadne CDN. -->
 <link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style/paper.css?v=d1ba2c04">
+<link rel="stylesheet" href="/style/paper.css?v=e68fba59">
 <script src="/style/prepinac.js?v=2988c181" defer></script>
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
@@ -40,7 +40,7 @@
   "@type": "SoftwareApplication",
   "name": "camt.053 výpis z banky do Excelu",
   "url": "https://arling.sk/camt053-to-excel/",
-  "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from any bank in Slovakia, Germany, Austria or Switzerland into a CSV/Excel table. Upload one or more files or paste the XML directly; nothing you upload leaves the browser. Available in Slovak, English and German.",
+  "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from any bank in Slovakia, Germany, Austria or Switzerland into a CSV/Excel table. Upload a statement or paste the XML directly (Pro unlocks processing several files at once); nothing you upload leaves the browser. Available in Slovak, English and German.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
   "inLanguage": ["sk", "en", "de"],
@@ -134,7 +134,7 @@
       "name": "Čo dostanem v Pro?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky Bankové nástroje pre účtovníkov, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb."
+        "text": "Stiahnutie celého súboru v CSV aj Exceli, export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod a celá tabuľka na obrazovke ostávajú zadarmo, bez limitu; bez licencie sa stiahne prvých 20 riadkov ako ukážka. Pro sa aktivuje jednou licenciou zo stránky Bankové nástroje pre účtovníkov, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb."
       }
     },
     {
@@ -193,9 +193,12 @@
     .bar nav a { white-space:nowrap; }
   }
 
-  /* Úvod: dôkazový riadok a odkaz na video */
+  /* Úvod: dôkazový riadok a odkaz na video. Farba je lokálne var(--body) miesto
+     zdieľaného var(--muted), lebo --muted na tmavom pozadí (body.noc) padá pod
+     WCAG AA 4.5:1 (namerané kontrast.mjs: 3.3 až 4.1); meniť len tu, nie v
+     zdieľanom paper.css, aby sa nedotklo iných nástrojov. */
   .facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 0;
-    font-family:var(--ui); font-size:14px; color:var(--muted); }
+    font-family:var(--ui); font-size:14px; color:var(--body); }
   .facts li { max-width:100%; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }
@@ -496,7 +499,7 @@
         <li data-i18n="hero.fact.tests">546 automatizovaných testov</li>
         <li data-i18n="hero.fact.maxsize">max. 20 MB</li>
         <li data-i18n="hero.fact.free">0 €, bez účtu, beží vo vašom prehliadači</li>
-        <li data-i18n="hero.fact.freeFirst">Prvý prevod je zadarmo, bez konta.</li>
+        <li data-i18n="hero.fact.freeFirst">Celá tabuľka na obrazovke zadarmo, bez limitu.</li>
       </ul>
     </div>
     <div class="r d2">
@@ -661,8 +664,8 @@
     <div class="wrap">
       <p class="kicker">04</p>
       <h2 class="r" data-i18n="s4.h2">Pro: MT940 a DATEV Buchungsstapel, viac súborov naraz.</h2>
-      <p class="sub r d1" data-i18n="s4.sub">Prevod jedného výpisu na CSV alebo Excel je a zostáva úplne zadarmo, bez limitu. Pro pridá export do MT940 (pre ručný import do DATEV alebo iný starší softvér) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.</p>
-      <p class="free-first-note r d2" data-i18n="s4.freeFirst">Prvý prevod je zadarmo, bez konta.</p>
+      <p class="sub r d1" data-i18n="s4.sub">Prevod aj celá tabuľka na obrazovke sú zadarmo, bez limitu a bez konta: vidíte každý riadok, sumy aj kontrolu zostatku. Bez licencie sa stiahne prvých 20 riadkov s viditeľnou hlavičkou o ukážke. S licenciou stiahnete celý súbor v CSV aj Exceli, k tomu export do MT940 a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.</p>
+      <p class="free-first-note r d2" data-i18n="s4.freeFirst">Celá tabuľka na obrazovke zadarmo, bez limitu.</p>
 
       <div class="rule"></div>
       <ol class="rules">
@@ -721,7 +724,7 @@
     <div class="wrap">
       <p class="kicker">05</p>
       <h2 class="r" data-i18n="s5.h2">Celá tabuľka zadarmo, bez limitu.</h2>
-      <p class="sub r d1" data-i18n="s5.sub">Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Bez účtu, bez platby, bez limitu na počet výpisov ani stiahnutí.</p>
+      <p class="sub r d1" data-i18n="s5.sub">Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Prevod aj celá tabuľka na obrazovke sú zadarmo, bez účtu a bez limitu na počet výpisov. Bez licencie sa stiahne prvých 20 riadkov s hlavičkou o ukážke; celý súbor je súčasťou licencie.</p>
       <div class="rule"></div>
       <div class="ask r d1">
         <p data-i18n-html="s5.ask.p">Ak vám ušetrí popoludnie, napíšte, čo nástroj spracoval zle. <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">Otvorte issue na GitHube</a>.</p>
@@ -777,7 +780,7 @@
       </details>
       <details class="r d2">
         <summary data-i18n="faq.q7">Čo dostanem v Pro?</summary>
-        <p data-i18n-html="faq.a7">Export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod jedného výpisu na CSV alebo Excel je aj naďalej úplne zadarmo, bez zmeny. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.</p>
+        <p data-i18n-html="faq.a7">Stiahnutie celého súboru v CSV aj Exceli, export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod a celá tabuľka na obrazovke ostávajú zadarmo, bez limitu; bez licencie sa stiahne prvých 20 riadkov ako ukážka. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.</p>
       </details>
       <details class="r d2">
         <summary data-i18n="faq.q8">Prevediete camt.053 aj na MT940 pre DATEV?</summary>

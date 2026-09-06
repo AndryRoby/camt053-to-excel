@@ -31,7 +31,7 @@
 <!-- Vzhľad: jediný zdroj je /style/paper.css (ops/design/paper v AI-OS, rozkopírovaný skriptom sync-paper.mjs). Fonty hostíme sami, žiadne CDN. -->
 <link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style/paper.css?v=d1ba2c04">
+<link rel="stylesheet" href="/style/paper.css?v=e68fba59">
 <script src="/style/prepinac.js?v=2988c181" defer></script>
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
@@ -198,9 +198,12 @@
     .bar nav a { white-space:nowrap; }
   }
 
-  /* Úvod: dôkazový riadok a odkaz na video */
+  /* Úvod: dôkazový riadok a odkaz na video. Farba je lokálne var(--body) miesto
+     zdieľaného var(--muted), lebo --muted na tmavom pozadí (body.noc) padá pod
+     WCAG AA 4.5:1 (namerané kontrast.mjs: 3.3 až 4.1); meniť len tu, nie v
+     zdieľanom paper.css, aby sa nedotklo iných nástrojov. */
   .facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 0;
-    font-family:var(--ui); font-size:14px; color:var(--muted); }
+    font-family:var(--ui); font-size:14px; color:var(--body); }
   .facts li { max-width:100%; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }

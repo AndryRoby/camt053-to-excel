@@ -4,7 +4,7 @@
 <script src="/style/vzhlad.js?v=93c2659f"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net 'sha256-Ra6Uywy+wsJf4KPNx0SzRl80g7NgcrRvVypX9OfV/+M=' 'sha256-CTI9Fe397HVkSQVv+ZnyQC7B9yKlaVt+B3kCjF2nFSY=' 'sha256-UVveCVikDBI/+D3peEEdrZt5m0k+/Pxkr9nm565rRN0=' 'sha256-qOYU9qhxmyA60IALscCoQ7JPQumlBWSUP04mtzfsnTk=' 'sha256-BaIR75TQS8j6hEHfN/hREDF4ii5+OziOVzgDS7KT+wY=' 'sha256-NLH26Gs4M2CUiKiv1LKpGx12C+4ywDxKpN2X4yrDrc4='; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://homelab.tailbf8f27.ts.net 'sha256-Ra6Uywy+wsJf4KPNx0SzRl80g7NgcrRvVypX9OfV/+M=' 'sha256-M22ktqFot4gOXLmwWqTi1kZcGaodxz5lDatYYK8edTc=' 'sha256-UVveCVikDBI/+D3peEEdrZt5m0k+/Pxkr9nm565rRN0=' 'sha256-qOYU9qhxmyA60IALscCoQ7JPQumlBWSUP04mtzfsnTk=' 'sha256-BaIR75TQS8j6hEHfN/hREDF4ii5+OziOVzgDS7KT+wY=' 'sha256-NLH26Gs4M2CUiKiv1LKpGx12C+4ywDxKpN2X4yrDrc4='; connect-src 'self' https://homelab.tailbf8f27.ts.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <script>try{localStorage.setItem("arling_lang","en")}catch(e){}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0a0908">
@@ -31,7 +31,7 @@
 <!-- Vzhľad: jediný zdroj je /style/paper.css (ops/design/paper v AI-OS, rozkopírovaný skriptom sync-paper.mjs). Fonty hostíme sami, žiadne CDN. -->
 <link rel="preload" href="/fonts/arling-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/arling-serif.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/style/paper.css?v=d1ba2c04">
+<link rel="stylesheet" href="/style/paper.css?v=e68fba59">
 <script src="/style/prepinac.js?v=2988c181" defer></script>
 <script defer src="https://homelab.tailbf8f27.ts.net/script.js" data-website-id="39eedfc9-e5d0-4b22-9861-709ec7d7d843"></script>
 
@@ -41,7 +41,7 @@
   "@type": "SoftwareApplication",
   "name": "camt.053 bank statement to Excel",
   "url": "https://arling.sk/camt053-to-excel/en/",
-  "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from any bank in Slovakia, Germany, Austria or Switzerland into a CSV/Excel table. Upload one or more files or paste the XML directly; nothing you upload leaves the browser. Available in Slovak, English and German.",
+  "description": "Free, client-side tool that converts a camt.053 XML bank statement (výpis z účtu, ISO 20022) from any bank in Slovakia, Germany, Austria or Switzerland into a CSV/Excel table. Upload a statement or paste the XML directly (Pro unlocks processing several files at once); nothing you upload leaves the browser. Available in Slovak, English and German.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
   "inLanguage": [
@@ -198,9 +198,12 @@
     .bar nav a { white-space:nowrap; }
   }
 
-  /* Úvod: dôkazový riadok a odkaz na video */
+  /* Úvod: dôkazový riadok a odkaz na video. Farba je lokálne var(--body) miesto
+     zdieľaného var(--muted), lebo --muted na tmavom pozadí (body.noc) padá pod
+     WCAG AA 4.5:1 (namerané kontrast.mjs: 3.3 až 4.1); meniť len tu, nie v
+     zdieľanom paper.css, aby sa nedotklo iných nástrojov. */
   .facts { list-style:none; margin:20px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 0;
-    font-family:var(--ui); font-size:14px; color:var(--muted); }
+    font-family:var(--ui); font-size:14px; color:var(--body); }
   .facts li { max-width:100%; }
   .facts li + li::before { content:"·"; margin:0 10px; color:var(--line); }
   .facts b { color:var(--ink); font-weight:600; }
