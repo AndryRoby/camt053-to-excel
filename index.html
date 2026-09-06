@@ -820,7 +820,7 @@
   import { isValid as licenceIsValid, load as licenceLoad, save as licenceSave, clear as licenceClear, claim as licenceClaim } from './licence.js';
   import { toMt940, foldDiacritics } from './mt940.js';
   import { toDatevBuchungsstapel, toCp1252Bytes } from './datev-extf.js';
-  import { hasUsedFree, markFreeUsed } from './free-pass.js';
+  import { orez, hlavicka as ukazkaHlavicka, priponaUkazky, UKAZKA_RIADKOV } from './ukazka.js';
   import {
     t, tf, getLang, columnLabel, columnLabelsMap, formatAmountForLang, formatDateForLang,
     defaultCsvOptsForLang, defaultColumnsForLang, localeTagForLang, TEMPLATE_PRESETS, templateLabel, templateOrderForLang,
@@ -1145,6 +1145,9 @@
   //      (first PREVIEW_LINES lines) plus the buy buttons, as before,
   //      with a line noting the free export is already spent.
   const PREVIEW_LINES = 8;
+  const CRLF = String.fromCharCode(13, 10);
+  const NL = String.fromCharCode(10);
+  const KUPA_URL = 'https://arling.sk/bankove-nastroje/';
 
   function mt940Filename(entry) {
     return baseFilename(entry.name) + '.sta';
@@ -1187,7 +1190,7 @@
     const lines = content.split(/\r\n|\n/).filter((l) => l.length > 0).slice(0, PREVIEW_LINES).join('\n');
     const titleKey = kind === 'mt940' ? 'js.pro.preview.title.mt940' : 'js.pro.preview.title.datev';
     slot.innerHTML = `<div class="pro-export-preview">
-      <p class="free-export-exhausted-note">${esc(t('js.free.exhausted'))}</p>
+      <p class="free-export-exhausted-note">${esc(t('js.ukazka.preco'))}</p>
       <div class="pro-export-preview-head">
         <span class="pro-export-preview-title">${esc(t(titleKey))}</span>
         <button type="button" class="pro-export-close" data-close-preview="1">${esc(t('js.pro.preview.close'))}</button>
@@ -1204,16 +1207,16 @@
     wireBuyPings(slot);
   }
 
-  // The panel shown right after a visitor's one free MT940/DATEV download:
-  // calm confirmation, not an upsell warning, since nothing went wrong.
-  function renderFreeExportDone(idx) {
+  // Panel po stiahnutí ukážky. Nie je to varovanie, nič sa nepokazilo: návštevník
+  // dostal presne to, čo stránka sľubuje, a tu sa dozvie, čo dostane za peniaze.
+  function renderUkazkaDone(idx, u) {
     const slot = $('pro-export-slot-' + idx);
     if (!slot) return;
     slot.innerHTML = `<div class="free-export-done">
-      <p class="free-export-done-head">${esc(t('js.free.done.head'))}</p>
-      <p>${esc(t('js.free.done.body'))}</p>
-      <p>${esc(t('js.free.done.price'))}</p>
-      <div class="pro-export-preview-buy">${buyButtonsHtml('free_export_done')}</div>
+      <p class="free-export-done-head">${esc(tf('js.ukazka.head', { n: u.zobrazene, spolu: u.spolu }))}</p>
+      <p>${esc(tf('js.ukazka.body', { chyba: u.spolu - u.zobrazene }))}</p>
+      <p>${esc(t('js.ukazka.price'))}</p>
+      <div class="pro-export-preview-buy">${buyButtonsHtml('ukazka_done')}</div>
     </div>`;
     wireBuyPings(slot);
   }
@@ -1259,21 +1262,28 @@
       const cols = activeColumns();
       const dlCsv = output.querySelector(`[data-download-csv="${i}"]`);
       dlCsv.addEventListener('click', () => {
-        const csv = toCsv(localizedRows(entry.rows), csvOptions());
-        triggerDownload(new Blob([csv], { type: 'text/csv;charset=utf-8' }), baseFilename(entry.name) + '-tabulka.csv');
-        track('download_csv', { bank: entry.parsed.bank || '' });
+        const u = orez(entry.rows, licenceState.valid);
+        let csv = toCsv(localizedRows(u.rows), csvOptions());
+        if (u.orezane) csv = ukazkaHlavicka(getLang(), u.zobrazene, u.spolu, KUPA_URL) + CRLF + csv;
+        triggerDownload(new Blob([csv], { type: 'text/csv;charset=utf-8' }), baseFilename(entry.name) + '-tabulka' + priponaUkazky(u.orezane) + '.csv');
+        track(u.orezane ? 'ukazka_csv' : 'download_csv', { bank: entry.parsed.bank || '' });
+        if (u.orezane) renderUkazkaDone(i, u);
       });
       const dlXlsx = output.querySelector(`[data-download-xlsx="${i}"]`);
       dlXlsx.addEventListener('click', () => {
+        const u = orez(entry.rows, licenceState.valid);
         const headers = cols.map((c) => columnLabel(c.key, lang));
-        const dataRows = localizedRows(entry.rows).map((r) => cols.map((c) => {
+        const dataRows = localizedRows(u.rows).map((r) => cols.map((c) => {
           const v = r[c.key];
           if (c.key === 'amount' || c.key === 'charges') return v === null || v === undefined ? null : Number(v);
           return v;
         }));
+        // Ukazka nesie vetu v prvom riadku, aby bolo jasne aj o tyzden, preco je subor kratky.
+        if (u.orezane) dataRows.unshift([ukazkaHlavicka(getLang(), u.zobrazene, u.spolu, KUPA_URL)].concat(headers.slice(1).map(() => '')));
         const bytes = buildXlsx('camt053', headers, dataRows);
-        triggerDownload(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), baseFilename(entry.name) + '-tabulka.xlsx');
-        track('download_xlsx', { bank: entry.parsed.bank || '' });
+        triggerDownload(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), baseFilename(entry.name) + '-tabulka' + priponaUkazky(u.orezane) + '.xlsx');
+        track(u.orezane ? 'ukazka_xlsx' : 'download_xlsx', { bank: entry.parsed.bank || '' });
+        if (u.orezane) renderUkazkaDone(i, u);
       });
       const proExportSlot = output.querySelector(`#pro-export-slot-${i}`);
       const mt940Btn = output.querySelector(`[data-export-mt940="${i}"]`);
@@ -1283,15 +1293,9 @@
           if (proExportSlot) proExportSlot.innerHTML = '';
           triggerDownload(new Blob([content], { type: 'application/octet-stream' }), mt940Filename(entry));
           track('mt940_download', { bank: entry.parsed.bank || '' });
-        } else if (!hasUsedFree('mt940')) {
-          markFreeUsed('mt940');
-          triggerDownload(new Blob([content], { type: 'application/octet-stream' }), mt940Filename(entry));
-          renderFreeExportDone(i);
-          track('free_export_used', { format: 'mt940' });
         } else {
           renderProExportPreview(i, 'mt940', content);
           track('mt940_preview', { bank: entry.parsed.bank || '' });
-          track('free_export_exhausted', { format: 'mt940' });
         }
       });
       const datevBtn = output.querySelector(`[data-export-datev="${i}"]`);
@@ -1301,20 +1305,16 @@
           if (proExportSlot) proExportSlot.innerHTML = '';
           triggerDownload(new Blob([toCp1252Bytes(content)], { type: 'text/csv' }), datevFilename());
           track('datev_download', { bank: entry.parsed.bank || '' });
-        } else if (!hasUsedFree('datev')) {
-          markFreeUsed('datev');
-          triggerDownload(new Blob([toCp1252Bytes(content)], { type: 'text/csv' }), datevFilename());
-          renderFreeExportDone(i);
-          track('free_export_used', { format: 'datev' });
         } else {
           renderProExportPreview(i, 'datev', content);
           track('datev_preview', { bank: entry.parsed.bank || '' });
-          track('free_export_exhausted', { format: 'datev' });
         }
       });
       const cpBtn = output.querySelector(`[data-copy-tsv="${i}"]`);
       cpBtn.addEventListener('click', async () => {
-        const tsv = toCsv(localizedRows(entry.rows), { columns: cols.map((c) => c.key), delimiter: '\t', decimalComma: getLang() !== 'en', bom: false, labels: columnLabelsMap(lang) });
+        const uc = orez(entry.rows, licenceState.valid);
+        let tsv = toCsv(localizedRows(uc.rows), { columns: cols.map((c) => c.key), delimiter: '\t', decimalComma: getLang() !== 'en', bom: false, labels: columnLabelsMap(lang) });
+        if (uc.orezane) tsv = ukazkaHlavicka(getLang(), uc.zobrazene, uc.spolu, KUPA_URL) + NL + tsv;
         try {
           await navigator.clipboard.writeText(tsv);
           cpBtn.textContent = t('js.copy.done');
@@ -1330,8 +1330,10 @@
     if (allBtnEl) {
       allBtnEl.addEventListener('click', () => {
         okResults.forEach((entry, i) => {
-          const csv = toCsv(localizedRows(entry.rows), csvOptions());
-          triggerDownload(new Blob([csv], { type: 'text/csv;charset=utf-8' }), baseFilename(entry.name) + '-tabulka.csv');
+          const u = orez(entry.rows, licenceState.valid);
+          let csv = toCsv(localizedRows(u.rows), csvOptions());
+          if (u.orezane) csv = ukazkaHlavicka(getLang(), u.zobrazene, u.spolu, KUPA_URL) + CRLF + csv;
+          triggerDownload(new Blob([csv], { type: 'text/csv;charset=utf-8' }), baseFilename(entry.name) + '-tabulka' + priponaUkazky(u.orezane) + '.csv');
         });
         track('download_csv', { bank: 'all', count: okResults.length });
       });
