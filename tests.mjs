@@ -1144,6 +1144,38 @@ eq('ukazka: limit je 20 riadkov', UKAZKA_RIADKOV, 20);
 eq('pripona: ukazka ma vlastnu priponu v nazve suboru', priponaUkazky(true), '-ukazka');
 eq('pripona: ostry subor ju nema', priponaUkazky(false), '');
 
+// ═══════════════════════════ dataTableHtml (index.html) ═══════════════════
+// Do 25. 9. 2026 vetva pre licenciu citala `entry.rows.length`, hoci v
+// dataTableHtml ziadne entry nie je: platiaci zakaznik s vypisom nad 200
+// riadkov dostal ReferenceError a renderOutput nevypisal nic. Funkciu
+// vyberieme z index.html a spustime s licenciou aj bez nej na 250 riadkoch.
+{
+  const { readFileSync } = await import('node:fs');
+  const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+  const start = html.indexOf('  function dataTableHtml(rows, columns) {');
+  const end = html.indexOf('\n  }\n', start) >= 0 ? html.indexOf('\n  }\n', start) : html.indexOf('\r\n  }\r\n', start);
+  ok('dataTableHtml: funkcia sa nasla v index.html', start >= 0 && end > start);
+  const src = html.slice(start, end + 4);
+  eq('dataTableHtml: nepouziva neexistujuce entry', /\bentry\./.test(src), false);
+  const make = (valid) => new Function(
+    'getLang', 'localizedRows', 'TABLE_ROW_LIMIT', 'esc', 'columnLabel', 'vsSourceLabel', 'formatAmountForLang', 'tf', 't', 'licenceState',
+    src + '\nreturn dataTableHtml;',
+  )(
+    () => 'sk', (r) => r, 200, (s) => String(s), columnLabel, () => '', (n) => String(n), tf, t, { valid },
+  );
+  const rows250 = Array.from({ length: 250 }, (_, i) => ({ amount: i, counterpartyName: 'R' + i }));
+  const cols = [{ key: 'amount' }, { key: 'counterpartyName' }];
+  let proHtml = '';
+  let proErr = null;
+  try { proHtml = make(true)(rows250, cols); } catch (e) { proErr = e; }
+  eq('dataTableHtml s licenciou a 250 riadkami nehodi vynimku', proErr ? String(proErr) : null, null);
+  eq('dataTableHtml s licenciou: tabulka ma 200 riadkov', (proHtml.match(/<tr>/g) || []).length, 201);
+  includes('dataTableHtml s licenciou: poznamka hovori o vsetkych 250', proHtml, tf('js.tableNote.pro', { total: 250 }));
+  let freeHtml = '';
+  try { freeHtml = make(false)(rows250, cols); } catch (e) { freeHtml = String(e); }
+  includes('dataTableHtml bez licencie: poznamka o 20 riadkoch', freeHtml, t('js.tableNote.free'));
+}
+
 // ═══════════════════════════ summary ═══════════════════════════════════
 
 console.log(`\n${pass} passed, ${fail} failed (${pass + fail} total assertions)`);

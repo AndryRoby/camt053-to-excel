@@ -55,9 +55,9 @@ export const DICT = {
   'mast.who': { sk: 'ARLing s. r. o., Bratislava', en: 'ARLing s. r. o., Bratislava', de: 'ARLing s. r. o., Bratislava' },
   'fact.free.dt': { sk: 'Zadarmo', en: 'Free', de: 'Kostenlos' },
   'fact.free.dd': {
-    sk: 'Celá tabuľka na obrazovke a prevod bez limitu na počet riadkov. Bez účtu.',
-    en: 'The full table on screen and the conversion with no limit on the number of rows. No account.',
-    de: 'Die vollständige Tabelle am Bildschirm und die Umwandlung ohne Zeilenbegrenzung. Ohne Konto.',
+    sk: 'Prevod celého výpisu, súčty a kontrola zostatku bez limitu na počet riadkov; tabuľka na obrazovke ukáže prvých 200. Bez účtu.',
+    en: 'Conversion of the whole statement, totals and the balance check with no limit on rows; the table on screen shows the first 200. No account.',
+    de: 'Umwandlung des ganzen Auszugs, Summen und Saldenprüfung ohne Zeilenbegrenzung; die Tabelle am Bildschirm zeigt die ersten 200. Ohne Konto.',
   },
   'fact.paid.dt': { sk: 'Platí sa', en: 'Paid', de: 'Kostenpflichtig' },
   'fact.paid.dd': {
@@ -138,7 +138,7 @@ export const DICT = {
   'hero.fact.tests': { sk: '546 automatizovaných testov', en: '546 automated tests', de: '546 automatisierte Tests' },
   'hero.fact.maxsize': { sk: 'max. 20 MB', en: 'max. 20 MB', de: 'max. 20 MB' },
   'hero.fact.free': { sk: 'Bez účtu, beží vo vašom prehliadači', en: 'No account, runs in your browser', de: 'Ohne Konto, läuft im Browser' },
-  'hero.fact.freeFirst': { sk: 'Celá tabuľka na obrazovke zadarmo, bez limitu.', en: 'The full table on screen, free, no limit.', de: 'Die vollständige Tabelle am Bildschirm, kostenlos, ohne Limit.' },
+  'hero.fact.freeFirst': { sk: 'Prevod celého výpisu a kontrola zostatku zadarmo.', en: 'Converting the whole statement and the balance check, free.', de: 'Umwandlung des ganzen Auszugs und Saldenprüfung, kostenlos.' },
 
   // ── section 01: three reasons ───────────────────────────────────────
   's1.h2': {
@@ -253,11 +253,11 @@ export const DICT = {
   // ── section 04: Pro ──────────────────────────────────────────────────
   's4.h2': { sk: 'Pro: MT940 a DATEV Buchungsstapel, viac súborov naraz.', en: 'Pro: MT940 and DATEV Buchungsstapel, several files at once.', de: 'Pro: MT940 und DATEV-Buchungsstapel, mehrere Dateien gleichzeitig.' },
   's4.sub': {
-    sk: 'Prevod aj celá tabuľka na obrazovke sú zadarmo, bez limitu a bez konta: vidíte každý riadok, sumy aj kontrolu zostatku. Bez licencie sa stiahne prvých 20 riadkov s viditeľnou hlavičkou o ukážke. S licenciou stiahnete celý súbor v CSV aj Exceli, k tomu export do MT940 a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre štyri bankové nástroje ARLing.',
-    en: 'The conversion and the full table on screen are free, no limit and no account: you see every row, the totals and the balance check. Without a licence the download gives you the first 20 rows with a visible sample header. With a licence you download the whole file as CSV and Excel, plus an MT940 export and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a conversion history, with one licence shared across the four ARLing banking tools.',
-    de: 'Die Umwandlung und die vollständige Tabelle am Bildschirm sind kostenlos, ohne Limit und ohne Konto: Sie sehen jede Zeile, die Summen und die Saldenprüfung. Ohne Lizenz enthält der Download die ersten 20 Zeilen mit sichtbarer Muster-Kopfzeile. Mit Lizenz laden Sie die vollständige Datei als CSV und Excel herunter, dazu einen MT940-Export und einen DATEV-Buchungsstapel-Export (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für alle vier ARLing-Banktools.',
+    sk: 'Prevod celého výpisu je zadarmo a bez konta: vidíte súčty, kontrolu zostatku a tabuľku na obrazovke (pri dlhšom výpise prvých 200 riadkov). Bez licencie sa stiahne prvých 20 riadkov s viditeľnou hlavičkou o ukážke. S licenciou stiahnete celý súbor v CSV aj Exceli, k tomu export do MT940 a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu konverzií, jednou licenciou spoločnou pre tri bankové nástroje ARLing.',
+    en: 'Converting the whole statement is free and needs no account: you see the totals, the balance check and the table on screen (the first 200 rows of a longer statement). Without a licence the download gives you the first 20 rows with a visible sample header. With a licence you download the whole file as CSV and Excel, plus an MT940 export and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a conversion history, with one licence shared across three ARLing banking tools.',
+    de: 'Die Umwandlung des ganzen Auszugs ist kostenlos und ohne Konto: Sie sehen die Summen, die Saldenprüfung und die Tabelle am Bildschirm (bei längeren Auszügen die ersten 200 Zeilen). Ohne Lizenz enthält der Download die ersten 20 Zeilen mit sichtbarer Muster-Kopfzeile. Mit Lizenz laden Sie die vollständige Datei als CSV und Excel herunter, dazu einen MT940-Export und einen DATEV-Buchungsstapel-Export (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen Umwandlungsverlauf, mit einer Lizenz für drei ARLing-Banktools.',
   },
-  's4.freeFirst': { sk: 'Celá tabuľka na obrazovke zadarmo, bez limitu.', en: 'The full table on screen, free, no limit.', de: 'Die vollständige Tabelle am Bildschirm, kostenlos, ohne Limit.' },
+  's4.freeFirst': { sk: 'Prevod celého výpisu a kontrola zostatku zadarmo.', en: 'Converting the whole statement and the balance check, free.', de: 'Umwandlung des ganzen Auszugs und Saldenprüfung, kostenlos.' },
   's4.r0.title': { sk: 'MT940 a DATEV Buchungsstapel export.', en: 'MT940 and DATEV Buchungsstapel export.', de: 'MT940- und DATEV-Buchungsstapel-Export.' },
   's4.r0.body': {
     sk: 'MT940 vypadlo z pravidiel nemeckého bankového styku v novembri 2025, mnohé banky už výpis posielajú iba ako camt.053. DATEV Kanzlei-Rechnungswesen ale priamy import camt.053 nemá, ručný import súborov stále čaká MT940. Pro k tomu pridá aj export priamo do formátu DATEV Buchungsstapel (EXTF CSV).',
@@ -283,16 +283,16 @@ export const DICT = {
     de: 'Eine Frage oder ein Fall, den das Tool falsch verarbeitet hat? Bevorzugte Antwort, direkt vom Autor des Tools.',
   },
   's4.cta.p': {
-    sk: '<b>Jedna licencia pre štyri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky štyri nástroje, DPH v cene, faktúru pošle Stripe.',
-    en: '<b>One licence for four tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all four tools, VAT included, Stripe sends the invoice.',
-    de: '<b>Eine Lizenz für vier Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle vier Tools, inkl. MwSt., die Rechnung stellt Stripe.',
+    sk: '<b>Jedna licencia pre tri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky tri, DPH v cene, faktúru pošle Stripe. SEPA pain.001 Doctor je zadarmo a licenciu nepotrebuje.',
+    en: '<b>One licence for three tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all three, VAT included, Stripe sends the invoice. SEPA pain.001 Doctor is free and needs no licence.',
+    de: '<b>Eine Lizenz für drei Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle drei, inkl. MwSt., die Rechnung stellt Stripe. SEPA pain.001 Doctor ist kostenlos und braucht keine Lizenz.',
   },
   's4.buy.year.btn': { sk: 'Kúpiť Pro, 79 €/rok', en: 'Buy Pro, €79/year', de: 'Pro kaufen, 79 €/Jahr' },
   's4.buy.month.btn': { sk: 'alebo 9 €/mesiac', en: 'or €9/month', de: 'oder 9 €/Monat' },
   's4.included.list': {
-    sk: '<li>Export do MT940 (.sta) a DATEV Buchungsstapel (EXTF CSV)</li><li>Viac súborov naraz, história konverzií v prehliadači</li><li>Jeden licenčný kľúč pre štyri nástroje: camt.053 do Excelu, SEPA pain.001 Doctor, SEPA pain.001 Generátor, Párovač platieb</li><li>Prednostná podpora e-mailom</li>',
-    en: '<li>MT940 (.sta) and DATEV Buchungsstapel (EXTF CSV) export</li><li>Several files at once, conversion history in the browser</li><li>One licence key for four tools: camt.053 to Excel, SEPA pain.001 Doctor, SEPA pain.001 Generator, Payment matcher</li><li>Priority email support</li>',
-    de: '<li>MT940-Export (.sta) und DATEV-Buchungsstapel-Export (EXTF-CSV)</li><li>Mehrere Dateien gleichzeitig, Umwandlungsverlauf im Browser</li><li>Ein Lizenzschlüssel für vier Tools: camt.053 nach Excel, SEPA pain.001 Doctor, SEPA-pain.001-Generator, Zahlungsabgleich</li><li>Bevorzugter E-Mail-Support</li>',
+    sk: '<li>Export do MT940 (.sta) a DATEV Buchungsstapel (EXTF CSV)</li><li>Viac súborov naraz, história konverzií v prehliadači</li><li>Jeden licenčný kľúč pre tri nástroje: camt.053 do Excelu, SEPA pain.001 Generátor, Párovač platieb</li><li>Prednostná podpora e-mailom</li>',
+    en: '<li>MT940 (.sta) and DATEV Buchungsstapel (EXTF CSV) export</li><li>Several files at once, conversion history in the browser</li><li>One licence key for three tools: camt.053 to Excel, SEPA pain.001 Generator, Payment matcher</li><li>Priority email support</li>',
+    de: '<li>MT940-Export (.sta) und DATEV-Buchungsstapel-Export (EXTF-CSV)</li><li>Mehrere Dateien gleichzeitig, Umwandlungsverlauf im Browser</li><li>Ein Lizenzschlüssel für drei Tools: camt.053 nach Excel, SEPA-pain.001-Generator, Zahlungsabgleich</li><li>Bevorzugter E-Mail-Support</li>',
   },
   's4.buy.fineprint': {
     sk: 'Platba cez Stripe, DPH v cene, mesačne zrušiteľné, žiadna viazanosť: odkaz na zrušenie nájdete priamo v potvrdení platby od Stripe. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
@@ -313,14 +313,14 @@ export const DICT = {
   's4.licence.input.placeholder': { sk: 'Licenčný kľúč (dlhý reťazec s bodkou uprostred)', en: 'Licence key (a long string with a dot in the middle)', de: 'Lizenzschlüssel (langer Text mit Punkt in der Mitte)' },
   's4.licence.activate.btn': { sk: 'Aktivovať', en: 'Activate', de: 'Aktivieren' },
   's4.licence.remove.btn': { sk: 'Odstrániť licenciu', en: 'Remove licence', de: 'Lizenz entfernen' },
-  's4.sticky.text': { sk: 'Licencia Pro pre všetky štyri nástroje, mesačne zrušiteľná, žiadna viazanosť.', en: 'Pro licence for all four tools, cancel monthly, no minimum term.', de: 'Pro-Lizenz für alle vier Tools, monatlich kündbar, keine Mindestlaufzeit.' },
+  's4.sticky.text': { sk: 'Licencia Pro pre tri bankové nástroje, mesačne zrušiteľná, žiadna viazanosť.', en: 'Pro licence for three banking tools, cancel monthly, no minimum term.', de: 'Pro-Lizenz für drei Banktools, monatlich kündbar, keine Mindestlaufzeit.' },
 
   // ── section 05: pricing / ask ────────────────────────────────────────
-  's5.h2': { sk: 'Celá tabuľka zadarmo, bez limitu.', en: 'The full table, free, no limit.', de: 'Die vollständige Tabelle, kostenlos, ohne Limit.' },
+  's5.h2': { sk: 'Prevod zadarmo, celý súbor s licenciou.', en: 'Free conversion, the whole file with a licence.', de: 'Umwandlung kostenlos, die ganze Datei mit Lizenz.' },
   's5.sub': {
-    sk: 'Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Prevod aj celá tabuľka na obrazovke sú zadarmo, bez účtu a bez limitu na počet výpisov. Bez licencie sa stiahne prvých 20 riadkov s hlavičkou o ukážke; celý súbor je súčasťou licencie.',
-    en: 'Built out of a real need: turn a bank statement into a table without retyping XML by hand. The conversion and the full table on screen are free, no account, no limit on statements. Without a licence the download gives you the first 20 rows with a sample header; the whole file is part of the licence.',
-    de: 'Entstanden aus echtem Bedarf: einen Kontoauszug in eine Tabelle umwandeln, ohne XML von Hand abzutippen. Die Umwandlung und die vollständige Tabelle am Bildschirm sind kostenlos, ohne Konto und ohne Limit bei der Zahl der Auszüge. Ohne Lizenz enthält der Download die ersten 20 Zeilen mit Muster-Kopfzeile; die vollständige Datei gehört zur Lizenz.',
+    sk: 'Vznikol z vlastnej potreby: previesť výpis z banky na tabuľku bez ručného prepisovania XML. Prevod aj tabuľka na obrazovke sú zadarmo, bez účtu a bez limitu na počet výpisov. Bez licencie sa stiahne prvých 20 riadkov s hlavičkou o ukážke; celý súbor je súčasťou licencie.',
+    en: 'Built out of a real need: turn a bank statement into a table without retyping XML by hand. The conversion and the table on screen are free, no account, no limit on statements. Without a licence the download gives you the first 20 rows with a sample header; the whole file is part of the licence.',
+    de: 'Entstanden aus echtem Bedarf: einen Kontoauszug in eine Tabelle umwandeln, ohne XML von Hand abzutippen. Die Umwandlung und die Tabelle am Bildschirm sind kostenlos, ohne Konto und ohne Limit bei der Zahl der Auszüge. Ohne Lizenz enthält der Download die ersten 20 Zeilen mit Muster-Kopfzeile; die vollständige Datei gehört zur Lizenz.',
   },
   's5.ask.p': {
     sk: 'Ak vám ušetrí popoludnie, napíšte, čo nástroj spracoval zle. <a href="https://github.com/AndryRoby/camt053-to-excel/issues" target="_blank" rel="noopener">Otvorte issue na GitHube</a>.',
@@ -395,9 +395,9 @@ export const DICT = {
   },
   'faq.q7': { sk: 'Čo dostanem v Pro?', en: 'What do I get with Pro?', de: 'Was bekomme ich mit Pro?' },
   'faq.a7': {
-    sk: 'Stiahnutie celého súboru v CSV aj Exceli, export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod a celá tabuľka na obrazovke ostávajú zadarmo, bez limitu; bez licencie sa stiahne prvých 20 riadkov ako ukážka. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Doctor, SEPA pain.001 Generátor a Párovač platieb. Pozrite si <a href="#pro">sekciu Pro</a>.',
-    en: 'The full-file download as CSV and Excel, an MT940 (.sta) export and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a history of past conversions stored in your browser. The conversion itself and the full table on screen stay free, no limit; without a licence the download gives you the first 20 rows as a sample. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Doctor, SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.',
-    de: 'Den Download der vollständigen Datei als CSV und Excel, einen Export nach MT940 (.sta) und in das Format DATEV-Buchungsstapel (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung selbst und die vollständige Tabelle am Bildschirm bleiben kostenlos, ohne Limit; ohne Lizenz enthält der Download die ersten 20 Zeilen als Muster. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch in SEPA pain.001 Doctor, SEPA-pain.001-Generator und Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
+    sk: 'Stiahnutie celého súboru v CSV aj Exceli, export do MT940 (.sta) a do DATEV Buchungsstapel (EXTF CSV), spracovanie viacerých súborov naraz a históriu doterajších konverzií uloženú vo vašom prehliadači. Samotný prevod celého výpisu a tabuľka na obrazovke (prvých 200 riadkov) ostávajú zadarmo; bez licencie sa stiahne prvých 20 riadkov ako ukážka. Pro sa aktivuje jednou licenciou zo stránky <a href="https://arling.sk/bankove-nastroje/">Bankové nástroje pre účtovníkov</a>, ktorá funguje aj v SEPA pain.001 Generátore a Párovači platieb. Pozrite si <a href="#pro">sekciu Pro</a>.',
+    en: 'The full-file download as CSV and Excel, an MT940 (.sta) export and a DATEV Buchungsstapel (EXTF CSV) export, processing several files at once, and a history of past conversions stored in your browser. The conversion of the whole statement and the table on screen (first 200 rows) stay free; without a licence the download gives you the first 20 rows as a sample. Pro is activated by one licence from the <a href="https://arling.sk/bankove-nastroje/">Banking tools for accountants</a> page, which also works in SEPA pain.001 Generator and Payment matcher. See the <a href="#pro">Pro section</a>.',
+    de: 'Den Download der vollständigen Datei als CSV und Excel, einen Export nach MT940 (.sta) und in das Format DATEV-Buchungsstapel (EXTF-CSV), die gleichzeitige Verarbeitung mehrerer Dateien sowie einen im Browser gespeicherten Verlauf bisheriger Umwandlungen. Die Umwandlung des ganzen Auszugs und die Tabelle am Bildschirm (erste 200 Zeilen) bleiben kostenlos; ohne Lizenz enthält der Download die ersten 20 Zeilen als Muster. Pro wird mit einer Lizenz von der Seite <a href="https://arling.sk/bankove-nastroje/">Banktools für Buchhalter</a> aktiviert, die auch im SEPA-pain.001-Generator und im Zahlungsabgleich funktioniert. Siehe den <a href="#pro">Pro-Abschnitt</a>.',
   },
   'faq.q8': { sk: 'Prevediete camt.053 aj na MT940 pre DATEV?', en: 'Can you also convert camt.053 to MT940 for DATEV?', de: 'Wandeln Sie camt.053 auch für DATEV in MT940 um?' },
   'faq.a8': {
@@ -408,7 +408,7 @@ export const DICT = {
 
   // ── footer ───────────────────────────────────────────────────────────
   'footer.sisters.label': { sk: 'Sesterské nástroje:', en: 'Sibling tools:', de: 'Schwester-Tools:' },
-  'footer.bundle.label': { sk: 'Pro pre všetky štyri:', en: 'Pro for all four:', de: 'Pro für alle vier:' },
+  'footer.bundle.label': { sk: 'Pro pre tri nástroje:', en: 'Pro for three tools:', de: 'Pro für drei Tools:' },
   'footer.all.tools': { sk: 'Všetky nástroje ARLing', en: 'All ARLing tools', de: 'Alle ARLing-Tools' },
   'footer.privacy': { sk: 'Súkromie', en: 'Privacy', de: 'Datenschutz' },
   'footer.tool.doctor': { sk: 'SEPA pain.001 Doctor', en: 'SEPA pain.001 Doctor', de: 'SEPA pain.001 Doctor' },
@@ -500,14 +500,14 @@ export const DICT = {
     de: 'Sie haben ein Muster geladen: {n} von {spolu} Zeilen',
   },
   'js.ukazka.body': {
-    sk: 'V súbore chýba {chyba} riadkov. Celá tabuľka je vyššie na obrazovke a ostáva zadarmo. S licenciou sa stiahne celý súbor bez hlavičky o ukážke.',
-    en: 'The file is missing {chyba} rows. The full table is on screen above and stays free. With a licence the download contains the whole file, without the sample header.',
-    de: 'In der Datei fehlen {chyba} Zeilen. Die vollständige Tabelle steht oben am Bildschirm und bleibt kostenlos. Mit Lizenz enthält der Download die ganze Datei, ohne Muster-Kopfzeile.',
+    sk: 'V súbore chýba {chyba} riadkov. Tabuľka na obrazovke ukazuje najviac 200 riadkov, súčty a kontrola zostatku sú z celého výpisu. S licenciou sa stiahne celý súbor bez hlavičky o ukážke.',
+    en: 'The file is missing {chyba} rows. The table on screen shows up to 200 rows; the totals and the balance check cover the whole statement. With a licence the download contains the whole file, without the sample header.',
+    de: 'In der Datei fehlen {chyba} Zeilen. Die Tabelle am Bildschirm zeigt höchstens 200 Zeilen, Summen und Saldenprüfung gelten für den ganzen Auszug. Mit Lizenz enthält der Download die ganze Datei, ohne Muster-Kopfzeile.',
   },
   'js.ukazka.price': {
-    sk: '9 € mesačne alebo 79 € ročne za všetky štyri bankové nástroje ARLing, DPH v cene, zrušiť môžete kedykoľvek.',
-    en: '9 € a month or 79 € a year for all four ARLing banking tools, VAT included, cancel any time.',
-    de: '9 € im Monat oder 79 € im Jahr für alle vier ARLing-Banktools, inklusive Umsatzsteuer, jederzeit kündbar.',
+    sk: '9 € mesačne alebo 79 € ročne za tri bankové nástroje ARLing (camt.053 do Excelu, SEPA pain.001 Generátor, Párovač platieb), DPH v cene, zrušiť môžete kedykoľvek.',
+    en: '9 € a month or 79 € a year for three ARLing banking tools (camt.053 to Excel, SEPA pain.001 Generator, Payment matcher), VAT included, cancel any time.',
+    de: '9 € im Monat oder 79 € im Jahr für drei ARLing-Banktools (camt.053 nach Excel, SEPA-pain.001-Generator, Zahlungsabgleich), inklusive Umsatzsteuer, jederzeit kündbar.',
   },
 
   's2.datev.title': { sk: 'Nastavenia DATEV Buchungsstapel (Pro)', en: 'DATEV Buchungsstapel settings (Pro)', de: 'Einstellungen DATEV-Buchungsstapel (Pro)' },

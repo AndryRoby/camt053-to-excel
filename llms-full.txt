@@ -30,10 +30,7 @@ the table.
 
 Upload one or more `.xml` files with the file picker, or paste the XML
 text directly into the page. An uploaded file is read with the
-browser's own `FileReader` API; it is never sent anywhere. Multiple
-files can be converted in the same sitting (several months of
-statements, or several accounts), each producing its own table and its
-own CSV download.
+browser's own `FileReader` API; it is never sent anywhere. With a licence, multiple files can be converted in the same sitting (several months of statements, or several accounts), each producing its own table and its own CSV download; without one, only the first file is converted per run, and each download holds the first 20 rows as a sample.
 
 ### 2. Supported camt.053 versions
 
@@ -240,9 +237,7 @@ checking against the original XML rather than a sign the tool
 miscalculated.
 
 **Is there a limit on how many entries or files I can convert?**
-Not in this tool. A very large statement (thousands of entries) parses
-more slowly since everything runs in your browser's own JavaScript
-engine, but there's no artificial cap.
+The conversion itself has no cap on entries, and you can convert as many statements as you like one after another. The limits that exist: 20 MB of XML per run, one file per run without a licence, a table on screen of the first 200 rows (totals and the balance check cover everything), and without a licence a CSV or Excel download of the first 20 rows as a sample. A very large statement (thousands of entries) parses more slowly since everything runs in your browser's own JavaScript engine.
 
 **Can I paste the XML instead of uploading a file?**
 Yes. Uploading with the file picker and pasting the XML text both feed
