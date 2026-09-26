@@ -4,6 +4,8 @@ camt.053 to Excel converts a camt.053 XML bank statement (ISO 20022) into a CSV 
 
 Live: https://arling.sk/camt053-to-excel/ (Slovak) · https://arling.sk/camt053-to-excel/en/ (English) · https://arling.sk/camt053-to-excel/de/ (German)
 
+camt.053 in MT940 umwandeln, für DATEV (German page for the Pro MT940 and DATEV exports, €9 a month or €79 a year, VAT included): https://arling.sk/camt053-to-excel/mt940/?utm_source=github · English: https://arling.sk/camt053-to-excel/mt940/en/?utm_source=github
+
 Nothing you upload is sent anywhere. The page has a language switcher
 and is fully available in Slovak, English and German, with column
 headers, error messages, the FAQ and the Pro section translated in
@@ -145,8 +147,9 @@ generated client-side exactly like the free CSV/Excel export, just
 gated on the Banking tools licence for the actual download; without a
 licence, clicking either button shows a preview of the first eight
 lines instead. A dedicated landing page for this pair of exports
-lives at `mt940/index.html` (German) and `mt940/en/index.html`
-(English); its CTA links to the converter with `?export=mt940`, which
+lives at `mt940/index.html` (German, live at
+https://arling.sk/camt053-to-excel/mt940/) and `mt940/en/index.html`
+(English, https://arling.sk/camt053-to-excel/mt940/en/); its CTA links to the converter with `?export=mt940`, which
 `index.html` reads to show a hint and highlight the MT940 button once a
 statement is converted.
 
