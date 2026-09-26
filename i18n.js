@@ -92,7 +92,7 @@ export const DICT = {
   'col.pub.dd': {
     sk: 'ARLing s. r. o., Ivanská cesta 32E, 821 04 Bratislava, Slovensko. IČO 56583486, IČ DPH SK2122352100.',
     en: 'ARLing s. r. o., Ivanská cesta 32E, 821 04 Bratislava, Slovakia. Company number 56583486, VAT ID SK2122352100.',
-    de: 'ARLing s. r. o., Ivanská cesta 32E, 821 04 Bratislava, Slowakei. Handelsregister-Nr. 56583486, USt-IdNr. SK2122352100.',
+    de: 'ARLing s. r. o., Ivanská cesta 32E, 821 04 Bratislava, Slowakei. IČO 56583486, USt-IdNr. SK2122352100.',
   },
   'col.who.dt': { sk: 'Kto to robí', en: 'Who makes it', de: 'Wer es macht' },
   'col.who.dd': {
@@ -102,9 +102,9 @@ export const DICT = {
   },
   'col.pay.dt': { sk: 'Platba a doručenie', en: 'Payment and delivery', de: 'Zahlung und Lieferung' },
   'col.pay.dd': {
-    sk: 'Platbu spracuje Stripe, ktorý je voči vám predajcom, vystaví doklad a odvedie DPH. Licenčný kľúč príde e-mailom hneď po zaplatení.',
-    en: 'Payment is handled by Stripe, which is the seller towards you, issues the receipt and remits VAT. The licence key arrives by e-mail right after payment.',
-    de: 'Die Zahlung wickelt Stripe ab, das Ihnen gegenüber Verkäufer ist, den Beleg ausstellt und die Umsatzsteuer abführt. Der Lizenzschlüssel kommt direkt nach der Zahlung per E-Mail.',
+    sk: 'Platbu spracuje Stripe cez Managed Payments. Predajcom je Link (Sold through Link, LLC), ktorý vám pošle doklad a faktúru v PDF; DPH vypočíta a odvedie Stripe. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
+    en: 'Stripe processes the payment through Managed Payments. The merchant of record is Link (Sold through Link, LLC), which sends you the receipt and the invoice as a PDF; Stripe calculates and remits the VAT. You get the licence key on the confirmation page right after payment.',
+    de: 'Die Zahlung wickelt Stripe über Managed Payments ab. Verkäufer (Merchant of Record) ist Link (Sold through Link, LLC), der Ihnen Beleg und Rechnung als PDF schickt; die Umsatzsteuer berechnet und führt Stripe ab. Den Lizenzschlüssel erhalten Sie sofort nach der Zahlung auf der Bestätigungsseite.',
   },
   'col.sample.dt': { sk: 'Ukážka a podmienky', en: 'Sample and terms', de: 'Beispiel und Bedingungen' },
   'col.sample.dd': {
@@ -114,9 +114,9 @@ export const DICT = {
   },
   'col.reply.dt': { sk: 'Odpoveď', en: 'Reply', de: 'Antwort' },
   'col.reply.dd': {
-    sk: 'Na <a href="mailto:andrej@arling.sk">andrej@arling.sk</a> odpovedáme do 24 hodín.',
-    en: 'We answer <a href="mailto:andrej@arling.sk">andrej@arling.sk</a> within 24 hours.',
-    de: 'Auf <a href="mailto:andrej@arling.sk">andrej@arling.sk</a> antworten wir innerhalb von 24 Stunden.',
+    sk: 'Na <a href="mailto:podpora@arling.sk">podpora@arling.sk</a> odpovedáme do 24 hodín.',
+    en: 'We answer <a href="mailto:support@arling.sk">support@arling.sk</a> within 24 hours.',
+    de: 'Auf <a href="mailto:support@arling.sk">support@arling.sk</a> antworten wir innerhalb von 24 Stunden.',
   },
   'col.not.dt': { sk: 'Čo to nie je', en: 'What it is not', de: 'Was es nicht ist' },
   'col.not.dd': {
@@ -283,9 +283,9 @@ export const DICT = {
     de: 'Eine Frage oder ein Fall, den das Tool falsch verarbeitet hat? Bevorzugte Antwort, direkt vom Autor des Tools.',
   },
   's4.cta.p': {
-    sk: '<b>Jedna licencia pre tri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky tri, DPH v cene, faktúru pošle Stripe. SEPA pain.001 Doctor je zadarmo a licenciu nepotrebuje.',
-    en: '<b>One licence for three tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all three, VAT included, Stripe sends the invoice. SEPA pain.001 Doctor is free and needs no licence.',
-    de: '<b>Eine Lizenz für drei Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle drei, inkl. MwSt., die Rechnung stellt Stripe. SEPA pain.001 Doctor ist kostenlos und braucht keine Lizenz.',
+    sk: '<b>Jedna licencia pre tri nástroje.</b> Pro pre camt.053 do Excelu sa aktivuje rovnakou licenciou ako SEPA pain.001 Generátor a Párovač platieb: 9&nbsp;€ mesačne alebo 79&nbsp;€ ročne pre všetky tri, DPH v cene. Platbu spracuje Stripe cez Managed Payments, doklad a faktúru vám pošle Link (Sold through Link, LLC). SEPA pain.001 Doctor je zadarmo a licenciu nepotrebuje.',
+    en: '<b>One licence for three tools.</b> Pro for camt.053 to Excel is activated by the same licence as SEPA pain.001 Generator and Payment matcher: €9/month or €79/year for all three, VAT included. Stripe processes the payment through Managed Payments; Link (Sold through Link, LLC) sends you the receipt and the invoice. SEPA pain.001 Doctor is free and needs no licence.',
+    de: '<b>Eine Lizenz für drei Tools.</b> Pro für camt.053 nach Excel wird mit derselben Lizenz aktiviert wie SEPA-pain.001-Generator und Zahlungsabgleich: 9&nbsp;€/Monat oder 79&nbsp;€/Jahr für alle drei, inkl. MwSt. Die Zahlung wickelt Stripe über Managed Payments ab; Beleg und Rechnung schickt Ihnen Link (Sold through Link, LLC). SEPA pain.001 Doctor ist kostenlos und braucht keine Lizenz.',
   },
   's4.buy.year.btn': { sk: 'Kúpiť Pro, 79 €/rok', en: 'Buy Pro, €79/year', de: 'Pro kaufen, 79 €/Jahr' },
   's4.buy.month.btn': { sk: 'alebo 9 €/mesiac', en: 'or €9/month', de: 'oder 9 €/Monat' },
@@ -295,14 +295,14 @@ export const DICT = {
     de: '<li>MT940-Export (.sta) und DATEV-Buchungsstapel-Export (EXTF-CSV)</li><li>Mehrere Dateien gleichzeitig, Umwandlungsverlauf im Browser</li><li>Ein Lizenzschlüssel für drei Tools: camt.053 nach Excel, SEPA-pain.001-Generator, Zahlungsabgleich</li><li>Bevorzugter E-Mail-Support</li>',
   },
   's4.buy.fineprint': {
-    sk: 'Platba cez Stripe, DPH v cene, mesačne zrušiteľné, žiadna viazanosť: odkaz na zrušenie nájdete priamo v potvrdení platby od Stripe. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
-    en: 'Payment via Stripe, VAT included, cancel monthly, no minimum term: the cancellation link is right in Stripe’s payment confirmation email. You get the licence key on the confirmation page right after payment.',
-    de: 'Zahlung über Stripe, inkl. MwSt., monatlich kündbar, keine Mindestlaufzeit: den Kündigungslink schickt Stripe direkt in der Zahlungsbestätigung. Den Lizenzschlüssel erhalten Sie sofort nach der Zahlung auf der Bestätigungsseite.',
+    sk: 'Platba cez Stripe, DPH v cene, žiadna viazanosť: predplatné zrušíte kedykoľvek na portáli Stripe (billing.stripe.com), platí do konca zaplateného obdobia. Licenčný kľúč dostanete hneď po zaplatení na potvrdzovacej stránke.',
+    en: 'Payment via Stripe, VAT included, no minimum term: cancel the subscription at any time in the Stripe customer portal (billing.stripe.com); it stays active until the end of the paid period. You get the licence key on the confirmation page right after payment.',
+    de: 'Zahlung über Stripe, inkl. MwSt., keine Mindestlaufzeit: das Abo kündigen Sie jederzeit im Stripe-Kundenportal (billing.stripe.com); es bleibt bis zum Ende des bezahlten Zeitraums aktiv. Den Lizenzschlüssel erhalten Sie sofort nach der Zahlung auf der Bestätigungsseite.',
   },
   's4.trust': {
-    sk: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, IČ DPH SK2122352100. Prevod beží vo vašom prehliadači, výpis sa nikam neposiela. Ak sa vám MT940 alebo DATEV súbor neimportuje, napíšte s chybovou hláškou na <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>, budeme to riešiť prednostne. <a href="https://arling.sk/podmienky/">Podmienky</a> · <a href="https://arling.sk/gdpr/">GDPR</a>',
-    en: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slovakia, VAT ID SK2122352100. The conversion runs in your browser, your statement is never uploaded. If the MT940 or DATEV file does not import for you, write to <a href="mailto:andrej@arling.sk">andrej@arling.sk</a> with the error message, we prioritise fixing it. <a href="https://arling.sk/podmienky/">Terms</a> · <a href="https://arling.sk/gdpr/">Privacy (GDPR)</a>',
-    de: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slowakei, USt-IdNr. SK2122352100. Die Umwandlung läuft in Ihrem Browser, Ihr Kontoauszug wird nicht hochgeladen. Importiert die MT940- oder DATEV-Datei bei Ihnen nicht, schreiben Sie mit der Fehlermeldung an <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>, wir kümmern uns vorrangig darum. <a href="https://arling.sk/podmienky/">AGB</a> · <a href="https://arling.sk/gdpr/">Datenschutz</a>',
+    sk: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, IČ DPH SK2122352100. Prevod beží vo vašom prehliadači, výpis sa nikam neposiela. Ak sa vám MT940 alebo DATEV súbor neimportuje, napíšte s chybovou hláškou na <a href="mailto:podpora@arling.sk">podpora@arling.sk</a>, budeme to riešiť prednostne. <a href="https://arling.sk/podmienky/">Podmienky</a> · <a href="https://arling.sk/gdpr/">GDPR</a>',
+    en: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slovakia, VAT ID SK2122352100. The conversion runs in your browser, your statement is never uploaded. If the MT940 or DATEV file does not import for you, write to <a href="mailto:support@arling.sk">support@arling.sk</a> with the error message, we prioritise fixing it. <a href="https://arling.sk/podmienky/">Terms</a> · <a href="https://arling.sk/gdpr/">Privacy (GDPR)</a>',
+    de: 'ARLing s.&nbsp;r.&nbsp;o., Bratislava, Slowakei, USt-IdNr. SK2122352100. Die Umwandlung läuft in Ihrem Browser, Ihr Kontoauszug wird nicht hochgeladen. Importiert die MT940- oder DATEV-Datei bei Ihnen nicht, schreiben Sie mit der Fehlermeldung an <a href="mailto:support@arling.sk">support@arling.sk</a>, wir kümmern uns vorrangig darum. <a href="https://arling.sk/podmienky/">AGB</a> · <a href="https://arling.sk/gdpr/">Datenschutz</a>',
   },
   's4.bundle.link': { sk: 'Čo všetko je v balíku', en: 'What is in the bundle', de: 'Was im Paket enthalten ist' },
   's4.licence.manual.label': {
@@ -337,9 +337,9 @@ export const DICT = {
   's5.subscribe.btn': { sk: 'Dať vedieť', en: 'Notify me', de: 'Benachrichtigen' },
   's5.subscribe.thanks': { sk: 'Ďakujeme. Ozveme sa len vtedy, keď bude niečo nové.', en: 'Thanks. We’ll only write when there’s something new.', de: 'Danke. Wir melden uns nur, wenn es etwas Neues gibt.' },
   's5.subscribe.error': {
-    sk: 'Nepodarilo sa uložiť. Napíšte na <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>.',
-    en: 'Could not save it. Please write to <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>.',
-    de: 'Speichern fehlgeschlagen. Bitte schreiben Sie an <a href="mailto:andrej@arling.sk">andrej@arling.sk</a>.',
+    sk: 'Nepodarilo sa uložiť. Napíšte na <a href="mailto:podpora@arling.sk">podpora@arling.sk</a>.',
+    en: 'Could not save it. Please write to <a href="mailto:support@arling.sk">support@arling.sk</a>.',
+    de: 'Speichern fehlgeschlagen. Bitte schreiben Sie an <a href="mailto:support@arling.sk">support@arling.sk</a>.',
   },
   's5.subscribe.privacy': { sk: 'Súkromie', en: 'Privacy', de: 'Datenschutz' },
   's5.business.p': {
@@ -460,7 +460,7 @@ export const DICT = {
   'js.error.sizeExceeded': { sk: 'Súbory spolu presahujú limit {limit}. Odstráňte niektoré a skúste znova.', en: 'The files together exceed the {limit} limit. Remove some and try again.', de: 'Die Dateien überschreiten zusammen das Limit von {limit}. Entfernen Sie einige und versuchen Sie es erneut.' },
   'js.error.readFile': { sk: 'Súbor sa nepodarilo prečítať.', en: 'The file could not be read.', de: 'Die Datei konnte nicht gelesen werden.' },
   'js.error.parseFallback': { sk: 'Súbor sa nepodarilo spracovať ako camt.053 XML.', en: 'The file could not be processed as camt.053 XML.', de: 'Die Datei konnte nicht als camt.053-XML verarbeitet werden.' },
-  'js.error.activationFailed': { sk: 'Aktivácia zlyhala. Skúste vložiť kľúč ručne nižšie, alebo napíšte na andrej@arling.sk.', en: 'Activation failed. Try pasting the key manually below, or write to andrej@arling.sk.', de: 'Aktivierung fehlgeschlagen. Versuchen Sie, den Schlüssel unten manuell einzufügen, oder schreiben Sie an andrej@arling.sk.' },
+  'js.error.activationFailed': { sk: 'Aktivácia zlyhala. Skúste vložiť kľúč ručne nižšie, alebo napíšte na podpora@arling.sk.', en: 'Activation failed. Try pasting the key manually below, or write to support@arling.sk.', de: 'Aktivierung fehlgeschlagen. Versuchen Sie, den Schlüssel unten manuell einzufügen, oder schreiben Sie an support@arling.sk.' },
   'js.error.licenceKeyMissing': { sk: 'Vložte licenčný kľúč.', en: 'Paste a licence key.', de: 'Lizenzschlüssel einfügen.' },
 
   'js.sizeWarn': { sk: 'Súbory spolu majú {size}, limit je {limit}. Odstráňte niektoré, alebo ich prevádzajte po menších skupinách.', en: 'The files together are {size}, the limit is {limit}. Remove some, or convert them in smaller batches.', de: 'Die Dateien sind zusammen {size} groß, das Limit liegt bei {limit}. Entfernen Sie einige oder wandeln Sie in kleineren Gruppen um.' },
@@ -895,7 +895,7 @@ export function applyI18n(lang) {
 
   const businessLink = document.getElementById('business-link');
   if (businessLink) {
-    businessLink.href = 'mailto:andrej@arling.sk?subject=' + encodeURIComponent(t('s5.business.subject', l));
+    businessLink.href = 'mailto:' + (l === 'sk' ? 'podpora' : 'support') + '@arling.sk?subject=' + encodeURIComponent(t('s5.business.subject', l));
   }
 
   // The Pro-section "what is in the bundle" link sends visitors to the

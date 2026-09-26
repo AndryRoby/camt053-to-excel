@@ -1,25 +1,18 @@
-# camt.053 výpis banky do Excelu
+# camt.053 to Excel: bank statement XML to a CSV or Excel table
+
+camt.053 to Excel converts a camt.053 XML bank statement (ISO 20022) into a CSV or Excel table in your browser, for accountants and companies that get statements from Tatra banka, SLSP, VÚB, ČSOB or a German, Austrian or Swiss bank and need the entries in a spreadsheet or in DATEV. Converting the whole statement, the totals and the balance check are free; without a licence the downloaded file holds the first 20 rows as a sample, and the full download plus MT940 and DATEV Buchungsstapel exports come with the Pro licence for €9 a month or €79 a year (VAT included) at https://arling.sk/bankove-nastroje/, which also covers SEPA pain.001 Generator and Payment matcher.
 
 Live: https://arling.sk/camt053-to-excel/ (Slovak) · https://arling.sk/camt053-to-excel/en/ (English) · https://arling.sk/camt053-to-excel/de/ (German)
 
-**English summary:** a free, client-side tool that turns any camt.053
-XML bank statement (ISO 20022, the standard electronic statement
-format at banks in Slovakia, Germany, Austria and Switzerland) into a
-plain CSV/Excel table, entirely in the browser: nothing you upload is
-sent anywhere. The page itself has a language switcher and is fully
-available in Slovak, English and German (SK/EN/DE), with column
+Nothing you upload is sent anywhere. The page has a language switcher
+and is fully available in Slovak, English and German, with column
 headers, error messages, the FAQ and the Pro section translated in
 each language, and per-language defaults for number/date formatting
 (decimal comma and dd.mm.yyyy for SK/DE, decimal point and yyyy-mm-dd
 for EN) and CSV export presets (DATEV/Lexware/sevDesk generic layouts
-for DE/EN).
-
-A free, static, client-side tool that turns a **camt.053 XML bank
-statement** (výpis z účtu, ISO 20022) from **Tatra banka, Slovenská
-sporiteľňa (SLSP), VÚB, ČSOB, or any German, Austrian or Swiss bank**
-into a plain CSV/Excel table, so you don't have to eyeball raw XML, or
-pay for accounting software's built-in import, just to see what's on a
-statement, pair it against invoices, or check it by eye.
+for DE/EN). You don't have to eyeball raw XML, or pay for accounting
+software's built-in import, just to see what's on a statement, pair it
+against invoices, or check it by eye.
 
 ## What it's for
 
@@ -43,9 +36,10 @@ English, and a Slovak Tatra banka statement (three entries) in Slovak.
 1. **The statement file(s).** Upload one or more `.xml` files with the
    file picker, or paste the XML text directly into the page. An
    uploaded file is read with the browser's own `FileReader` API and
-   never leaves the page. Multiple files can be converted in the same
-   session (several months, or several accounts, at once), each kept
-   as its own table and its own download.
+   never leaves the page. The free version converts one file at a
+   time; converting several files in one go (several months, or
+   several accounts), each kept as its own table and its own download,
+   is part of Pro.
 
 2. **Supported camt.053 versions:**
 
@@ -91,10 +85,13 @@ each file.
 
 ## How it works (client-side only)
 
-Everything runs in your browser. There is no backend, no account, and
-no payment wall. You upload or paste one or more camt.053 files, and
-the page parses them and offers the result as a CSV download (Excel
-opens a `.csv` directly).
+Everything runs in your browser. There is no backend and no account.
+You upload or paste one or more camt.053 files, and the page parses
+them, shows the totals, the balance check and the table on screen (the
+first 200 rows of a longer statement), and offers the result as a CSV
+or Excel download. Without a licence the download holds the first 20
+rows with a visible sample header; with a licence you get the whole
+file (see Pro below).
 
 Nothing about your statement is sent anywhere: no IBANs, no
 transaction amounts, no counterparty names. The only network activity
@@ -115,7 +112,28 @@ dependency on `DOMParser`, so it also runs unmodified in Node (used by
 this project's own test suite, `tests.mjs`), the same approach this
 project's sibling tool, SEPA pain.001 Doctor, uses for parsing XML.
 
-## Pro: MT940 and DATEV Buchungsstapel exports
+## Pro: full download, MT940 and DATEV Buchungsstapel exports
+
+Pro is the Banking tools licence sold at
+https://arling.sk/bankove-nastroje/ for €9 a month or €79 a year, VAT
+included. One licence activates Pro in three tools: camt.053 to Excel,
+SEPA pain.001 Generator and Payment matcher (SEPA pain.001 Doctor is
+free and needs no licence). In this tool Pro adds the whole downloaded
+file as CSV and Excel, the MT940 and DATEV exports described below,
+several files at once, a history of past conversions stored in your
+browser, and priority email support.
+
+The licence is sold through Stripe Managed Payments. The merchant of
+record is Link (Sold through Link, LLC, which provides that service for
+Stripe): Link sends the receipt and the invoice as a PDF, and Stripe
+calculates and remits the VAT; ARLing s. r. o. delivers the tool and the
+licence key. Cancel or change the subscription at any time in the
+Stripe customer portal
+(https://billing.stripe.com/p/login/3cIaER9M63hNeFcg8B4ko00); it stays
+active until the end of the paid period. For a monthly or yearly
+subscription, ARLing refunds the payment on request within 14 days of
+purchase, without you giving a reason: write to support@arling.sk.
+Full terms: https://arling.sk/podmienky/en/ (sections 4 to 6).
 
 German banks stopped issuing MT940 in November 2025: the German banking
 industry's own rulebook now specifies camt.053 only for the electronic
@@ -124,10 +142,9 @@ direct camt.053 file import; its manual file import (Stapelverarbeitung)
 still expects MT940 (the paid DATEV Bankdatenservice covers camt.053 a
 different way). That gap is what these two Pro exports are for, both
 generated client-side exactly like the free CSV/Excel export, just
-gated on a licence (the same "Bankové nástroje" / Banking tools bundle
-licence used across all four ARLing bank tools) for the actual download;
-without a licence, clicking either button shows a preview of the first
-eight lines instead. A dedicated landing page for this pair of exports
+gated on the Banking tools licence for the actual download; without a
+licence, clicking either button shows a preview of the first eight
+lines instead. A dedicated landing page for this pair of exports
 lives at `mt940/index.html` (German) and `mt940/en/index.html`
 (English); its CTA links to the converter with `?export=mt940`, which
 `index.html` reads to show a hint and highlight the MT940 button once a
@@ -225,7 +242,7 @@ on it for accounting or reconciliation.
 ## About
 
 Built by ARLing s. r. o. (Bratislava, Slovakia).
-Contact: andrej@arling.sk
+Contact: support@arling.sk
 
 Sibling tools from the same "Doctor" family:
 - SEPA pain.001 Generátor (builds a pain.001 XML payment file from

@@ -303,4 +303,4 @@ is sent to the subscribe endpoint and nothing else.
 
 ## Contact
 
-Built by ARLing s. r. o. (Bratislava, Slovakia). andrej@arling.sk
+Built by ARLing s. r. o. (Bratislava, Slovakia). support@arling.sk (English, German), podpora@arling.sk (Slovak)
